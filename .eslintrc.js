@@ -11,6 +11,9 @@ module.exports = {
   rules: {
     // Add specific rules here to turn off warnings
     "vue/multi-word-component-names": "off",
-    // Add more rules as needed
+    "no-console": "off", // Disable no-console rule globally
+    "vue/max-attributes-per-line": "off",
+    "linebreak-style": "off",
+    'vue/singleline-html-element-content-newline': 'off'
   },
 };
