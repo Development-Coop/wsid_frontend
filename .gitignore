@@ -1,2 +1,3 @@
 node_modules
 .quasar
+.DS_Store
