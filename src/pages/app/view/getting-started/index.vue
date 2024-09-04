@@ -2,7 +2,7 @@
   <q-page class="q-pa-lg">
     <div>
       <q-icon v-motion-pop-visible :delay="300" size="87px">
-        <img src="src/assets/logo.svg" alt="logo" />
+        <img src="~src/assets/logo.svg" alt="logo" />
       </q-icon>
       <h3
         v-motion-slide-bottom
