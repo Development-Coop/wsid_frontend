@@ -1,13 +1,21 @@
 <template>
   <q-page class="q-pa-lg">
     <div>
-      <q-icon size="87px">
+      <q-icon v-motion-pop-visible :delay="300" size="87px">
         <img src="src/assets/logo.svg" alt="logo" />
       </q-icon>
-      <h3 class="text-weight-bolder text-center">{{ $t("wsid") }}</h3>
+      <h3
+        v-motion-slide-bottom
+        :delay="500"
+        class="text-weight-bolder text-center"
+      >
+        {{ $t("wsid") }}
+      </h3>
     </div>
     <div>
       <q-btn
+        v-motion-pop
+        :delay="600"
         no-caps
         block
         unelevated
@@ -18,6 +26,8 @@
         style="color: #363b4b; background-color: #f0f2f5"
       />
       <q-btn
+        v-motion-pop
+        :delay="700"
         no-caps
         block
         unelevated

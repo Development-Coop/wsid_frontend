@@ -1,4 +1,5 @@
 @import "./typography.scss";
+@import "./utils.scss";
 
 body {
   font-family: "SF Pro", sans-serif;
@@ -12,10 +13,6 @@ body {
 button {
   outline: none;
   border: none;
-}
-
-.w-full {
-  width: 100%;
 }
 
 .q-btn {
