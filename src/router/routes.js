@@ -6,9 +6,26 @@ const routes = [
   },
   {
     path: "/app",
-    component: () => import("layouts/RegularLayout.vue"),
+    component: () => import("src/layouts/AppRegularLayout.vue"),
     children: [
-      { path: "", component: () => import("src/pages/app/view/home.vue") },
+      {
+        path: "getting-started",
+        name: "getting-started",
+        component: () => import("src/layouts/AppPlainLayout.vue"),
+        children: [
+          {
+            path: "",
+            component: () =>
+              import("src/pages/app/view/getting-started/index.vue"),
+          },
+          {
+            path: "ask-questions",
+            name: "ask-questions",
+            component: () =>
+              import("src/pages/app/view/getting-started/AskQuestions.vue"),
+          },
+        ],
+      },
     ],
   },
   {

@@ -1,10 +1,25 @@
-// app global css in SCSS form
+@import "./typography.scss";
+
+body {
+  font-family: "SF Pro", sans-serif;
+}
+
 * {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 button {
-    outline: none;
-    border: none;
+  outline: none;
+  border: none;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.q-btn {
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
 }
