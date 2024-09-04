@@ -92,9 +92,13 @@ header {
         text-decoration: none;
         color: #4a4848;
 
+        &:hover {
+          color: $primary; 
+        }
+
         &.router-link-active {
           font-weight: 700;
-          color: $primary;  /* Assuming $primary is defined elsewhere */
+          color: $primary; 
         }
       }
     }
@@ -102,13 +106,13 @@ header {
 
   .button {
     background-color: #ff573212;  /* Semi-transparent background color */
-    color: $primary;  /* Assuming $primary is defined elsewhere */
-    padding: 12px 16px;
+    color: $primary; 
+    padding: 6px 16px;
     font-size: 14px;
     font-weight: 500;
     min-width: 114px;
     border: none;  /* Ensure no border */
-    border-radius: 4px;  /* Add border-radius for better appearance */
+    border-radius: 8px;  /* Add border-radius for better appearance */
     cursor: pointer;
     transition: background-color 0.3s ease;  /* Smooth transition on hover */
 
