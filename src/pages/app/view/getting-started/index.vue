@@ -22,8 +22,7 @@
         color="primary"
         label="Continue"
         class="w-full q-mb-md"
-        :to="{ name: 'ask-questions' }"
-        style="color: #363b4b; background-color: #f0f2f5"
+        :to="{ name: 'introduction' }"
       />
       <q-btn
         v-motion-pop
@@ -31,10 +30,10 @@
         no-caps
         block
         unelevated
+        color="grey-12"
         class="w-full"
         text-color="black"
         label="Learn More"
-        style="color: #363b4b; background-color: #f0f2f5"
       />
     </div>
   </q-page>

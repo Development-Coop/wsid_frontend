@@ -19,10 +19,10 @@ const routes = [
               import("src/pages/app/view/getting-started/index.vue"),
           },
           {
-            path: "ask-questions",
-            name: "ask-questions",
+            path: "introduction",
+            name: "introduction",
             component: () =>
-              import("src/pages/app/view/getting-started/AskQuestions.vue"),
+              import("src/pages/app/view/getting-started/Introduction.vue"),
           },
         ],
       },

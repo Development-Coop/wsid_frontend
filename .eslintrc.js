@@ -8,6 +8,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2021,
   },
+  ignorePatterns: ["dist/**"],
   rules: {
     // Add specific rules here to turn off warnings
     "vue/multi-word-component-names": "off",
