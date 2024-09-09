@@ -12,11 +12,12 @@
     >
       <q-carousel-slide :name="1" class="column no-wrap flex-center">
         <div>
-          <img
+          <q-img
             v-motion-pop-visible
+            loading="lazy"
             src="~src/assets/images/gettingstarted_frame1.png"
+            spinner-color="white"
             class="w-full"
-            alt="logo"
           />
           <h4
             v-motion-slide-visible-bottom
@@ -36,8 +37,10 @@
 
       <q-carousel-slide :name="2" class="column no-wrap flex-center">
         <div>
-          <img
+          <q-img
             v-motion-pop-visible
+            loading="lazy"
+            spinner-color="white"
             src="~src/assets/images/gettingstarted_frame2.png"
             class="w-full"
             alt="logo"
@@ -60,8 +63,10 @@
 
       <q-carousel-slide :name="3" class="column no-wrap flex-center">
         <div>
-          <img
+          <q-img
             v-motion-pop-visible
+            loading="lazy"
+            spinner-color="white"
             src="~src/assets/images/gettingstarted_frame3.png"
             class="w-full"
             alt="logo"
@@ -84,8 +89,10 @@
 
       <q-carousel-slide :name="4" class="column no-wrap flex-center">
         <div>
-          <img
+          <q-img
             v-motion-pop-visible
+            loading="lazy"
+            spinner-color="white"
             src="~src/assets/images/gettingstarted_frame4.png"
             class="w-full"
             alt="logo"
@@ -108,8 +115,10 @@
 
       <q-carousel-slide :name="5" class="column no-wrap flex-center">
         <div class="intro-final">
-          <img
+          <q-img
             v-motion-pop-visible
+            loading="lazy"
+            spinner-color="white"
             src="~src/assets/images/gettingstarted_frame5.png"
             class="w-full"
             alt="logo"
