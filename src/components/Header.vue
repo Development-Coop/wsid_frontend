@@ -22,8 +22,8 @@
             </div>
           </q-scroll-area>
         </q-drawer>
-        <img src="../assets/logo.svg" class="logo-img" alt="logo">
-        <p class="no-margin">WSID</p>
+        <img src="../assets/logo.svg" class="logo-img cursor-pointer" alt="logo" @click="router.push('/')">
+        <p class="no-margin cursor-pointer" @click="router.push('/')">WSID</p>
       </div>
       <nav v-if="!isMobile">
         <ul class="row q-pl-none q-m-none web-view">
@@ -40,8 +40,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
+const router = useRouter();
 const drawerLeft = ref(false);
 
 const navItems = [
