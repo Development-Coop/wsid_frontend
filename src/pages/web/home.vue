@@ -309,6 +309,7 @@ const isMobile = computed(() => $q.screen.width < 992);
         position: static;
         height: auto;
         grid-gap: 32px;
+        border-radius: 44px;
       }
     }
     &__actions {
