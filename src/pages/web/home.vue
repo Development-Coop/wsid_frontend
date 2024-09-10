@@ -62,41 +62,53 @@
         </div>
         <div class="app-info__actions">
           <div class="app-info__actions-container">
-            <img
-              src="../../assets/images/ask-que.png"
-              alt="action-img"
-              srcset="
-                ../../assets/images/2x/ask-que.png,../../assets/images/3x/ask-que.png,../../assets/images/4x/ask-que.png
-              "
-            />
-            <img
-              src="../../assets/images/create-options.png"
-              alt="action-img"
-              srcset="
-                ../../assets/images/2x/create-options.png,../../assets/images/3x/create-options.png,../../assets/images/4x/create-options.png
-              "
-            />
-            <img
-              src="../../assets/images/receive-results.png"
-              alt="action-img"
-              srcset="
-                ../../assets/images/2x/receive-results.png,../../assets/images/3x/receive-results.png,../../assets/images/4x/receive-results.png
-              "
-            />
-            <img
-              src="../../assets/images/get-feedback.png"
-              alt="action-img"
-              srcset="
-                ../../assets/images/2x/get-feedback.png,../../assets/images/3x/get-feedback.png,../../assets/images/4x/get-feedback.png
-              "
-            />
+            <div class="app-info__actions-names">
+              <img
+                src="../../assets/images/ask-que.png"
+                alt="action-img"
+                srcset="
+                  ../../assets/images/2x/ask-que.png,../../assets/images/3x/ask-que.png,../../assets/images/4x/ask-que.png
+                "
+              />
+              <p>Ask Questions</p>
+            </div>
+            <div class="app-info__actions-names">
+              <img
+                src="../../assets/images/create-options.png"
+                alt="action-img"
+                srcset="
+                  ../../assets/images/2x/create-options.png,../../assets/images/3x/create-options.png,../../assets/images/4x/create-options.png
+                "
+              />
+              <p>Create Options</p>
+            </div>
+            <div class="app-info__actions-names">
+              <img
+                src="../../assets/images/receive-results.png"
+                alt="action-img"
+                srcset="
+                  ../../assets/images/2x/receive-results.png,../../assets/images/3x/receive-results.png,../../assets/images/4x/receive-results.png
+                "
+              />
+              <p>Receive Results</p>
+            </div>
+            <div class="app-info__actions-names">
+              <img
+                src="../../assets/images/get-feedback.png"
+                alt="action-img"
+                srcset="
+                  ../../assets/images/2x/get-feedback.png,../../assets/images/3x/get-feedback.png,../../assets/images/4x/get-feedback.png
+                "
+              />
+              <p>Get Feedback</p>
+            </div>
           </div>
-          <div class="app-info__actions-names">
+          <!-- <div class="app-info__actions-names">
             <p>Ask Questions</p>
             <p>Create Options</p>
             <p>Receive Results</p>
             <p>Get Feedback</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -110,9 +122,7 @@
           finding numerous and diverse perspectives on-demand.
         </p>
       </div>
-      <div>
-        <CommentsSlider />
-      </div>
+      <CommentsSlider />
     </section>
 
     <section class="footer">
@@ -281,9 +291,13 @@ const isMobile = computed(() => $q.screen.width < 992);
     position: relative;
     padding: 0 48px;
     width: 100%;
+    @media screen and (max-width: 992px) {
+      padding: 0 24px;
+      margin-bottom: 24px;
+    }
     &__container {
       background-color: #fff3f1;
-      padding: 80px 40px 120px 40px;
+      padding: 60px 40px 120px 40px;
       position: relative;
       height: 660px;
       display: grid;
@@ -291,9 +305,17 @@ const isMobile = computed(() => $q.screen.width < 992);
       top: -105px;
       z-index: -1;
       border-radius: 88px;
+      @media screen and (max-width: 992px) {
+        position: static;
+        height: auto;
+        grid-gap: 32px;
+      }
     }
     &__actions {
       width: 88%;
+      @media screen and (max-width: 992px) {
+        width: 100%;
+      }
       &-container {
         background-color: #2d2d2d;
         border-radius: 32px;
@@ -301,35 +323,53 @@ const isMobile = computed(() => $q.screen.width < 992);
         grid-auto-flow: column;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-items: center;
-        img {
-          height: 100%;
-        }
-
-        img:nth-child(1) {
-          width: 309px;
-        }
-
-        img:nth-child(2) {
-          width: 279px;
-        }
-
-        img:nth-child(3) {
-          width: 263px;
-        }
-
-        img:nth-child(4) {
-          width: 245px;
+        padding-left: 16px;
+        @media screen and (max-width: 992px) {
+          grid-template-columns: 1fr;
+          grid-auto-flow: row;
+          grid-gap: 48px;
+          color: #fff;
+          padding: 0;
+          background-color: transparent;
         }
       }
       &-names {
         display: grid;
-        grid-auto-flow: column;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-items: center;
+        position: relative;
+        @media screen and (max-width: 992px) {
+          background-color: #2d2d2d;
+          border-radius: 32px;
+        }
         p {
           margin: 0;
           font-weight: 800;
           padding-top: 16px;
+          position: absolute;
+          bottom: -40px;
+          @media screen and (max-width: 992px) {
+            bottom: -32px;
+            color: #000;
+          }
+        }
+        img {
+          width: 100%;
+        }
+
+        img:nth-child(1) {
+          height: 227px;
+        }
+
+        img:nth-child(2) {
+          height: 218px;
+        }
+
+        img:nth-child(3) {
+          height: 237px;
+        }
+
+        img:nth-child(4) {
+          height: 237px;
         }
       }
     }
@@ -340,6 +380,14 @@ const isMobile = computed(() => $q.screen.width < 992);
       grid-gap: 32px;
       width: 50%;
       margin-left: 48px;
+      @media screen and (max-width: 992px) {
+        grid-auto-flow: row;
+        justify-self: center;
+        margin: 0;
+        text-align: center;
+        grid-gap: 16px;
+        width: 100%;
+      }
       p {
         margin: 0;
         font-size: 20px;
@@ -355,6 +403,8 @@ const isMobile = computed(() => $q.screen.width < 992);
         display: flex;
         gap: 16px;
         padding: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
   }
@@ -364,18 +414,31 @@ const isMobile = computed(() => $q.screen.width < 992);
     display: grid;
     padding: 80px 0;
     justify-content: center;
-    height: auto;
     gap: 80px;
+    width: 100%;
+    box-sizing: border-box;
+    @media screen and (max-width: 992px) {
+      padding: 60px 0;
+      gap: 60px;
+      height: auto;
+    }
     &__header {
       display: grid;
       justify-self: center;
       align-self: flex-start;
       text-align: center;
+      @media screen and (max-width: 992px) {
+        grid-gap: 16px;
+      }
       h1 {
         font-size: 40px;
         font-weight: 500;
         color: #d6d4cc;
         margin: 0;
+        @media screen and (max-width: 992px) {
+          font-size: 32px;
+          line-height: 40px;
+        }
       }
       p {
         color: #a3a3a3;
@@ -383,6 +446,9 @@ const isMobile = computed(() => $q.screen.width < 992);
         margin: 0;
         justify-self: center;
         max-width: 42%;
+        @media screen and (max-width: 992px) {
+          max-width: 80%;
+        }
       }
     }
   }

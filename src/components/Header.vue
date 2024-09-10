@@ -13,7 +13,7 @@
         />
         <q-drawer v-model="drawerLeft" side="left" :width="200" elevated>
           <q-scroll-area class="fit">
-            <div class="q-pa-sm">
+            <div class="q-pa-sm side-bar">
               <ul class="q-pl-none q-m-none">
                 <li v-for="item in navItems" :key="item.name">
                   <router-link :to="item.path">{{ item.name }}</router-link>
@@ -118,6 +118,13 @@ header {
 
     &:hover {
       background-color: darken(#ff573212, 10%);  /* Darken on hover */
+    }
+  }
+
+  .side-bar {
+    padding: 24px 32px;
+    ul {
+      grid-gap: 24px;
     }
   }
 }

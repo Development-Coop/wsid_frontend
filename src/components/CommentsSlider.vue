@@ -129,12 +129,15 @@ onMounted(() => {
 section {
   display: grid;
   gap: 30px;
-
+  width: 100%;
+  overflow-x: hidden;
   .card-list {
     display: flex;
     gap: 32px;
-    // overflow: hidden;
     position: relative;
+    @media screen and (max-width: 992px) {
+      gap: 16px;
+    }
 
     /* Adjust the container width for continuous animation */
     &:nth-child(4) {
@@ -160,7 +163,7 @@ section {
       flex-shrink: 0; /* Ensure cards do not shrink */
       @media (max-width: 768px) {
         .card {
-          width: 300px; /* Smaller card size for mobile */
+          width: 150px; /* Smaller card size for mobile */
         }
       }
     }
@@ -170,7 +173,7 @@ section {
       display: flex;
       gap: 32px;
       align-items: center;
-      animation: slide-left 10s linear infinite;
+      animation: slide-left 16s linear infinite;
 
       &.comments-list-0 {
         padding-left: 80px;
@@ -182,7 +185,7 @@ section {
       display: flex;
       gap: 32px;
       align-items: center;
-      animation: slide-right 6s linear infinite;
+      animation: slide-right 10s linear infinite;
     }
   }
 }
