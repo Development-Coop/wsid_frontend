@@ -13,8 +13,12 @@
             life altering.
           </p>
           <div class="banner-buttons">
-            <button class="btn btn-primary">Get Started</button>
-            <button class="btn btn-secondary">Learn More</button>
+            <button v-motion-pop :delay="700" class="btn btn-primary">
+              Get Started
+            </button>
+            <button v-motion-pop :delay="700" class="btn btn-secondary">
+              Learn More
+            </button>
           </div>
         </div>
       </section>
@@ -142,19 +146,19 @@ import { useQuasar } from "quasar";
 const $q = useQuasar();
 const commentsList = ref([
   {
-    imgSrc: "src/assets/icons/sample-profile-1.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-1.svg', import.meta.url).href,
     comment: "An App Idea in my mind, which tool should I use to prototype?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-2.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-2.svg', import.meta.url).href,
     comment: "What is the best tea to loose belly fat real quick?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-3.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-3.svg', import.meta.url).href,
     comment: "Should I break the law to save a loved one or cry in vain?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-4.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-4.svg', import.meta.url).href,
     comment: "That makes sense to me. I am in favor.",
   },
 ]);
