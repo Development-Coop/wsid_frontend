@@ -73,32 +73,32 @@ import { ref } from "vue";
 
 const commentsList = ref([
   {
-    imgSrc: "src/assets/icons/sample-profile-1.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-1.svg', import.meta.url).href,
     comment: "An App Idea in my mind, which tool should I use to prototype?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-2.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-2.svg', import.meta.url).href,
     comment: "What is the best tea to loose belly fat real quick?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-3.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-3.svg', import.meta.url).href,
     comment: "Should I break the law to save a loved one or cry in vain?",
   },
   {
-    imgSrc: "src/assets/icons/sample-profile-4.svg",
+    imgSrc: new URL('../assets/icons/sample-profile-4.svg', import.meta.url).href,
     comment: "That makes sense to me. I am in favor.",
   },
 ]);
 
 const emojis = ref([
-  "src/assets/emoji/ok-hand.webp",
-  "src/assets/emoji/smirking-face.webp",
-  "src/assets/emoji/thinking-face.webp",
-  "src/assets/emoji/thumbs-up.webp",
-  "src/assets/emoji/face-hearts.webp",
-  "src/assets/emoji/face-glass.webp",
-  "src/assets/emoji/victory-hand.webp",
-  "src/assets/emoji/man.webp",
+  new URL('../assets/emoji/ok-hand.webp', import.meta.url).href,
+  new URL('../assets/emoji/smirking-face.webp', import.meta.url).href,
+  new URL('../assets/emoji/thinking-face.webp', import.meta.url).href,
+  new URL('../assets/emoji/thumbs-up.webp', import.meta.url).href,
+  new URL('../assets/emoji/face-hearts.webp', import.meta.url).href,
+  new URL('../assets/emoji/face-glass.webp', import.meta.url).href,
+  new URL('../assets/emoji/victory-hand.webp', import.meta.url).href,
+  new URL('../assets/emoji/man.webp', import.meta.url).href,
 ]);
 
 const shuffledEmojisList1 = ref([]);
