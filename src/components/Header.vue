@@ -22,7 +22,12 @@
             </div>
           </q-scroll-area>
         </q-drawer>
-        <img src="../assets/logo.svg" class="logo-img cursor-pointer" alt="logo" @click="router.push('/')">
+        <img
+          src="../assets/logo.svg"
+          class="logo-img cursor-pointer"
+          alt="logo"
+          @click="router.push('/')"
+        />
         <p class="no-margin cursor-pointer" @click="router.push('/')">WSID</p>
       </div>
       <nav v-if="!isMobile">
@@ -59,7 +64,7 @@ const isMobile = computed(() => $q.screen.width < 700);
 <style scoped lang="scss">
 header {
   div {
-    display: flex;  /* Ensure flex layout for gap to work */
+    display: flex; /* Ensure flex layout for gap to work */
     gap: 4px;
 
     img {
@@ -74,17 +79,17 @@ header {
   }
 
   ul {
-    display: grid;  /* Flex layout for horizontal alignment */
+    display: grid; /* Flex layout for horizontal alignment */
     list-style: none;
-    grid-gap: 12px;  /* Spacing between list items */
+    grid-gap: 12px; /* Spacing between list items */
     font-size: 16px;
     font-weight: 500;
-    padding: 0;  /* Ensure no padding on the ul */
-    margin: 0;  /* Ensure no margin on the ul */
+    padding: 0; /* Ensure no padding on the ul */
+    margin: 0; /* Ensure no margin on the ul */
 
     &.web-view {
-        display: flex;
-        gap: 40px;
+      display: flex;
+      gap: 40px;
     }
 
     li {
@@ -95,31 +100,31 @@ header {
         color: #4a4848;
 
         &:hover {
-          color: $primary; 
+          color: $primary;
         }
 
         &.router-link-active {
           font-weight: 700;
-          color: $primary; 
+          color: $primary;
         }
       }
     }
   }
 
   .button {
-    background-color: #ff573212;  /* Semi-transparent background color */
-    color: $primary; 
+    background-color: #ff573212; /* Semi-transparent background color */
+    color: $primary;
     padding: 6px 16px;
     font-size: 14px;
     font-weight: 500;
     min-width: 114px;
-    border: none;  /* Ensure no border */
-    border-radius: 8px;  /* Add border-radius for better appearance */
+    border: none; /* Ensure no border */
+    border-radius: 8px; /* Add border-radius for better appearance */
     cursor: pointer;
-    transition: background-color 0.3s ease;  /* Smooth transition on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
 
     &:hover {
-      background-color: darken(#ff573212, 10%);  /* Darken on hover */
+      background-color: darken(#ff573212, 10%); /* Darken on hover */
     }
   }
 
