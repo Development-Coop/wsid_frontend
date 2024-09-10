@@ -5,7 +5,7 @@
         <Header />
         <div class="banner-content">
           <span class="banner-subtitle">What Should I Do?</span>
-          <h1 class="banner-title">
+          <h1 v-motion-slide-left :delay="500" class="banner-title">
             Forums for everyday life. Discuss with the world.
           </h1>
           <p class="banner-description">
@@ -28,7 +28,7 @@
           :key="index"
           :class="[`comments-list-${index}`, 'comments-list']"
         >
-          <CommentCard :image-src="comment.imgSrc" :text="comment.comment" />
+          <CommentCard v-motion-slide-right :delay="index == 0 ? 500: 600" :image-src="comment.imgSrc" :text="comment.comment" />
         </div>
         <div class="primary-img">
           <span class="shadow"></span>
@@ -146,19 +146,23 @@ import { useQuasar } from "quasar";
 const $q = useQuasar();
 const commentsList = ref([
   {
-    imgSrc: new URL('../../assets/icons/sample-profile-1.svg', import.meta.url).href,
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+      .href,
     comment: "An App Idea in my mind, which tool should I use to prototype?",
   },
   {
-    imgSrc: new URL('../../assets/icons/sample-profile-2.svg', import.meta.url).href,
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+      .href,
     comment: "What is the best tea to loose belly fat real quick?",
   },
   {
-    imgSrc: new URL('../../assets/icons/sample-profile-3.svg', import.meta.url).href,
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+      .href,
     comment: "Should I break the law to save a loved one or cry in vain?",
   },
   {
-    imgSrc: new URL('../../assets/icons/sample-profile-4.svg', import.meta.url).href,
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+      .href,
     comment: "That makes sense to me. I am in favor.",
   },
 ]);
