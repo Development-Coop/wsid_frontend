@@ -2,9 +2,32 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/RegularLayout.vue"),
-    children: [{ path: "", component: () => import("pages/web/Home.vue") }],
+    children: [{ path: "", component: () => import("src/pages/web/home.vue") }],
   },
-
+  {
+    path: "/app",
+    component: () => import("src/layouts/AppRegularLayout.vue"),
+    children: [
+      {
+        path: "getting-started",
+        name: "getting-started",
+        component: () => import("src/layouts/AppPlainLayout.vue"),
+        children: [
+          {
+            path: "",
+            component: () =>
+              import("src/pages/app/view/getting-started/index.vue"),
+          },
+          {
+            path: "introduction",
+            name: "introduction",
+            component: () =>
+              import("src/pages/app/view/getting-started/Introduction.vue"),
+          },
+        ],
+      },
+    ],
+  },
   {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),
