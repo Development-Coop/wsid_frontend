@@ -1,0 +1,211 @@
+<template>
+  <section>
+    <div class="card-list">
+      <div
+        v-for="(comment, index) in commentsList.concat(commentsList)"
+        :key="index"
+        :class="[`comments-list-${index}`, 'primary-list', 'slide-left']"
+      >
+        <span>
+          <img
+            :src="shuffledEmojisList1[index % shuffledEmojisList1.length]"
+            alt="Emoji"
+          />
+        </span>
+        <CommentCard :image-src="comment.imgSrc" :text="comment.comment" />
+      </div>
+    </div>
+
+    <div class="card-list">
+      <div
+        v-for="(comment, index) in commentsList.concat(commentsList)"
+        :key="index"
+        :class="[`comments-list-${index}`, 'secondary-list', 'slide-right']"
+      >
+        <span>
+          <img
+            :src="shuffledEmojisList2[index % shuffledEmojisList2.length]"
+            alt="Emoji"
+          />
+        </span>
+        <CommentCard :image-src="comment.imgSrc" :text="comment.comment" />
+      </div>
+    </div>
+
+    <div class="card-list">
+      <div
+        v-for="(comment, index) in commentsList.concat(commentsList)"
+        :key="index"
+        :class="[`comments-list-${index}`, 'primary-list', 'slide-left']"
+      >
+        <span>
+          <img
+            :src="shuffledEmojisList3[index % shuffledEmojisList3.length]"
+            alt="Emoji"
+          />
+        </span>
+        <CommentCard :image-src="comment.imgSrc" :text="comment.comment" />
+      </div>
+    </div>
+
+    <div class="card-list">
+      <div
+        v-for="(comment, index) in commentsList.concat(commentsList)"
+        :key="index"
+        :class="[`comments-list-${index}`, 'secondary-list', 'slide-right']"
+      >
+        <span>
+          <img
+            :src="shuffledEmojisList4[index % shuffledEmojisList4.length]"
+            alt="Emoji"
+          />
+        </span>
+        <CommentCard :image-src="comment.imgSrc" :text="comment.comment" />
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { onMounted } from "vue";
+import CommentCard from "./CommentCard.vue";
+import { ref } from "vue";
+
+const commentsList = ref([
+  {
+    imgSrc: "src/assets/icons/sample-profile-1.svg",
+    comment: "An App Idea in my mind, which tool should I use to prototype?",
+  },
+  {
+    imgSrc: "src/assets/icons/sample-profile-2.svg",
+    comment: "What is the best tea to loose belly fat real quick?",
+  },
+  {
+    imgSrc: "src/assets/icons/sample-profile-3.svg",
+    comment: "Should I break the law to save a loved one or cry in vain?",
+  },
+  {
+    imgSrc: "src/assets/icons/sample-profile-4.svg",
+    comment: "That makes sense to me. I am in favor.",
+  },
+]);
+
+const emojis = ref([
+  "src/assets/emoji/ok-hand.webp",
+  "src/assets/emoji/smirking-face.webp",
+  "src/assets/emoji/thinking-face.webp",
+  "src/assets/emoji/thumbs-up.webp",
+  "src/assets/emoji/face-hearts.webp",
+  "src/assets/emoji/face-glass.webp",
+  "src/assets/emoji/victory-hand.webp",
+  "src/assets/emoji/man.webp",
+]);
+
+const shuffledEmojisList1 = ref([]);
+const shuffledEmojisList2 = ref([]);
+const shuffledEmojisList3 = ref([]);
+const shuffledEmojisList4 = ref([]);
+
+const shuffleEmojis = (emojiList) => {
+  // Create a copy of the emojis array and shuffle it
+  const shuffled = [...emojiList];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+// Call shuffleEmojis for each card list
+onMounted(() => {
+  shuffledEmojisList1.value = shuffleEmojis(emojis.value);
+  shuffledEmojisList2.value = shuffleEmojis(emojis.value);
+  shuffledEmojisList3.value = shuffleEmojis(emojis.value);
+  shuffledEmojisList4.value = shuffleEmojis(emojis.value);
+});
+</script>
+
+<style scoped lang="scss">
+section {
+  display: grid;
+  gap: 30px;
+  width: 100%;
+  overflow-x: hidden;
+  .card-list {
+    display: flex;
+    gap: 32px;
+    position: relative;
+    @media screen and (max-width: 992px) {
+      gap: 16px;
+    }
+
+    /* Adjust the container width for continuous animation */
+    &:nth-child(4) {
+      position: relative;
+      right: 80px;
+      width: 200%; /* Extend the width for continuous sliding */
+    }
+
+    &:nth-child(3) .primary-list.comments-list-0 {
+      padding-left: 40px; /* Adjust padding for specific card */
+    }
+
+    span img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .card {
+      width: 430px;
+      height: 76px;
+      background-color: #f3f3f3;
+      border-radius: 10px;
+      flex-shrink: 0; /* Ensure cards do not shrink */
+      @media (max-width: 768px) {
+        .card {
+          width: 150px; /* Smaller card size for mobile */
+        }
+      }
+    }
+
+    /* Primary list (left to right) */
+    .primary-list {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      animation: slide-left 16s linear infinite;
+
+      &.comments-list-0 {
+        padding-left: 80px;
+      }
+    }
+
+    /* Secondary list (right to left) */
+    .secondary-list {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      animation: slide-right 10s linear infinite;
+    }
+  }
+}
+
+/* Sliding Animations */
+@keyframes slide-left {
+  0% {
+    transform: translateX(100%); /* Start from the right */
+  }
+  100% {
+    transform: translateX(-100%); /* Slide to the left */
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(-100%); /* Start from the left */
+  }
+  100% {
+    transform: translateX(100%); /* Slide to the right */
+  }
+}
+</style>
