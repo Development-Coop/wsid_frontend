@@ -107,12 +107,6 @@
               <p>Get Feedback</p>
             </div>
           </div>
-          <!-- <div class="app-info__actions-names">
-            <p>Ask Questions</p>
-            <p>Create Options</p>
-            <p>Receive Results</p>
-            <p>Get Feedback</p>
-          </div> -->
         </div>
       </div>
     </section>
@@ -296,9 +290,9 @@ const isMobile = computed(() => $q.screen.width < 992);
     }
   }
   .app-info {
-    position: relative;
     padding: 0 48px;
     width: 100%;
+    margin-bottom: 80px;
     @media screen and (max-width: 992px) {
       padding: 0 24px;
       margin-bottom: 24px;
@@ -306,15 +300,14 @@ const isMobile = computed(() => $q.screen.width < 992);
     &__container {
       background-color: #fff3f1;
       padding: 60px 40px 120px 40px;
-      position: relative;
       height: 660px;
       display: grid;
       place-items: center;
-      top: -105px;
+      margin-top: -105px;
       z-index: -1;
       border-radius: 88px;
       @media screen and (max-width: 992px) {
-        position: static;
+        margin-top: 0;
         height: auto;
         grid-gap: 32px;
         border-radius: 44px;
