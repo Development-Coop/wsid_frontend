@@ -27,8 +27,8 @@ defineProps({
     background-color: #fff;
     border-radius: 4px;
     padding: 16px;
-    width: 430px;
-    height: 76px;
+    // width: 430px;
+    // height: 76px;
     overflow: hidden;
     box-shadow: 0px 4px 4px 0px #00000040;
     img {

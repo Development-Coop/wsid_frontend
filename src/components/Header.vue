@@ -74,7 +74,7 @@ header {
   ul {
     display: grid;  /* Flex layout for horizontal alignment */
     list-style: none;
-    grid-gap: 12pxpx;  /* Spacing between list items */
+    grid-gap: 12px;  /* Spacing between list items */
     font-size: 16px;
     font-weight: 500;
     padding: 0;  /* Ensure no padding on the ul */
