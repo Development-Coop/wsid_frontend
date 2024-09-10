@@ -139,17 +139,6 @@ section {
       gap: 16px;
     }
 
-    /* Adjust the container width for continuous animation */
-    &:nth-child(4) {
-      position: relative;
-      right: 80px;
-      width: 200%; /* Extend the width for continuous sliding */
-    }
-
-    &:nth-child(3) .primary-list.comments-list-0 {
-      padding-left: 40px; /* Adjust padding for specific card */
-    }
-
     span img {
         width: 50px;
         height: 50px;
@@ -173,11 +162,7 @@ section {
       display: flex;
       gap: 32px;
       align-items: center;
-      animation: slide-left 16s linear infinite;
-
-      &.comments-list-0 {
-        padding-left: 80px;
-      }
+      animation: slide-left 10s linear infinite;
     }
 
     /* Secondary list (right to left) */
@@ -185,7 +170,7 @@ section {
       display: flex;
       gap: 32px;
       align-items: center;
-      animation: slide-right 10s linear infinite;
+      animation: slide-right 6s linear infinite;
     }
   }
 }
