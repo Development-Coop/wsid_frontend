@@ -26,6 +26,23 @@ const routes = [
           },
         ],
       },
+      {
+        path: "auth",
+        name: "auth",
+        component: () => import("src/layouts/AppPlainLayout.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("src/pages/app/view/auth/index.vue"),
+          },
+          {
+            path: "registration",
+            name: "registration",
+            component: () =>
+              import("src/pages/app/view/auth/registration/index.vue"),
+          },
+        ],
+      },
     ],
   },
   {

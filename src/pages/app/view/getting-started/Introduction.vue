@@ -196,7 +196,7 @@ const prevSlide = () => {
 
 const handleNextOrFinish = () => {
   if (slide.value === 5) {
-    router.push("/app/getting-started");
+    router.push("/app/auth");
   } else {
     nextSlide();
   }
