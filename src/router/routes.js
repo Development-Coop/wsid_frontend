@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: "/",
+    path: "",
     component: () => import("layouts/RegularLayout.vue"),
     children: [{ path: "", component: () => import("src/pages/web/home.vue") }],
   },
@@ -14,7 +14,7 @@ const routes = [
         component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
           {
-            path: "/",
+            path: "",
             component: () =>
               import("src/pages/app/view/getting-started/index.vue"),
           },
@@ -32,7 +32,7 @@ const routes = [
         component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
           {
-            path: "/",
+            path: "",
             component: () => import("src/pages/app/view/auth/index.vue"),
           },
           {
