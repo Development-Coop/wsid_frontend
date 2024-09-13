@@ -90,7 +90,7 @@ const moveIconToRight = () => {
 };
 
 const setPassword = () => {
-    router.push({ name: "set-user-id" });
+  router.push({ name: "set-user-id" });
 };
 </script>
 

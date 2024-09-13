@@ -1,19 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <!-- Back Button at the top -->
-    <q-btn
-      dense
-      no-caps
-      block
-      unelevated
-      class="justify-self-start align-self-start"
-      style="border-radius: 0px"
-      @click="router.push({ name: 'set-password' })"
-    >
-      <q-icon v-motion-pop-visible :delay="300" size="24px">
-        <img src="~src/assets/icons/arrow-left.svg" alt="logo" />
-      </q-icon>
-    </q-btn>
+    <div></div>
 
     <div>
       <div>
@@ -90,6 +78,7 @@
             color="primary"
             unelevated
             :disable="!isCodeValid"
+            @click="setUserName"
           />
         </div>
       </div>
@@ -177,6 +166,10 @@ const validateUsername = (event) => {
     event = input.slice(0, -1); // Remove invalid character
   }
 };
+
+const setUserName = () => {
+  router.push({ name: "set-profile" });
+};
 </script>
 
 <style scoped lang="scss">
@@ -204,6 +197,7 @@ const validateUsername = (event) => {
     .suggestions-list {
       span {
         font-size: 16px;
+        cursor: pointer;
       }
     }
     .show-more {
