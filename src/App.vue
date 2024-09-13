@@ -7,3 +7,9 @@ defineOptions({
   name: "App",
 });
 </script>
+
+<style lang="scss">
+p {
+  margin: 0;
+}
+</style>
