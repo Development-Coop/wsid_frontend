@@ -50,7 +50,12 @@
           </q-input>
 
           <!-- Suggestions as a static list (No dropdown) -->
-          <div v-if="filteredSuggestions.length" class="suggestions-list">
+          <div
+            v-if="filteredSuggestions.length"
+            v-motion-slide-left
+            :delay="800"
+            class="suggestions-list"
+          >
             <div>
               <span
                 v-for="(suggestion, index) in visibleSuggestions"
