@@ -46,6 +46,18 @@ const routes = [
             name: "otp-verification",
             component: () =>
               import("src/pages/app/view/auth/registration/otp-verification.vue")
+          },
+          {
+            path: "set-password",
+            name: "set-password",
+            component: () =>
+              import("src/pages/app/view/auth/registration/set-password.vue")
+          },
+          {
+            path: "set-user-id",
+            name: "set-user-id",
+            component: () =>
+              import("src/pages/app/view/auth/registration/set-username.vue")
           }
         ],
       },

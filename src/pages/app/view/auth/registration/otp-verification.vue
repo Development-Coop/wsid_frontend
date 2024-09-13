@@ -139,9 +139,7 @@ const getOtp = () => {
   // Join all the elements to form a single OTP string
   const otpString = otp.value.join("");
   console.log("Entered OTP:", otpString);
-
-  // You can also return this value for further use
-  return otpString;
+  router.push({ name: "set-password" });
 };
 </script>
 
