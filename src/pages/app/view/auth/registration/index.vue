@@ -107,6 +107,11 @@ const errors = ref({
 const today = ref(new Date().toISOString().split("T")[0]);
 const showPopup = ref(false);
 
+const parseDate = (dateString) => {
+  const [day, month, year] = dateString.split("-");
+  return new Date(`${year}-${month}-${day}`);
+};
+
 // Validation function
 const validateForm = () => {
   let isValid = true;
@@ -142,7 +147,8 @@ const validateForm = () => {
     isValid = false;
   } else {
     const today = new Date().toISOString().split("T")[0];
-    if (userDetails.value.dob > today) {
+    const dob = parseDate(userDetails.value.dob);
+    if (dob > new Date(today)) {
       errors.value.dob = "Date of birth cannot be in the future.";
       isValid = false;
     }
