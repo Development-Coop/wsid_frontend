@@ -58,6 +58,18 @@ const routes = [
             name: "set-user-id",
             component: () =>
               import("src/pages/app/view/auth/registration/set-username.vue")
+          },
+          {
+            path: "set-profile",
+            name: "set-profile",
+            component: () =>
+              import("src/pages/app/view/auth/registration/set-profile.vue")
+          },
+          {
+            path: "add-bio",
+            name: "add-bio",
+            component: () =>
+              import("src/pages/app/view/auth/registration/add-bio.vue")
           }
         ],
       },
