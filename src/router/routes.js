@@ -14,7 +14,7 @@ const routes = [
         component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
           {
-            path: "",
+            path: "/",
             component: () =>
               import("src/pages/app/view/getting-started/index.vue"),
           },
@@ -32,7 +32,7 @@ const routes = [
         component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
           {
-            path: "",
+            path: "/",
             component: () => import("src/pages/app/view/auth/index.vue"),
           },
           {
@@ -41,6 +41,12 @@ const routes = [
             component: () =>
               import("src/pages/app/view/auth/registration/index.vue"),
           },
+          {
+            path: "otp-verification",
+            name: "otp-verification",
+            component: () =>
+              import("src/pages/app/view/auth/registration/otp-verification.vue")
+          }
         ],
       },
     ],
