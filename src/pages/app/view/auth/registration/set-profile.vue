@@ -53,6 +53,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import confetti from 'canvas-confetti';
 
 const router = useRouter();
 const profilePicture = ref(null);
@@ -64,6 +65,15 @@ const uploadProfile = () => {
   document.querySelector('input[type="file"]').click();
 };
 
+// Function to trigger confetti animation
+const triggerConfetti = () => {
+  confetti({
+    particleCount: 150,
+    spread: 60,
+    origin: { y: 0.6 }
+  });
+};
+
 // Handle file input and update profile picture
 const onFileChange = (e) => {
   const file = e.target.files[0];
@@ -72,6 +82,8 @@ const onFileChange = (e) => {
     reader.onload = () => {
       profilePicture.value = reader.result; // Update the picture source
     };
+    // Trigger the confetti animation once the picture is uploaded
+    triggerConfetti();
     reader.readAsDataURL(file);
   }
 };
