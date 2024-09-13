@@ -121,6 +121,8 @@ const setProfilePicture = () => {
       :deep(.q-img__image) {
         border-radius: 50%;
         height: 150px;
+        border: 1px solid #9FA3B3;
+;
       }
     }
   }
