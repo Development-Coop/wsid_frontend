@@ -35,11 +35,11 @@
           >
             <!-- Conditionally render icon on the left or right based on iconRight state -->
             <template v-if="!iconRight" #prepend>
-              <img src="src/assets/icons/password-icon.svg" alt="icon-right" />
+              <img src="~src/assets/icons/password-icon.svg" alt="icon-right" />
             </template>
 
             <template v-if="iconRight" #append>
-              <img src="src/assets/icons/password-icon.svg" alt="icon-right" />
+              <img src="~src/assets/icons/password-icon.svg" alt="icon-right" />
             </template>
           </q-input>
 
