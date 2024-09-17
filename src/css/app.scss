@@ -26,3 +26,16 @@ button {
   font-size: 18px;
   font-weight: 500;
 }
+
+.q-focus-helper{
+  display: none;
+}
+
+.q-tab__content{
+  .q-tab__label{
+    font-size: 12px;
+  }
+}
+.q-tab__indicator {
+  display: none !important;
+}
