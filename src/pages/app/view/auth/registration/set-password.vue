@@ -29,7 +29,6 @@
             v-model="password"
             :type="showPassword ? 'text' : 'password'"
             outlined
-            dense
             placeholder="Enter your password"
             @focus="moveIconToRight"
           >

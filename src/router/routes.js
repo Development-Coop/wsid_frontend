@@ -73,6 +73,16 @@ const routes = [
             component: () =>
               import("src/pages/app/view/auth/registration/add-bio.vue"),
           },
+          {
+            path: "login",
+            name: "login",
+            component: () => import("src/pages/app/view/auth/login/index.vue"),
+          },
+          {
+            path: "enter-password",
+            name: "enter-password",
+            component: () => import("src/pages/app/view/auth/login/password.vue"),
+          },
         ],
       },
       {

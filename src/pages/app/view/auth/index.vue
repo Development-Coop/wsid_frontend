@@ -51,7 +51,7 @@
       />
       <p class="text-center text-body1">
         Have an account already?
-        <RouterLink to="/" class="text-primary text-weight-bold">
+        <RouterLink to="/app/auth/login" class="text-primary text-weight-bold">
           Login
         </RouterLink>
       </p>

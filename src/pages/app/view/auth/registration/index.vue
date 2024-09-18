@@ -22,21 +22,18 @@
         <q-form class="q-gutter-md">
           <q-input
             v-model="userDetails.name"
-            dense
             outlined
             placeholder="Name"
             :error="!!errors.name"
           />
           <q-input
             v-model="userDetails.phone_or_email"
-            dense
             outlined
             placeholder="Phone number or email address"
             :error="!!errors.phone_or_email"
           />
           <q-input
             v-model="userDetails.dob"
-            dense
             outlined
             label="Date of birth"
             readonly

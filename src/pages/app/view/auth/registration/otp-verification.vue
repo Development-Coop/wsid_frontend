@@ -36,7 +36,6 @@
               v-model="otp[index]"
               v-motion-pop
               :delay="500"
-              dense
               outlined
               maxlength="1"
               class="q-mx-xs code-box"

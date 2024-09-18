@@ -17,7 +17,6 @@
             v-model="username"
             type="text"
             outlined
-            dense
             placeholder="Set your username"
             :error="!isValidUsername"
             error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."

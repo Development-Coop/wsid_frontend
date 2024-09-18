@@ -20,7 +20,6 @@
             type="text"
             :maxlength="160"
             outlined
-            dense
             placeholder="Your bio"
           >
             <template #append>
