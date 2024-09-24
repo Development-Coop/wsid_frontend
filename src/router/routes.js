@@ -2,7 +2,41 @@ const routes = [
   {
     path: "",
     component: () => import("layouts/RegularLayout.vue"),
-    children: [{ path: "", component: () => import("src/pages/web/home.vue") }],
+    children: [
+      { path: "", component: () => import("src/pages/web/Home.vue") }
+    ],
+  },
+  {
+    path: "/auth",
+    component: () => import("layouts/WebAuthLayout.vue"),
+    redirect: "/auth/web-login",
+    children: [
+      { 
+        path: "web-login", 
+        name: "web-login", 
+        component: () => import("pages/web/Auth.vue") 
+      },
+      { 
+        path: "web-forgot-password", 
+        name: "web-forgot-password", 
+        component: () => import("pages/web/ForgotPassword.vue") 
+      },
+      { 
+        path: "web-set-username", 
+        name: "web-set-username", 
+        component: () => import("pages/web/SetUserName.vue") 
+      },
+      { 
+        path: "web-set-bio", 
+        name: "web-set-bio", 
+        component: () => import("pages/web/SetBio.vue") 
+      },
+      { 
+        path: "web-set-profile", 
+        name: "web-set-profile", 
+        component: () => import("pages/web/UploadProfile.vue") 
+      }
+    ]
   },
   {
     path: "/app",
