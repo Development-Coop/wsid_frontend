@@ -168,7 +168,7 @@ export const useAuthStore = defineStore('auth', () => {
     });
     errors.value.login = ""; // Clear previous errors
     try {
-      const response = await api.post('/api/auth/login', {
+      const response = await api.post('/auth/login', {
         emailOrUsername: userDetails.value.phone_or_email,
         password: userDetails.value.password
       }, {
