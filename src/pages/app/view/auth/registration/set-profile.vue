@@ -11,10 +11,10 @@
 
         <!-- Profile Picture Upload -->
         <div
-          :class="['profile-container', { 'file-uploaded': !!profilePicture }]"
+          :class="['profile-container', { 'file-uploaded': !!authStore.userDetails.profilePicture }]"
         >
           <q-img
-            :src="profilePicture || placeholderImage"
+            :src="authStore.userDetails.profilePicture || authStore.placeholderImage"
             @click="uploadProfile"
           />
 
@@ -41,8 +41,8 @@
             label="Next"
             color="primary"
             unelevated
-            :disable="!profilePicture"
-            @click="setProfilePicture"
+            :disable="!authStore.userDetails.profilePicture"
+            @click="navigateToAddBio"
           />
         </div>
       </div>
@@ -51,16 +51,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 import confetti from 'canvas-confetti';
 
 const router = useRouter();
-const profilePicture = ref(null);
-const placeholderImage = ref(
-  new URL("../../../../../assets/icons/placeholder-icon.svg", import.meta.url)
-    .href
-);
+const authStore = useAuthStore();
+
 const uploadProfile = () => {
   document.querySelector('input[type="file"]').click();
 };
@@ -78,17 +75,13 @@ const triggerConfetti = () => {
 const onFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      profilePicture.value = reader.result; // Update the picture source
-    };
+    authStore.setProfilePicture(file);
     // Trigger the confetti animation once the picture is uploaded
     triggerConfetti();
-    reader.readAsDataURL(file);
   }
 };
 
-const setProfilePicture = () => {
+const navigateToAddBio = () => {
   router.push({ name: "add-bio" });
 };
 </script>

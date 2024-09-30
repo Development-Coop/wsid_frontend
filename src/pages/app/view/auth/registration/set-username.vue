@@ -14,11 +14,11 @@
         <!-- Code Input Boxes (use q-input with narrow width or custom styling) -->
         <div class="input-wrapper">
           <q-input
-            v-model="username"
+            v-model="authStore.userDetails.username"
             type="text"
             outlined
             placeholder="Set your username"
-            :error="!isValidUsername"
+            :error="!authStore.isValidUsername"
             error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."
             @focus="moveIconToRight"
             @update:model-value="validateUsername"
@@ -38,7 +38,7 @@
 
           <!-- Suggestions as a static list (No dropdown) -->
           <div
-            v-if="filteredSuggestions.length"
+            v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length"
             v-motion-slide-left
             :delay="800"
             class="suggestions-list"
@@ -57,7 +57,7 @@
 
             <!-- Show more/less option -->
             <p
-              v-if="filteredSuggestions.length > visibleCount"
+              v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length > visibleCount"
               class="text-green-5 show-more q-mt-sm cursor-pointer"
               @click="toggleShowAll"
             >
@@ -88,46 +88,28 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
-const username = ref("");
-const isValidUsername = ref(true);
+const authStore = useAuthStore();
 const iconRight = ref(false);
 const showSuggestions = ref(true);
 const showAll = ref(false);
 
-// List of suggestions
-const suggestions = ref([
-  "@Doe.Alex123",
-  "@Alex.Doe",
-  "@123DoeAlex",
-  "@User123",
-  "@John.Doe",
-  "@Jane.Doe",
-  "@CoolUser",
-]);
-
 // Maximum visible suggestions before "Show more" is clicked
 const visibleCount = 2;
 
-// Computed property to filter suggestions based on user input
-const filteredSuggestions = computed(() => {
-  const searchTerm = username.value.toLowerCase().replace("@", "");
-  return suggestions.value.filter((suggestion) =>
-    suggestion.toLowerCase().includes(searchTerm)
-  );
-});
-
 // Computed property to show either a limited or full list of suggestions
 const visibleSuggestions = computed(() => {
+  if (!authStore.filteredSuggestions) return [];
   return showAll.value
-    ? filteredSuggestions.value
-    : filteredSuggestions.value.slice(0, visibleCount);
+    ? authStore.filteredSuggestions
+    : authStore.filteredSuggestions.slice(0, visibleCount);
 });
 
 // Select a suggestion and fill the input
 const selectSuggestion = (suggestion) => {
-  username.value = suggestion.replace("@", "");
+  authStore.setUsername(suggestion.replace("@", ""));
   showSuggestions.value = false; // Hide suggestions after selection
 };
 
@@ -137,32 +119,21 @@ const toggleShowAll = () => {
 };
 
 const isCodeValid = computed(() => {
-  return !!username.value;
+  return !!authStore.userDetails.username && authStore.isValidUsername;
 });
+
 const moveIconToRight = () => {
   iconRight.value = true;
 };
 
 // Function to validate the username while typing
 const validateUsername = (event) => {
-  const validPattern = /^[a-zA-Z0-9._]*$/; // Allows only alphanumeric, underscores, and periods
-  const noConsecutiveDotsPattern = /\.{2,}/;
   const input = event;
-
-  // Check if the input matches the allowed pattern and length (1 to 15 characters)
-  if (
-    input.length > 15 ||
-    !validPattern.test(input) ||
-    noConsecutiveDotsPattern.test(input)
-  ) {
-    isValidUsername.value = false;
-  } else {
-    isValidUsername.value = true;
-  }
+  authStore.validateUsername(input);
 
   // Prevent any invalid characters from being entered
-  if (!validPattern.test(input) || noConsecutiveDotsPattern.test(input)) {
-    event = input.slice(0, -1); // Remove invalid character
+  if (!authStore.isValidUsername) {
+    authStore.setUsername(input.slice(0, -1)); // Remove invalid character
   }
 };
 

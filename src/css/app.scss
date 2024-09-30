@@ -39,3 +39,9 @@ button {
 .q-tab__indicator {
   display: none !important;
 }
+
+.q-input{
+  .q-field__native{
+    font-size: 16px;
+  }
+}

@@ -71,9 +71,11 @@
 <script setup>
 import { onMounted, ref, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 const contactDetail = ref("");
 const otp = ref(new Array(6).fill(""));
 const otpInput = ref([]);
@@ -133,13 +135,23 @@ const handleKeydown = (index, event) => {
   }
 };
 
-// Function to combine the OTP and display it
-const getOtp = () => {
-  // Join all the elements to form a single OTP string
+// Update the getOtp function
+const getOtp = async () => {
   const otpString = otp.value.join("");
   console.log("Entered OTP:", otpString);
-  router.push({ name: "set-password" });
+  
+  const success = await authStore.registerStep2(otpString, contactDetail.value);
+  if (success) {
+    // If OTP verification is successful, navigate to set-password page
+    router.push({ name: 'set-password' });
+  } else {
+    // Handle unsuccessful verification (e.g., show an error message)
+    console.error('OTP verification failed');
+    // You might want to add error handling logic here, such as displaying an error message to the user
+  }
 };
+
+// ... rest of the existing code ...
 </script>
 
 <style scoped lang="scss">

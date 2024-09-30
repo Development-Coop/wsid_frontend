@@ -9,21 +9,22 @@
         <div class="text-center main-wrapper">
           <h4 class="text-h5 text-weight-medium">Describe yourself</h4>
           <p>
-            What makes you special? Don’t think too hard, just have fun with it
+            What makes you special? Don't think too hard, just have fun with it
           </p>
         </div>
 
         <!-- Code Input Boxes (use q-input with narrow width or custom styling) -->
         <div class="input-wrapper">
           <q-input
-            v-model="bio"
+            v-model="authStore.userDetails.bio"
             type="text"
             :maxlength="160"
             outlined
             placeholder="Your bio"
+            @update:model-value="authStore.setBio"
           >
             <template #append>
-              <span class="bio-length">{{ 160 - bio.length }}</span>
+              <span class="bio-length">{{ authStore.remainingBioChars }}</span>
             </template>
           </q-input>
         </div>
@@ -38,7 +39,8 @@
             label="Next"
             color="primary"
             unelevated
-            :disable="!bio.length"
+            :disable="!authStore.isBioValid"
+            @click="navigateToNextStep"
           />
         </div>
       </div>
@@ -47,11 +49,36 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-//   import { useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
+import { useQuasar } from 'quasar';
 
-//   const router = useRouter();
-const bio = ref("");
+const router = useRouter();
+const authStore = useAuthStore();
+const $q = useQuasar();
+
+const navigateToNextStep = async () => {
+
+  try {
+    const success = await authStore.registerStep3();
+    if (success) {
+      router.push({ name: 'dashboard' });
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: 'Registration failed. Please try again.'
+      });
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    $q.notify({
+      color: 'negative',
+      message: 'An error occurred. Please try again.'
+    });
+  } finally {
+    console.log("Completed");
+  }
+};
 </script>
 
 <style scoped lang="scss">

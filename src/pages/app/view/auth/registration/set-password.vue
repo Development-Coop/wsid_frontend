@@ -75,8 +75,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const password = ref("");
 const showPassword = ref(false);
 const iconRight = ref(false);
@@ -84,12 +86,16 @@ const iconRight = ref(false);
 const isCodeValid = computed(() => {
   return password.value.length > 7;
 });
+
 const moveIconToRight = () => {
   iconRight.value = true;
 };
 
 const setPassword = () => {
-  router.push({ name: "set-user-id" });
+  if (isCodeValid.value) {
+    authStore.setPassword(password.value);
+    router.push({ name: "set-user-id" });
+  }
 };
 </script>
 

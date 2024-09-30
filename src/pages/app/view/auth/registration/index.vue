@@ -21,19 +21,19 @@
         <!-- Form structure with a gap of 16px -->
         <q-form class="q-gutter-md">
           <q-input
-            v-model="userDetails.name"
+            v-model="authStore.userDetails.name"
             outlined
             placeholder="Name"
             :error="!!errors.name"
           />
           <q-input
-            v-model="userDetails.phone_or_email"
+            v-model="authStore.userDetails.phone_or_email"
             outlined
             placeholder="Phone number or email address"
             :error="!!errors.phone_or_email"
           />
           <q-input
-            v-model="userDetails.dob"
+            v-model="authStore.userDetails.dob"
             outlined
             label="Date of birth"
             readonly
@@ -55,7 +55,7 @@
             >
               <!-- Date picker with max date set to today -->
               <q-date
-                v-model="userDetails.dob"
+                v-model="authStore.userDetails.dob"
                 mask="DD-MM-YYYY"
                 :max="today"
               />
@@ -84,17 +84,13 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-
+import { useAuthStore } from "src/stores/authstore";
 // Helper
 import { isValidEmail, isValidPhoneNumber } from "src/utils/helper";
 
 const router = useRouter();
+const authStore = useAuthStore();
 
-const userDetails = ref({
-  name: "",
-  phone_or_email: "",
-  dob: "",
-});
 const errors = ref({
   name: "",
   phone_or_email: "",
@@ -121,30 +117,30 @@ const validateForm = () => {
   };
 
   // Validate name
-  if (!userDetails.value.name.trim()) {
+  if (!authStore.userDetails.name.trim()) {
     errors.value.name = "Name is required.";
     isValid = false;
   }
 
   // Validate phone or email
-  if (!userDetails.value.phone_or_email.trim()) {
+  if (!authStore.userDetails.phone_or_email.trim()) {
     errors.value.phone_or_email = "Phone number or email is required.";
     isValid = false;
   } else if (
-    !isValidEmail(userDetails.value.phone_or_email) &&
-    !isValidPhoneNumber(userDetails.value.phone_or_email)
+    !isValidEmail(authStore.userDetails.phone_or_email) &&
+    !isValidPhoneNumber(authStore.userDetails.phone_or_email)
   ) {
     errors.value.phone_or_email = "Enter a valid phone number or email.";
     isValid = false;
   }
 
   // Validate date of birth (dob)
-  if (!userDetails.value.dob) {
+  if (!authStore.userDetails.dob) {
     errors.value.dob = "Date of birth is required.";
     isValid = false;
   } else {
     const today = new Date().toISOString().split("T")[0];
-    const dob = parseDate(userDetails.value.dob);
+    const dob = parseDate(authStore.userDetails.dob);
     if (dob > new Date(today)) {
       errors.value.dob = "Date of birth cannot be in the future.";
       isValid = false;
@@ -154,10 +150,24 @@ const validateForm = () => {
   return isValid;
 };
 
-// Function to handle form submission
-const handleSubmit = () => {
+// Updated function to handle form submission
+const handleSubmit = async () => {
   if (validateForm()) {
-    router.push({ name: 'otp-verification', query: { contactDetail: userDetails.value.phone_or_email.trim() } });
+    const success = await authStore.registerStep1(authStore.userDetails);
+    if (success) {
+      // Navigate to OTP verification page
+      router.push({ 
+        name: 'otp-verification', 
+        query: { contactDetail: authStore.userDetails.phone_or_email.trim() } 
+      });
+    } else {
+      // Handle error (e.g., show error message to user)
+      // $q.notify({
+      //   color: 'negative',
+      //   message: 'Registration failed. Please try again.',
+      //   icon: 'report_problem'
+      // });
+    }
   } else {
     console.log("Form is invalid, check errors.", errors.value);
   }
