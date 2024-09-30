@@ -1,91 +1,93 @@
 <template>
   <div class="login-container">
-    <div class="input-group">
-      <p>Email Id</p>
-      <!-- Email Input -->
-      <q-input
-        v-model="email"
-        outlined
-        label="Phone, email or @username"
-        dense
-        :rules="[(val) => !!val || 'Email is required']"
-      />
-    </div>
-
-    <div class="input-group">
-      <div class="label-container">
-        <p>Password</p>
-        <span
-          class="cursor-pointer"
-          @click="router.push({ name: 'web-forgot-password' })"
-        >
-          Forgot Password?
-        </span>
+    <form @submit.prevent="handleSubmit">
+      <div class="input-group">
+        <p>Email Id</p>
+        <q-input
+          v-model="authStore.userDetails.phone_or_email"
+          outlined
+          label="Phone, email or @username"
+          dense
+          :rules="[(val) => !!val || 'Email is required']"
+        />
       </div>
-      <!-- Password Input -->
-      <q-input
-        v-model="password"
-        type="password"
-        outlined
-        label="Enter Password"
-        dense
-        :rules="[(val) => !!val || 'Password is required']"
-      >
-      </q-input>
-    </div>
 
-    <div>
+      <div class="input-group">
+        <div class="label-container">
+          <p>Password</p>
+          <span
+            class="cursor-pointer"
+            @click="router.push({ name: 'web-forgot-password' })"
+          >
+            Forgot Password?
+          </span>
+        </div>
+        <q-input
+          v-model="authStore.userDetails.password"
+          type="password"
+          outlined
+          label="Enter Password"
+          dense
+          :rules="[(val) => !!val || 'Password is required']"
+        />
+      </div>
+
       <div class="button-container">
         <q-btn
+          type="submit"
           block
           label="Login"
           color="primary"
           unelevated
           class="login-btn"
+          :loading="loading"
         />
       </div>
+    </form>
 
-      <!-- Divider with OR -->
-      <div class="text-center relative-position q-py-lg divider-section">
-        <hr class="divider q-my-none" />
-        <span class="bg-white q-px-sm absolute-center divider-color">OR</span>
-      </div>
+    <q-dialog v-model="showError">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Error</div>
+        </q-card-section>
 
-      <!-- Social Login Buttons -->
-      <div class="social-login">
-        <q-btn round outline class="social-btn">
-          <img
-            src="../assets//icons//google-icon.svg"
-            alt="google-icon"
-            srcset=""
-          />
-        </q-btn>
-        <q-btn round outline class="social-btn">
-          <img
-            src="../assets//icons//apple-icon.svg"
-            alt="apple-icon"
-            srcset=""
-          />
-        </q-btn>
-        <q-btn round outline class="social-btn">
-          <img
-            src="../assets//icons//microsoft-icon.svg"
-            alt="microsoft-icon"
-            srcset=""
-          />
-        </q-btn>
-      </div>
-    </div>
+        <q-card-section class="q-pt-none">
+          {{ authStore.errors.login }}
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn v-close-popup flat label="OK" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
-const email = ref("");
-const password = ref("");
+const authStore = useAuthStore();
+
+const loading = ref(false);
+const showError = ref(false);
+
+const handleSubmit = async () => {
+  loading.value = true;
+  authStore.clearErrors();
+  try {
+    const result = await authStore.login();
+    console.log(result)
+    // Handle successful login here, e.g., redirect to dashboard
+    // router.push({ name: 'dashboard' });
+  } catch (error) {
+    showError.value = true;
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <style lang="scss" scoped>

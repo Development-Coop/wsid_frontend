@@ -19,13 +19,13 @@
           To get started, first enter <br /> your phone, email, or <br /> @username
         </h4>
   
-        <!-- Form structure with a gap of 16px -->
         <q-form class="q-gutter-md">
           <q-input
-            v-model="userDetails.phone_or_email"
+            v-model="authStore.userDetails.phone_or_email"
             outlined
             placeholder="Phone, email or @username"
-            :error="!!errors.phone_or_email"
+            :error="!!authStore.errors.phone_or_email"
+            :error-message="authStore.errors.phone_or_email"
           />
         </q-form>
       </div>
@@ -51,77 +51,22 @@
 </template>
   
   <script setup>
-  import { ref } from "vue";
   import { useRouter } from "vue-router";
-  
-  // Helper
-//   import { isValidEmail, isValidPhoneNumber } from "src/utils/helper";
-  
+  import { useAuthStore } from "src/stores/authstore";
+
   const router = useRouter();
-  
-  const userDetails = ref({
-    name: "",
-    phone_or_email: "",
-    dob: "",
-  });
-  const errors = ref({
-    name: "",
-    phone_or_email: "",
-    dob: "",
-  });
-  
-  
-//   const parseDate = (dateString) => {
-//     const [day, month, year] = dateString.split("-");
-//     return new Date(`${year}-${month}-${day}`);
-//   };
-  
-  // Validation function
-//   const validateForm = () => {
-//     let isValid = true;
-  
-//     // Reset error messages
-//     errors.value = {
-//       phone_or_email: "",
-//     };
-  
-//     // Validate name
-//     if (!userDetails.value.name.trim()) {
-//       errors.value.name = "Name is required.";
-//       isValid = false;
-//     }
-  
-//     // Validate phone or email
-//     if (!userDetails.value.phone_or_email.trim()) {
-//       errors.value.phone_or_email = "Phone number or email is required.";
-//       isValid = false;
-//     } else if (
-//       !isValidEmail(userDetails.value.phone_or_email) &&
-//       !isValidPhoneNumber(userDetails.value.phone_or_email)
-//     ) {
-//       errors.value.phone_or_email = "Enter a valid phone number or email.";
-//       isValid = false;
-//     }
-  
-//     // Validate date of birth (dob)
-//     if (!userDetails.value.dob) {
-//       errors.value.dob = "Date of birth is required.";
-//       isValid = false;
-//     } else {
-//       const today = new Date().toISOString().split("T")[0];
-//       const dob = parseDate(userDetails.value.dob);
-//       if (dob > new Date(today)) {
-//         errors.value.dob = "Date of birth cannot be in the future.";
-//         isValid = false;
-//       }
-//     }
-  
-//     return isValid;
-//   };
-  
-  // Function to handle form submission
+  const authStore = useAuthStore();
+
   const handleSubmit = () => {
-      router.push({ name: 'enter-password', query: { contactDetail: userDetails.value.phone_or_email.trim() } });
+      authStore.clearErrors();
+      if (authStore.userDetails.phone_or_email.trim()) {
+          router.push({ 
+              name: 'enter-password', 
+              query: { contactDetail: authStore.userDetails.phone_or_email.trim() } 
+          });
+      } else {
+          authStore.errors.phone_or_email = "Phone number, email, or username is required.";
+      }
   };
   </script>
   
@@ -157,4 +102,3 @@
     }
   }
   </style>
-  

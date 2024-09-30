@@ -162,6 +162,43 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const login = async () => {
+    const errors = ref({
+      login: "",
+    });
+    errors.value.login = ""; // Clear previous errors
+    try {
+      const response = await api.post('/api/auth/login', {
+        emailOrUsername: userDetails.value.phone_or_email,
+        password: userDetails.value.password
+      }, {
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log("Login successful:", response.data);
+      // You might want to store the user token or other data here
+      return response.data;
+    } catch (error) {
+      console.error("Login error:", error);
+      errors.value.login = error.response?.data?.message || "Login failed. Please try again.";
+      throw error;
+    }
+  };
+
+  const clearErrors = () => {
+    errors.value = {
+      login: "",
+    };
+  };
+
+  const errors = ref({
+    phone_or_email: "",
+    password: "",
+    login: "",
+  });
+
   return {
     userDetails,
     placeholderImage,
@@ -181,5 +218,8 @@ export const useAuthStore = defineStore('auth', () => {
     remainingBioChars,
     isBioValid,
     registerStep3,
+    login,
+    errors,
+    clearErrors,
   };
 });
