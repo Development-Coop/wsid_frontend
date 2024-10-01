@@ -206,6 +206,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const resetPassword = async (email, otp, password) => {
+    try {
+      const response = await api.post('/auth/reset-password', {
+        email,
+        otp,
+        password
+      }, {
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      });
+      return response?.data;
+    } catch (error) {
+      return error?.response?.data?.message || "Something went wrong!";
+    }
+  };
+
   const clearErrors = () => {
     errors.value = {
       login: "",
@@ -240,6 +257,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     errors,
     clearErrors,
-    forgotPassword
+    forgotPassword,
+    resetPassword
   };
 });

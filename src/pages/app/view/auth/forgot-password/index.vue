@@ -74,7 +74,14 @@
 
       <!-- OK button to close the popup -->
       <q-card-actions align="center">
-        <p class="popup-btn" @click="isSubmitted = false">OK</p>
+        <p
+          class="popup-btn"
+          @click="
+            router.push({ name: 'reset-password', query: { email: email } })
+          "
+        >
+          OK
+        </p>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -87,7 +94,7 @@ import { isValidEmail } from "src/utils/helper";
 
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
-import { useQuasar } from 'quasar';
+import { useQuasar } from "quasar";
 
 const email = ref("");
 const isSubmitted = ref(false);
@@ -100,18 +107,18 @@ const isEmailValid = computed(() => {
   return isValidEmail(email.value);
 });
 
-const submitEmail = async() => {
+const submitEmail = async () => {
   if (isValidEmail) {
     isLoading.value = true;
     isSubmitted.value = await authStore.forgotPassword(email.value);
     isLoading.value = false;
     if (!isSubmitted.value) {
       $q.notify({
-        message: 'Something went wrong!',
-        color: 'negative', // You can use different colors like 'negative', 'warning', 'info'
-        position: 'top', // Position can be 'top', 'bottom', 'left', 'right'
+        message: "Something went wrong!",
+        color: "negative", // You can use different colors like 'negative', 'warning', 'info'
+        position: "top", // Position can be 'top', 'bottom', 'left', 'right'
         timeout: 3000, // Duration the toast will be visible, in milliseconds
-        icon: 'error', // Optional: adds an icon, Quasar icons or Material Icons can be used
+        icon: "error", // Optional: adds an icon, Quasar icons or Material Icons can be used
       });
     }
   }
