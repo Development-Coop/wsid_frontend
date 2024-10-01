@@ -122,6 +122,11 @@ const routes = [
             name: "forgot-password",
             component: () => import("src/pages/app/view/auth/forgot-password/index.vue"),
           },
+          {
+            path: "reset-password",
+            name: "reset-password",
+            component: () => import("src/pages/app/view/auth/forgot-password/reset-password.vue"),
+          },
         ],
       },
       {
