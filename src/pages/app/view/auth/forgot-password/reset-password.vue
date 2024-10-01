@@ -144,7 +144,7 @@ const setPassword = async () => {
       confirmPassword.value
     );
     isLoading.value = false;
-    if (!res?.data?.status) {
+    if (!res?.status) {
       $q.notify({
         message: res,
         color: "negative", // You can use different colors like 'negative', 'warning', 'info'
@@ -153,7 +153,14 @@ const setPassword = async () => {
         icon: "error", // Optional: adds an icon, Quasar icons or Material Icons can be used
       });
     } else {
-      router.push({ name: "dashboard" });
+      $q.notify({
+        message: res?.message,
+        color: "positive", // You can use different colors like 'negative', 'warning', 'info'
+        position: "top", // Position can be 'top', 'bottom', 'left', 'right'
+        timeout: 3000, // Duration the toast will be visible, in milliseconds
+        icon: "check_circle", // Optional: adds an icon, Quasar icons or Material Icons can be used
+      });
+      router.push({ name: "login" });
     }
   }
 };
