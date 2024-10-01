@@ -187,6 +187,25 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    const errors = ref({
+      fp: "",
+    });
+    errors.value.fp = ""; // Clear previous errors
+    try {
+      const response = await api.post('/auth/forgot-password', {
+        email
+      }, {
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      });
+      return response.data.status;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const clearErrors = () => {
     errors.value = {
       login: "",
@@ -221,5 +240,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     errors,
     clearErrors,
+    forgotPassword
   };
 });
