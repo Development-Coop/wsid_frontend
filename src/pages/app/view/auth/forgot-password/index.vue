@@ -31,8 +31,7 @@
           <q-input
             v-model="email"
             outlined
-            label="email"
-            dense
+            placeholder="Email"
             :rules="[(val) => !!val || 'Email is required']"
           />
         </div>
