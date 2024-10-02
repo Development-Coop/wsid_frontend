@@ -28,7 +28,7 @@
 
         <!-- Code Input Boxes (use q-input with narrow width or custom styling) -->
         <div class="flex justify-center q-mb-lg">
-          <div class="flex">
+          <div class="otp-container">
             <q-input
               v-for="(digit, index) in otp"
               :key="index"
@@ -39,7 +39,7 @@
               outlined
               maxlength="1"
               class="q-mx-xs code-box"
-              style="width: 48px; height: 48px; text-align: center"
+              style="max-width: 48px; max-height: 48px; text-align: center"
               @keydown="handleKeydown(index, $event)"
               @update:model-value="handleInput(index, $event)"
             />
@@ -60,6 +60,7 @@
             color="primary"
             unelevated
             :disable="!isCodeValid"
+            :loading="isLoading"
             @click="getOtp"
           />
         </div>
@@ -79,6 +80,7 @@ const authStore = useAuthStore();
 const contactDetail = ref("");
 const otp = ref(new Array(6).fill(""));
 const otpInput = ref([]);
+const isLoading = ref(false);
 
 onMounted(() => {
   contactDetail.value = route?.query?.contactDetail;
@@ -139,8 +141,9 @@ const handleKeydown = (index, event) => {
 const getOtp = async () => {
   const otpString = otp.value.join("");
   console.log("Entered OTP:", otpString);
-  
+  isLoading.value = true;
   const success = await authStore.registerStep2(otpString, contactDetail.value);
+  isLoading.value = false;
   if (success) {
     // If OTP verification is successful, navigate to set-password page
     router.push({ name: 'set-password' });
@@ -186,6 +189,9 @@ const getOtp = async () => {
     p {
       font-size: 16px;
     }
+  }
+  .otp-container {
+    display: flex;
   }
   .button-container {
     display: grid;

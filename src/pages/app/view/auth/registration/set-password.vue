@@ -64,6 +64,7 @@
             color="primary"
             unelevated
             :disable="!isCodeValid"
+            :loading="isLoading"
             @click="setPassword"
           />
         </div>
@@ -82,6 +83,7 @@ const authStore = useAuthStore();
 const password = ref("");
 const showPassword = ref(false);
 const iconRight = ref(false);
+const isLoading = ref(false);
 
 const isCodeValid = computed(() => {
   return password.value.length > 7;
@@ -93,7 +95,9 @@ const moveIconToRight = () => {
 
 const setPassword = () => {
   if (isCodeValid.value) {
+    isLoading.value = true;
     authStore.setPassword(password.value);
+    isLoading.value = false;
     router.push({ name: "set-user-id" });
   }
 };
