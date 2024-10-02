@@ -40,6 +40,7 @@
             color="primary"
             unelevated
             :disable="!authStore.isBioValid"
+            :loading="isLoading"
             @click="navigateToNextStep"
           />
         </div>
@@ -49,6 +50,7 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
 import { useQuasar } from 'quasar';
@@ -56,24 +58,29 @@ import { useQuasar } from 'quasar';
 const router = useRouter();
 const authStore = useAuthStore();
 const $q = useQuasar();
+const isLoading = ref(false);
 
 const navigateToNextStep = async () => {
 
   try {
+    isLoading.value = true;
     const success = await authStore.registerStep3();
+    isLoading.value = false;
     if (success) {
       router.push({ name: 'dashboard' });
     } else {
       $q.notify({
         color: 'negative',
-        message: 'Registration failed. Please try again.'
+        message: 'Registration failed. Please try again.',
+        position: "top"
       });
     }
   } catch (error) {
     console.error('Registration error:', error);
     $q.notify({
       color: 'negative',
-      message: 'An error occurred. Please try again.'
+      message: 'An error occurred. Please try again.',
+      position: "top"
     });
   } finally {
     console.log("Completed");

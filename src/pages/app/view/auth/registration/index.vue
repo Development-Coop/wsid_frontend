@@ -74,6 +74,7 @@
           unelevated
           color="primary"
           label="Next"
+          :loading="isLoading"
           @click="handleSubmit"
         />
       </div>
@@ -96,6 +97,7 @@ const errors = ref({
   phone_or_email: "",
   dob: "",
 });
+const isLoading = ref(false);
 
 const today = ref(new Date().toISOString().split("T")[0]);
 const showPopup = ref(false);
@@ -153,7 +155,9 @@ const validateForm = () => {
 // Updated function to handle form submission
 const handleSubmit = async () => {
   if (validateForm()) {
+    isLoading.value = true;
     const success = await authStore.registerStep1(authStore.userDetails);
+    isLoading.value = false;
     if (success) {
       // Navigate to OTP verification page
       router.push({ 
