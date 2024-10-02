@@ -138,6 +138,7 @@ const validateUsername = (event) => {
 };
 
 const setUserName = () => {
+  authStore.setUsername(authStore.userDetails.username);
   router.push({ name: "set-profile" });
 };
 </script>
