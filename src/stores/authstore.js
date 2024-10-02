@@ -36,6 +36,13 @@ export const useAuthStore = defineStore('auth', () => {
     );
   });
 
+  const restoreUserFromSession = () => {
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      userDetails.value = JSON.parse(storedUser);
+    }
+  };
+
   const registerStep1 = async (userData) => {
     try {
       const response = await api.post('/auth/register-step1', {
@@ -46,6 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
       
       console.log("Registration step 1 successful:", response.data);
       userDetails.value = { ...userDetails.value, ...userData };
+      sessionStorage.setItem("user", JSON.stringify(userDetails.value));
       return true;
     } catch (error) {
       console.error("Registration step 1 error:", error);
@@ -59,26 +67,23 @@ export const useAuthStore = defineStore('auth', () => {
         otp: otp,
         email: email
       });
-      
-      if (response.data.status) {
-        console.log("OTP verification successful:", response.data);
-        return true;
-      } else {
-        console.error('OTP verification failed:', response.data.message);
-        return false;
-      }
+      return response?.data;
     } catch (error) {
       console.error('Error during OTP verification:', error);
-      return false;
+      return error?.response?.data?.message || "Something went wrong!";
     }
   };
 
   const setPassword = (password) => {
+    restoreUserFromSession();
     userDetails.value.password = password;
+    sessionStorage.setItem("user", JSON.stringify(userDetails.value));
   };
 
   const setUsername = (username) => {
+    restoreUserFromSession();
     userDetails.value.username = username;
+    sessionStorage.setItem("user", JSON.stringify(userDetails.value));
   };
 
   const validateUsername = (input) => {
@@ -109,10 +114,12 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const setProfilePicture = (file) => {
+    restoreUserFromSession();
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         userDetails.value.profilePicture = reader.result;
+        sessionStorage.setItem("user", JSON.stringify(userDetails.value));
       };
       reader.readAsDataURL(file);
     }
@@ -123,7 +130,9 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const setBio = (newBio) => {
+    restoreUserFromSession();
     userDetails.value.bio = newBio;
+    sessionStorage.setItem("user", JSON.stringify(userDetails.value));
   };
 
   const bioLength = computed(() => userDetails.value.bio.length);
@@ -134,6 +143,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const registerStep3 = async () => {
     try {
+      restoreUserFromSession();
       const formData = new FormData();
       formData.append("email", userDetails.value.phone_or_email);
       formData.append("password", userDetails.value.password);
@@ -155,10 +165,11 @@ export const useAuthStore = defineStore('auth', () => {
       });
 
       console.log("Registration step 3 successful:", response.data);
-      return true;
+      sessionStorage.clear();
+      return response?.data;
     } catch (error) {
       console.error("Registration step 3 error:", error);
-      return false;
+      return error?.response?.data?.message || "Something went wrong!";
     }
   };
 

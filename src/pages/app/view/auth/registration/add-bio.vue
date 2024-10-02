@@ -53,7 +53,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
-import { useQuasar } from 'quasar';
+import { useQuasar } from "quasar";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -61,26 +61,34 @@ const $q = useQuasar();
 const isLoading = ref(false);
 
 const navigateToNextStep = async () => {
-
   try {
     isLoading.value = true;
-    const success = await authStore.registerStep3();
+    const res = await authStore.registerStep3();
     isLoading.value = false;
-    if (success) {
-      router.push({ name: 'dashboard' });
+    if (!res?.status) {
+      $q.notify({
+        color: "negative",
+        message: res,
+        position: "top",
+        icon: "error",
+      });
     } else {
       $q.notify({
-        color: 'negative',
-        message: 'Registration failed. Please try again.',
-        position: "top"
+        message: "Account created successfully!",
+        color: "positive", // You can use different colors like 'negative', 'warning', 'info'
+        position: "top", // Position can be 'top', 'bottom', 'left', 'right'
+        timeout: 3000, // Duration the toast will be visible, in milliseconds
+        icon: "check_circle", // Optional: adds an icon, Quasar icons or Material Icons can be used
       });
+      router.push({ name: "dashboard" });
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     $q.notify({
-      color: 'negative',
-      message: 'An error occurred. Please try again.',
-      position: "top"
+      color: "negative",
+      message: "An error occurred. Please try again.",
+      position: "top",
+      icon: "error",
     });
   } finally {
     console.log("Completed");
@@ -112,7 +120,7 @@ const navigateToNextStep = async () => {
 
   .input-wrapper {
     span.bio-length {
-        font-size: 16px;
+      font-size: 16px;
     }
   }
   .button-container {
