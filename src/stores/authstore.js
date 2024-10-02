@@ -54,10 +54,10 @@ export const useAuthStore = defineStore('auth', () => {
       console.log("Registration step 1 successful:", response.data);
       userDetails.value = { ...userDetails.value, ...userData };
       sessionStorage.setItem("user", JSON.stringify(userDetails.value));
-      return true;
+      return response?.data;
     } catch (error) {
       console.error("Registration step 1 error:", error);
-      return false;
+      return error?.response?.data?.message || "Something went wrong!";
     }
   };
 
