@@ -88,6 +88,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
 // Helper
 import { isValidEmail, isValidPhoneNumber } from "src/utils/helper";
+import { useQuasar } from "quasar";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -101,6 +102,7 @@ const isLoading = ref(false);
 
 const today = ref(new Date().toISOString().split("T")[0]);
 const showPopup = ref(false);
+const $q = useQuasar();
 
 const parseDate = (dateString) => {
   const [day, month, year] = dateString.split("-");
@@ -156,21 +158,20 @@ const validateForm = () => {
 const handleSubmit = async () => {
   if (validateForm()) {
     isLoading.value = true;
-    const success = await authStore.registerStep1(authStore.userDetails);
+    const res = await authStore.registerStep1(authStore.userDetails);
     isLoading.value = false;
-    if (success) {
-      // Navigate to OTP verification page
-      router.push({ 
-        name: 'otp-verification', 
-        query: { contactDetail: authStore.userDetails.phone_or_email.trim() } 
+    if (!res?.status) {
+      $q.notify({
+        color: "negative",
+        message: res,
+        position: "top",
+        icon: "error",
       });
     } else {
-      // Handle error (e.g., show error message to user)
-      // $q.notify({
-      //   color: 'negative',
-      //   message: 'Registration failed. Please try again.',
-      //   icon: 'report_problem'
-      // });
+      router.push({
+        name: "otp-verification",
+        query: { contactDetail: authStore.userDetails.phone_or_email.trim() },
+      });
     }
   } else {
     console.log("Form is invalid, check errors.", errors.value);
