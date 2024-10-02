@@ -73,6 +73,7 @@
 import { onMounted, ref, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
+import { useQuasar } from "quasar";
 
 const router = useRouter();
 const route = useRoute();
@@ -81,6 +82,7 @@ const contactDetail = ref("");
 const otp = ref(new Array(6).fill(""));
 const otpInput = ref([]);
 const isLoading = ref(false);
+const $q = useQuasar();
 
 onMounted(() => {
   contactDetail.value = route?.query?.contactDetail;
@@ -140,17 +142,18 @@ const handleKeydown = (index, event) => {
 // Update the getOtp function
 const getOtp = async () => {
   const otpString = otp.value.join("");
-  console.log("Entered OTP:", otpString);
   isLoading.value = true;
-  const success = await authStore.registerStep2(otpString, contactDetail.value);
+  const res = await authStore.registerStep2(otpString, contactDetail.value);
   isLoading.value = false;
-  if (success) {
-    // If OTP verification is successful, navigate to set-password page
-    router.push({ name: 'set-password' });
+  if (!res?.status) {
+    $q.notify({
+      color: "negative",
+      message: res,
+      position: "top",
+      icon: "error"
+    });
   } else {
-    // Handle unsuccessful verification (e.g., show an error message)
-    console.error('OTP verification failed');
-    // You might want to add error handling logic here, such as displaying an error message to the user
+    router.push({ name: "set-password" });
   }
 };
 
