@@ -1,7 +1,19 @@
 <template>
   <q-page class="q-pa-lg">
     <!-- Back Button at the top -->
-    <div></div>
+    <q-btn
+      dense
+      no-caps
+      block
+      unelevated
+      class="justify-self-start align-self-start"
+      style="border-radius: 0px"
+      @click="router.push({ name: 'set-password' })"
+    >
+      <q-icon v-motion-pop-visible :delay="300" size="24px">
+        <img src="~src/assets/icons/arrow-left.svg" alt="logo" />
+      </q-icon>
+    </q-btn>
 
     <div>
       <div>
