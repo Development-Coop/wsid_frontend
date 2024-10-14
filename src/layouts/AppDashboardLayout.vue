@@ -27,20 +27,20 @@
             <img src="~src/assets/icons/nav-create.svg" alt="">
           </q-icon>
         </q-btn>
-        <q-btn flat round to="/app/profile">
-          <q-icon v-if="$route.path === '/app/profile'" size="24px">
-            <img src="~src/assets/icons/nav-user-active.svg" alt="">
-          </q-icon>
-          <q-icon v-else size="24px">
-            <img src="~src/assets/icons/nav-user.svg" alt="">
-          </q-icon>
-        </q-btn>
         <q-btn flat round to="/app/trending">
           <q-icon v-if="$route.path === '/app/trending'" size="24px">
             <img src="~src/assets/icons/nav-trending-up-active.svg" alt="">
           </q-icon>
           <q-icon v-else size="24px">
             <img src="~src/assets/icons/nav-trending-up.svg" alt="">
+          </q-icon>
+        </q-btn>
+        <q-btn flat round to="/app/profile">
+          <q-icon v-if="$route.path === '/app/profile'" size="24px">
+            <img src="~src/assets/icons/nav-user-active.svg" alt="">
+          </q-icon>
+          <q-icon v-else size="24px">
+            <img src="~src/assets/icons/nav-user.svg" alt="">
           </q-icon>
         </q-btn>
       </q-toolbar>

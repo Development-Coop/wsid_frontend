@@ -186,7 +186,7 @@ const routes = [
         children: [
           {
             path: "",
-            component: () => import("src/pages/app/view/dashboard/temp.vue"),
+            component: () => import("src/pages/app/view/dashboard/profile/profile.vue"),
           },
         ],
       },

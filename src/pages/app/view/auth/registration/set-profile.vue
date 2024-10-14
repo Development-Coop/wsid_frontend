@@ -29,6 +29,7 @@
         >
           <q-img
             :src="authStore.userDetails.profilePicture || authStore.placeholderImage"
+            style="height: 150px; max-width: 150px; object-fit: cover; border-radius: 50%;"
             @click="uploadProfile"
           />
 

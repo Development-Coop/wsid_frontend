@@ -30,7 +30,10 @@
             :type="showPassword ? 'text' : 'password'"
             outlined
             placeholder="Enter your password"
+            :error="!!errorMessage"
+            :error-message="errorMessage"
             @focus="moveIconToRight"
+            @blur="validatePasswordOnBlur"
           >
             <!-- Conditionally render icon on the left or right based on iconRight state -->
             <template v-if="!iconRight" #prepend>
@@ -84,13 +87,29 @@ const password = ref("");
 const showPassword = ref(false);
 const iconRight = ref(false);
 const isLoading = ref(false);
+const errorMessage = ref("");
 
 const isCodeValid = computed(() => {
-  return password.value.length > 7;
+  const passwordValue = password.value;
+  const hasMinLength = passwordValue.length > 7;
+  const hasUpperCase = /[A-Z]/.test(passwordValue);
+  const hasLowerCase = /[a-z]/.test(passwordValue);
+  const hasNumber = /\d/.test(passwordValue);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue);
+  
+  return hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
 });
 
 const moveIconToRight = () => {
   iconRight.value = true;
+};
+
+const validatePasswordOnBlur = () => {
+  if (!isCodeValid.value) {
+    errorMessage.value = "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
+  } else {
+    errorMessage.value = ""; // Clear error if valid
+  }
 };
 
 const setPassword = () => {
