@@ -10,6 +10,7 @@
         text-color="black"
         label="Back"
         style="width: 80px"
+        @click="router.back()"
       />
       <q-btn
         no-caps
@@ -130,6 +131,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const title = ref(""); // Separate ref for Title/Question
 const description = ref(""); // Separate ref for Description
 const descriptionImages = ref([]);

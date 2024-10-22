@@ -2,41 +2,39 @@ const routes = [
   {
     path: "",
     component: () => import("layouts/RegularLayout.vue"),
-    children: [
-      { path: "", component: () => import("src/pages/web/Home.vue") }
-    ],
+    children: [{ path: "", component: () => import("src/pages/web/Home.vue") }],
   },
   {
     path: "/auth",
     component: () => import("layouts/WebAuthLayout.vue"),
     redirect: "/auth/web-login",
     children: [
-      { 
-        path: "web-login", 
-        name: "web-login", 
-        component: () => import("pages/web/Auth.vue") 
+      {
+        path: "web-login",
+        name: "web-login",
+        component: () => import("pages/web/Auth.vue"),
       },
-      { 
-        path: "web-forgot-password", 
-        name: "web-forgot-password", 
-        component: () => import("pages/web/ForgotPassword.vue") 
+      {
+        path: "web-forgot-password",
+        name: "web-forgot-password",
+        component: () => import("pages/web/ForgotPassword.vue"),
       },
-      { 
-        path: "web-set-username", 
-        name: "web-set-username", 
-        component: () => import("pages/web/SetUserName.vue") 
+      {
+        path: "web-set-username",
+        name: "web-set-username",
+        component: () => import("pages/web/SetUserName.vue"),
       },
-      { 
-        path: "web-set-bio", 
-        name: "web-set-bio", 
-        component: () => import("pages/web/SetBio.vue") 
+      {
+        path: "web-set-bio",
+        name: "web-set-bio",
+        component: () => import("pages/web/SetBio.vue"),
       },
-      { 
-        path: "web-set-profile", 
-        name: "web-set-profile", 
-        component: () => import("pages/web/UploadProfile.vue") 
-      }
-    ]
+      {
+        path: "web-set-profile",
+        name: "web-set-profile",
+        component: () => import("pages/web/UploadProfile.vue"),
+      },
+    ],
   },
   {
     path: "/app",
@@ -115,17 +113,22 @@ const routes = [
           {
             path: "enter-password",
             name: "enter-password",
-            component: () => import("src/pages/app/view/auth/login/password.vue"),
+            component: () =>
+              import("src/pages/app/view/auth/login/password.vue"),
           },
           {
             path: "forgot-password",
             name: "forgot-password",
-            component: () => import("src/pages/app/view/auth/forgot-password/index.vue"),
+            component: () =>
+              import("src/pages/app/view/auth/forgot-password/index.vue"),
           },
           {
             path: "reset-password",
             name: "reset-password",
-            component: () => import("src/pages/app/view/auth/forgot-password/reset-password.vue"),
+            component: () =>
+              import(
+                "src/pages/app/view/auth/forgot-password/reset-password.vue"
+              ),
           },
         ],
       },
@@ -161,6 +164,18 @@ const routes = [
         ],
       },
       {
+        path: "view-question",
+        component: () => import("src/layouts/AppPlainLayout.vue"),
+        children: [
+          {
+            path: "",
+            name: "view-question",
+            component: () =>
+              import("src/pages/app/view/dashboard/view-question.vue"),
+          },
+        ],
+      },
+      {
         path: "search",
         component: () => import("src/layouts/AppDashboardLayout.vue"),
         children: [
@@ -177,7 +192,8 @@ const routes = [
         children: [
           {
             path: "",
-            component: () => import("src/pages/app/view/dashboard/ask-question.vue"),
+            component: () =>
+              import("src/pages/app/view/dashboard/ask-question.vue"),
           },
         ],
       },
@@ -187,7 +203,8 @@ const routes = [
         children: [
           {
             path: "",
-            component: () => import("src/pages/app/view/dashboard/profile/profile.vue"),
+            component: () =>
+              import("src/pages/app/view/dashboard/profile/profile.vue"),
           },
         ],
       },

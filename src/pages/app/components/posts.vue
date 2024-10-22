@@ -2,7 +2,7 @@
   <div class="flex no-wrap post">
     <q-img
       class="post-img"
-      :src="userImage"
+      src="userImage"
       spinner-color="primary"
       spinner-size="22px"
     />
@@ -34,6 +34,7 @@
           text-color="black"
           label="Answer"
           class="q-ml-auto"
+          :to="{ name: 'view-question' }"
         />
       </div>
     </div>
