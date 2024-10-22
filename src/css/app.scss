@@ -53,3 +53,10 @@ button {
 .h-full {
   height: 100%;
 }
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+}

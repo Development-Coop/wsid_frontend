@@ -171,12 +171,13 @@ const routes = [
         ],
       },
       {
-        path: "create",
+        path: "ask-question",
+        name: "ask-question",
         component: () => import("src/layouts/AppDashboardLayout.vue"),
         children: [
           {
             path: "",
-            component: () => import("src/pages/app/view/dashboard/temp.vue"),
+            component: () => import("src/pages/app/view/dashboard/ask-question.vue"),
           },
         ],
       },

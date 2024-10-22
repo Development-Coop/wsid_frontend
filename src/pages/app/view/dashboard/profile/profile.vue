@@ -66,7 +66,7 @@
               :delay="100"
               no-caps
               size="md"
-              type="submit"
+              to="/app/ask-question"
               label="Ask Question"
               color="primary"
               unelevated

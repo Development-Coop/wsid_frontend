@@ -22,7 +22,7 @@
             <img src="~src/assets/icons/nav-search.svg" alt="">
           </q-icon>
         </q-btn>    
-        <q-btn flat round to="/app/create" class="create-btn">
+        <q-btn flat round to="/app/ask-question" class="create-btn">
           <q-icon size="32px">
             <img src="~src/assets/icons/nav-create.svg" alt="">
           </q-icon>
