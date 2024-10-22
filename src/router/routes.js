@@ -188,7 +188,7 @@ const routes = [
       {
         path: "ask-question",
         name: "ask-question",
-        component: () => import("src/layouts/AppDashboardLayout.vue"),
+        component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
           {
             path: "",
