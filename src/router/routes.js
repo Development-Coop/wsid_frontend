@@ -37,6 +37,10 @@ const routes = [
     ],
   },
   {
+    path: "/dashboard",
+    component: () => import("src/pages/web/dashboard/layout.vue"),
+  },
+  {
     path: "/app",
     component: () => import("src/layouts/AppRegularLayout.vue"),
     children: [
