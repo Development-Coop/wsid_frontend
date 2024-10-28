@@ -37,8 +37,20 @@ const routes = [
     ],
   },
   {
-    path: "/dashboard",
-    component: () => import("src/pages/web/dashboard/layout.vue"),
+    path: "/web",
+    component: () => import("src/pages/web/layout.vue"),
+    children: [
+      {
+        path: "/web/dashboard/trending",
+        name: "web-dashboard-trending",
+        component: () => import("src/pages/web/dashboard/trending.vue"),
+      },
+      {
+        path: "/web/dashboard/profile",
+        name: "web-dashboard-profile",
+        component: () => import("src/pages/web/dashboard/profile.vue"),
+      },
+    ],
   },
   {
     path: "/app",

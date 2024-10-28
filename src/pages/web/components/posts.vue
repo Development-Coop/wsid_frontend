@@ -1,45 +1,46 @@
 <template>
-  <div class="flex no-wrap post">
-    <q-img
-      class="post-img"
-      :src="userImage"
-      spinner-color="primary"
-      spinner-size="22px"
-    />
-    <div style="flex-grow: 1">
-      <p>
-        <span v-if="username" class="text-weight-medium">{{ username }}</span>
-        <!-- Dynamic username -->
-        <span v-if="timeAgo" class="text-grey-7"> • {{ timeAgo }}</span>
-        <!-- Dynamic time -->
-      </p>
-      <p class="text-grey-9 q-mb-sm">
-        <span v-if="postContent">{{ postContent }}</span>
-        <!-- Dynamic post content -->
-      </p>
+  <div class="post">
+    <div class="flex items-center no-wrap">
       <q-img
-        v-if="postImage"
-        :src="postImage"
-        spinner-color="white"
-        fit="contain"
+        class="post-img"
+        :src="userImage"
+        spinner-color="primary"
+        spinner-size="22px"
       />
-      <div
-        class="flex no-wrap items-center q-pt-md q-mt-lg"
-        style="gap: 10px; border-top: 2px solid #f1f2f5"
-      >
-        <span>{{ votes }} <span class="text-grey-7">Votes</span></span> •
-        <span>{{ comments }} <span class="text-grey-7">Comments</span></span>
-        <q-btn
-          no-caps
-          size="md"
-          unelevated
-          color="grey-12"
-          text-color="black"
-          label="Answer"
-          class="q-ml-auto"
-          :to="{ name: 'view-question' }"
-        />
+      <div style="flex-grow: 1" class="q-ml-sm">
+        <p>
+          <span v-if="username" class="text-weight-medium">{{ username }}</span>
+          <!-- Dynamic username -->
+          <span v-if="timeAgo" class="text-grey-7"> • {{ timeAgo }}</span>
+          <!-- Dynamic time -->
+        </p>
       </div>
+    </div>
+    <p class="text-grey-9 q-mb-sm q-mt-sm">
+      <span v-if="postContent">{{ postContent }}</span>
+      <!-- Dynamic post content -->
+    </p>
+    <q-img
+      v-if="postImage"
+      :src="postImage"
+      spinner-color="white"
+      fit="contain"
+    />
+    <div
+      class="flex no-wrap items-center q-pt-md q-mt-lg"
+      style="gap: 10px; border-top: 2px solid #f1f2f5"
+    >
+      <span>{{ votes }} <span class="text-grey-7">Votes</span></span> •
+      <span>{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <q-btn
+        no-caps
+        size="md"
+        unelevated
+        color="grey-12"
+        text-color="black"
+        label="Answer"
+        class="q-ml-auto"
+      />
     </div>
   </div>
 </template>

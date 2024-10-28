@@ -49,11 +49,14 @@
           no-caps
           flat
           round
-          to="/dashboard"
-          :class="$route.path.includes('/dashboard') && 'is-active'"
+          to="/web/dashboard/trending"
+          :class="$route.path.includes('/trending') && 'is-active'"
         >
           <div class="flex items-center w-full q-px-lg">
-            <q-icon v-if="$route.path.includes('/dashboard')" size="27px">
+            <q-icon
+              v-if="$route.path.includes('/dashboard/trending')"
+              size="27px"
+            >
               <img src="~src/assets/icons/nav-home-active.svg" alt="" />
             </q-icon>
             <q-icon v-else size="27px">
@@ -63,42 +66,45 @@
           </div>
         </q-btn>
 
-        <div
-          class="flex items-center w-full q-px-lg"
-          :class="$route.path.includes('/search') && 'is-active'"
+        <q-btn
+          class="w-full"
+          unelevated
+          no-caps
+          flat
+          round
+          to="/trending"
+          :class="$route.path.includes('/trendings') && 'is-active'"
         >
-          <q-btn flat no-caps round to="/trending">
-            <div class="flex items-center w-full">
-              <q-icon v-if="$route.path === '/trending'" size="24px">
-                <img
-                  src="~src/assets/icons/nav-trending-up-active.svg"
-                  alt=""
-                />
-              </q-icon>
-              <q-icon v-else size="24px">
-                <img src="~src/assets/icons/nav-trending-up.svg" alt="" />
-              </q-icon>
-              <span class="q-ml-md">Trending</span>
-            </div>
-          </q-btn>
-        </div>
+          <div class="flex items-center w-full q-px-lg">
+            <q-icon v-if="$route.path === '/trending'" size="24px">
+              <img src="~src/assets/icons/nav-trending-up-active.svg" alt="" />
+            </q-icon>
+            <q-icon v-else size="24px">
+              <img src="~src/assets/icons/nav-trending-up.svg" alt="" />
+            </q-icon>
+            <span class="q-ml-md">Trending</span>
+          </div>
+        </q-btn>
 
-        <div
-          class="flex items-center w-full q-px-lg"
+        <q-btn
+          class="w-full"
+          unelevated
+          no-caps
+          flat
+          round
+          to="/web/dashboard/profile"
           :class="$route.path.includes('/profile') && 'is-active'"
         >
-          <q-btn flat no-caps round to="/profile">
-            <div class="flex items-center w-full">
-              <q-icon v-if="$route.path === '/profile'" size="24px">
-                <img src="~src/assets/icons/nav-user-active.svg" alt="" />
-              </q-icon>
-              <q-icon v-else size="24px">
-                <img src="~src/assets/icons/nav-user.svg" alt="" />
-              </q-icon>
-              <span class="q-ml-md">Profile</span>
-            </div>
-          </q-btn>
-        </div>
+          <div class="flex items-center w-full q-px-lg">
+            <q-icon v-if="$route.path === '/web/dashboard/profile'" size="24px">
+              <img src="~src/assets/icons/nav-user-active.svg" alt="" />
+            </q-icon>
+            <q-icon v-else size="24px">
+              <img src="~src/assets/icons/nav-user.svg" alt="" />
+            </q-icon>
+            <span class="q-ml-md">Profile</span>
+          </div>
+        </q-btn>
 
         <div
           class="flex items-center w-full q-px-lg"
@@ -157,25 +163,6 @@
     </q-drawer>
 
     <q-page-container>
-      <div class="q-pa-lg">
-        <div class="q-mb-sm text-body1 text-weight-bold text-grey-7">
-          Recent questions from people you follow
-        </div>
-        <div class="post-wrapper">
-          <Posts
-            v-for="post in posts"
-            :key="post.username"
-            class="q-pa-md"
-            :user-image="post.userImage"
-            :username="post.username"
-            :time-ago="post.timeAgo"
-            :post-content="post.postContent"
-            :post-image="post.postImage"
-            :votes="post.votes"
-            :comments="post.comments"
-          />
-        </div>
-      </div>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -183,7 +170,6 @@
 
 <script setup>
 import { ref } from "vue";
-import Posts from "../components/posts.vue";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 
@@ -194,49 +180,6 @@ const toggleLeftDrawer = () => {
 const toggleRightDrawer = () => {
   rightDrawerOpen.value = !rightDrawerOpen.value;
 };
-
-function* generateDummyContent() {
-  const userImages = [
-    "https://avatar.iran.liara.run/public/girl",
-    "https://avatar.iran.liara.run/public/boy",
-    "https://avatar.iran.liara.run/public",
-  ];
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hank",
-    "Ivy",
-    "Jack",
-  ];
-  const postContents = [
-    "Hello world!",
-    "This is a test post.",
-    "I love coding.",
-    "Today is a great day.",
-    "I am learning new things.",
-  ];
-  for (let i = 1; i <= 10; i++) {
-    yield {
-      userImage: userImages[Math.floor(Math.random() * userImages.length)],
-      username: names[Math.floor(Math.random() * names.length)],
-      timeAgo: "Just now",
-      postContent: `${
-        postContents[Math.floor(Math.random() * postContents.length)]
-      } Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum delectus, voluptatem laboriosam in veritatis modi nisi doloribus cupiditate optio accusantium.
- `,
-      postImage: "https://placehold.co/800x400",
-      votes: Math.floor(Math.random() * 100),
-      comments: Math.floor(Math.random() * 50),
-    };
-  }
-}
-
-const posts = Array.from(generateDummyContent());
 </script>
 
 <style scoped>
@@ -251,6 +194,7 @@ const posts = Array.from(generateDummyContent());
       .q-btn {
         border-radius: 0;
         min-height: 50px;
+        border: 1px solid transparent;
         &.is-active {
           border: 1px solid var(--q-primary);
           color: var(--q-primary);
