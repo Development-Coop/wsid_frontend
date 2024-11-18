@@ -90,7 +90,6 @@ const posts = ref([]);
 const profileStore = useProfileStore();
 
 const user = computed(()=> {
-  console.log(profileStore?.userDetails, ":::")
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
 })
 </script>
