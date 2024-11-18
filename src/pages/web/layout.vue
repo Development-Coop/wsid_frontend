@@ -169,9 +169,39 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useProfileStore } from "src/stores/profileStore";
+import { useQuasar, Loading } from "quasar";
+
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
+const $q = useQuasar();
+const profileStore = useProfileStore();
+
+const handleSubmit = async () => {
+  Loading.show({
+    message: "Loading...",
+  });
+  try {
+    await profileStore.getProfileDetails();
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message:
+        error.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
+onMounted(() => {
+  handleSubmit();
+});
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
