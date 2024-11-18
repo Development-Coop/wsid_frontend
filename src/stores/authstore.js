@@ -188,7 +188,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
       });
       localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
-      localStorage.setItem("acess-token", response?.data?.data?.accessToken);
+      localStorage.setItem("access-token", response?.data?.data?.accessToken);
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
