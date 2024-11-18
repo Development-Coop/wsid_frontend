@@ -41,8 +41,8 @@ import { ref } from "vue";
 const navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
-  { name: "Testimonials", path: "/testimonials" },
-  { name: "Connect", path: "/connect" },
+  { name: "Login", path: "/auth/web-login?tab=login" },
+  { name: "Register", path: "/auth/web-login?tab=signup" },
 ];
 const message = ref("");
 </script>

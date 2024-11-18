@@ -44,11 +44,13 @@ const routes = [
         path: "/web/dashboard/trending",
         name: "web-dashboard-trending",
         component: () => import("src/pages/web/dashboard/trending.vue"),
+        meta: { requiresAuth: true }
       },
       {
         path: "/web/dashboard/profile",
         name: "web-dashboard-profile",
         component: () => import("src/pages/web/dashboard/profile.vue"),
+        meta: { requiresAuth: true }
       },
     ],
   },
@@ -162,18 +164,21 @@ const routes = [
                 name: "trending",
                 component: () =>
                   import("src/pages/app/view/dashboard/trending.vue"),
+                  meta: { requiresAuth: true }
               },
               {
                 path: "favourites",
                 name: "favourites",
                 component: () =>
                   import("src/pages/app/view/dashboard/favourites.vue"),
+                  meta: { requiresAuth: true }
               },
               {
                 path: "following",
                 name: "following",
                 component: () =>
                   import("src/pages/app/view/dashboard/following.vue"),
+                  meta: { requiresAuth: true }
               },
             ],
           },
@@ -188,6 +193,7 @@ const routes = [
             name: "view-question",
             component: () =>
               import("src/pages/app/view/dashboard/view-question.vue"),
+              meta: { requiresAuth: true }
           },
         ],
       },
@@ -198,6 +204,7 @@ const routes = [
           {
             path: "",
             component: () => import("src/pages/app/view/dashboard/temp.vue"),
+            meta: { requiresAuth: true }
           },
         ],
       },
@@ -210,6 +217,7 @@ const routes = [
             path: "",
             component: () =>
               import("src/pages/app/view/dashboard/ask-question.vue"),
+              meta: { requiresAuth: true }
           },
         ],
       },
@@ -221,6 +229,7 @@ const routes = [
             path: "",
             component: () =>
               import("src/pages/app/view/dashboard/profile/profile.vue"),
+              meta: { requiresAuth: true }
           },
         ],
       },
@@ -231,6 +240,7 @@ const routes = [
           {
             path: "",
             component: () => import("src/pages/app/view/dashboard/temp.vue"),
+            meta: { requiresAuth: true }
           },
         ],
       },
