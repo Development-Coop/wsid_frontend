@@ -82,7 +82,7 @@ const handleSubmit = async () => {
   try {
     await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: 'dashboard' });
+    router.push({ name: 'web-dashboard-trending' });
   } catch (error) {
     $q.notify({
         color: "negative",
