@@ -179,9 +179,7 @@ const $q = useQuasar();
 const profileStore = useProfileStore();
 
 const handleSubmit = async () => {
-  Loading.show({
-    message: "Loading...",
-  });
+  Loading.show();
   try {
     await profileStore.getProfileDetails();
   } catch (error) {
