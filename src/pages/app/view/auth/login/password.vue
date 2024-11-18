@@ -92,10 +92,9 @@ const handleSubmit = async () => {
   loading.value = true;
   authStore.clearErrors();
   try {
-    const result = await authStore.login();
-    console.log(result);
+    await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: 'dashboard' });
+    router.push({ name: 'trending' });
   } catch (error) {
     showError.value = true;
   } finally {

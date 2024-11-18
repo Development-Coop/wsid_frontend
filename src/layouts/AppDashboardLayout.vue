@@ -52,6 +52,35 @@
   defineOptions({
     name: "AppDashboardLayout",
   });
+  import { onMounted } from "vue";
+import { useProfileStore } from "src/stores/profileStore";
+import { useQuasar, Loading } from "quasar";
+
+const $q = useQuasar();
+const profileStore = useProfileStore();
+
+const handleSubmit = async () => {
+  Loading.show();
+  try {
+    await profileStore.getProfileDetails();
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message:
+        error.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
+onMounted(() => {
+  handleSubmit();
+});
   </script>
   
   <style scoped>

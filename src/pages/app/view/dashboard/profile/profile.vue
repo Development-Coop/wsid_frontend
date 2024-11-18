@@ -83,15 +83,43 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
+import { useQuasar, Loading } from "quasar";
 const tab = ref("Posts");
 const posts = ref([]);
 const profileStore = useProfileStore();
+const $q = useQuasar();
 
 const user = computed(()=> {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
+});
+
+const handleSubmit = async () => {
+  Loading.show();
+  try {
+    await profileStore.getProfileDetails();
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message:
+        error.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
+onMounted(()=> {
+  if(!user.value?.name) {
+    handleSubmit();
+  }
 })
+
 </script>
 
 <style scoped lang="scss">
