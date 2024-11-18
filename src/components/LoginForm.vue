@@ -67,23 +67,30 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
+import { useQuasar } from "quasar";
 
 const router = useRouter();
 const authStore = useAuthStore();
 
 const loading = ref(false);
 const showError = ref(false);
+const $q = useQuasar();
 
 const handleSubmit = async () => {
   loading.value = true;
   authStore.clearErrors();
   try {
-    const result = await authStore.login();
-    console.log(result)
+    await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    // router.push({ name: 'dashboard' });
+    router.push({ name: 'dashboard' });
   } catch (error) {
-    showError.value = true;
+    $q.notify({
+        color: "negative",
+        message: error.response?.data?.message || "Login failed. Please try again.",
+        position: "top",
+        icon: "error",
+        autoClose: true
+      });
   } finally {
     loading.value = false;
   }
@@ -97,6 +104,10 @@ const handleSubmit = async () => {
   padding-top: 2rem;
   display: grid;
   grid-gap: 32px;
+  form {
+    display: grid;
+    grid-gap: 28px;
+  }
   .input-group {
     display: grid;
     grid-gap: 8px;

@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
         email: userData.phone_or_email, // Assuming it's an email
         dateOfBirth: userData.dob.split('-').reverse().join('/') // Convert DD-MM-YYYY to YYYY/MM/DD
       });
-      
+
       console.log("Registration step 1 successful:", response.data);
       userDetails.value = { ...userDetails.value, ...userData };
       sessionStorage.setItem("user", JSON.stringify(userDetails.value));
@@ -148,14 +148,14 @@ export const useAuthStore = defineStore('auth', () => {
       formData.append("email", userDetails.value.phone_or_email);
       formData.append("password", userDetails.value.password);
       formData.append("username", userDetails.value.username);
-      
+
       // Convert base64 to Blob
       if (userDetails.value.profilePicture) {
         const response = await fetch(userDetails.value.profilePicture);
         const blob = await response.blob();
         formData.append("profilePic", blob, "profile.png");
       }
-      
+
       formData.append("bio", userDetails.value.bio);
 
       const response = await api.post('/auth/register-step3', formData, {
@@ -183,13 +183,12 @@ export const useAuthStore = defineStore('auth', () => {
         emailOrUsername: userDetails.value.phone_or_email,
         password: userDetails.value.password
       }, {
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         }
       });
-      
-      console.log("Login successful:", response.data);
-      // You might want to store the user token or other data here
+      localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
+      localStorage.setItem("acess-token", response?.data?.data?.accessToken);
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
@@ -207,7 +206,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await api.post('/auth/forgot-password', {
         email
       }, {
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         }
       });
@@ -224,7 +223,7 @@ export const useAuthStore = defineStore('auth', () => {
         otp,
         password
       }, {
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         }
       });

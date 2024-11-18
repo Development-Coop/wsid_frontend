@@ -54,8 +54,8 @@ const drawerLeft = ref(false);
 const navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
-  { name: "Services", path: "/services" },
-  { name: "Testimonials", path: "/testimonials" },
+  { name: "Login", path: "/auth/web-login?tab=login" },
+  { name: "Register", path: "/auth/web-login?tab=signup" },
 ];
 
 const isMobile = computed(() => $q.screen.width < 700);
