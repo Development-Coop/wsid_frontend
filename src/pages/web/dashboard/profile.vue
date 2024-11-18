@@ -12,27 +12,26 @@
       <div class="flex no-wrap items-center profile-wrapper">
         <q-img
           class="profile-img"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s"
+          :src="user?.profilePic"
         />
         <div>
-          <p class="text-h6 text-weight-medium">Alex Doe</p>
+          <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
           <p class="text-grey-7">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            quos.
+            {{ user?.bio }}
           </p>
         </div>
       </div>
       <div class="flex justify-around q-my-lg">
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">122</p>
+          <p class="text-h6 text-weight-medium text-primary">{{ user?.followersCount }}</p>
           <p>Followers</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">122</p>
+          <p class="text-h6 text-weight-medium text-primary">{{ user?.followingCount }}</p>
           <p>Following</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">37k</p>
+          <p class="text-h6 text-weight-medium text-primary">{{ user?.likesCount }}</p>
           <p>Likes</p>
         </div>
       </div>
@@ -84,9 +83,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useProfileStore } from "src/stores/profileStore";
 const tab = ref("Posts");
 const posts = ref([]);
+const profileStore = useProfileStore();
+
+const user = computed(()=> {
+  console.log(profileStore?.userDetails, ":::")
+  return JSON.parse(JSON.stringify(profileStore?.userDetails));
+})
 </script>
 
 <style scoped lang="scss">
