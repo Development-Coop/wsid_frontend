@@ -151,34 +151,33 @@ const routes = [
         ],
       },
       {
-        path: "dashboard",
+        path: "dashboard", // Ensure the path starts with a leading slash
         name: "dashboard",
         component: () => import("src/layouts/AppDashboardLayout.vue"),
         children: [
           {
-            path: "",
+            path: "", // Default child route for "dashboard"
             component: () => import("src/pages/app/view/dashboard/layout.vue"),
             children: [
               {
-                path: "",
+                path: "", // Default child route for "layout"
                 name: "trending",
-                component: () =>
-                  import("src/pages/app/view/dashboard/trending.vue"),
-                  meta: { requiresAuth: true }
+                component: () => import("src/pages/app/view/dashboard/trending.vue"),
+                meta: { requiresAuth: true },
               },
               {
                 path: "favourites",
                 name: "favourites",
                 component: () =>
                   import("src/pages/app/view/dashboard/favourites.vue"),
-                  meta: { requiresAuth: true }
+                meta: { requiresAuth: true },
               },
               {
                 path: "following",
                 name: "following",
                 component: () =>
                   import("src/pages/app/view/dashboard/following.vue"),
-                  meta: { requiresAuth: true }
+                meta: { requiresAuth: true },
               },
             ],
           },
