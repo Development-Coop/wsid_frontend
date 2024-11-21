@@ -8,7 +8,7 @@
     <q-input
       v-model="email"
       outlined
-      label="Phone, email or @username"
+      label="Email or @username"
       dense
       :rules="[(val) => !!val || 'Email is required']"
     />

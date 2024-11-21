@@ -13,7 +13,7 @@
             life altering.
           </p>
           <div class="banner-buttons">
-            <button v-motion-pop :delay="700" class="btn btn-primary">
+            <button v-motion-pop :delay="700" class="btn btn-primary" @click="router.push({ path: '/auth/web-login?tab=login' })">
               Get Started
             </button>
             <button v-motion-pop :delay="700" class="btn btn-secondary">
@@ -136,8 +136,10 @@ import CommentCard from "../../components/CommentCard.vue";
 import CommentsSlider from "../../components/CommentsSlider.vue";
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
+const router = useRouter();
 const commentsList = ref([
   {
     imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)

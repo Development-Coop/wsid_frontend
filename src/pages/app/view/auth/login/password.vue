@@ -23,7 +23,7 @@
           <q-input
             v-model="authStore.userDetails.phone_or_email"
             outlined
-            label="Phone, email or @username"
+            label="Email or @username"
             :error="!!errors.phone_or_email"
             :rules="[(val) => !!val || 'Email is required']"
           />

@@ -2,13 +2,13 @@
   <footer class="footer">
     <div class="footer__contact">
       <div class="footer__social-links">
-        <a href="">
-          <img src="../assets/icons/youtube.svg" alt="youtube-icon" />
+        <a target="_blank" href="https://x.com/wsidcom">
+          <img src="../assets/icons/twitter.svg" alt="twitter-icon" />
         </a>
-        <a href="">
+        <a target="_blank" href="https://www.instagram.com/WSIDcom/">
           <img src="../assets/icons/instagram.svg" alt="instagram-icon" />
         </a>
-        <a href="">
+        <a target="_blank" href="https://www.facebook.com/WSIDcom/">
           <img src="../assets/icons/facebook.svg" alt="facebook-icon" />
         </a>
       </div>
@@ -82,6 +82,13 @@ const message = ref("");
   &__social-links {
     display: flex;
     gap: 32px;
+    img {
+      height: 18px;
+      filter: brightness(0.8);
+      &:hover {
+        filter: brightness(1.5);
+      }
+    }
   }
   &__content {
     display: grid;
