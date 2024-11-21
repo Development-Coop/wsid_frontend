@@ -17,7 +17,7 @@
       <div>
         <h4 class="text-h5 text text-weight-medium q-mb-xl">
           To get started, first enter <br />
-          your phone, email, or <br />
+          your Email, or <br />
           @username
         </h4>
 
@@ -25,7 +25,7 @@
           <q-input
             v-model="authStore.userDetails.phone_or_email"
             outlined
-            placeholder="Phone, email or @username"
+            placeholder="Email or @username"
             :error="!!authStore.errors.phone_or_email"
             :error-message="authStore.errors.phone_or_email"
           />
@@ -68,7 +68,7 @@ const handleSubmit = () => {
     });
   } else {
     authStore.errors.phone_or_email =
-      "Phone number, email, or username is required.";
+      "Email, or username is required.";
   }
 };
 </script>

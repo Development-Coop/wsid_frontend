@@ -30,7 +30,7 @@
           <q-input
             v-model="authStore.userDetails.phone_or_email"
             outlined
-            placeholder="Phone number or email address"
+            placeholder="Email address"
             :error="!!errors.phone_or_email"
           />
           <q-input
@@ -88,7 +88,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
 // Helper
-import { isValidEmail, isValidPhoneNumber } from "src/utils/helper";
+import { isValidEmail } from "src/utils/helper";
 import { useQuasar } from "quasar";
 
 const router = useRouter();
@@ -129,13 +129,12 @@ const validateForm = () => {
 
   // Validate phone or email
   if (!authStore.userDetails.phone_or_email.trim()) {
-    errors.value.phone_or_email = "Phone number or email is required.";
+    errors.value.phone_or_email = "Email is required.";
     isValid = false;
   } else if (
-    !isValidEmail(authStore.userDetails.phone_or_email) &&
-    !isValidPhoneNumber(authStore.userDetails.phone_or_email)
+    !isValidEmail(authStore.userDetails.phone_or_email)
   ) {
-    errors.value.phone_or_email = "Enter a valid phone number or email.";
+    errors.value.phone_or_email = "Enter a valid Email.";
     isValid = false;
   }
 
