@@ -4,7 +4,7 @@
       <p>Name</p>
       <!-- Name Input -->
       <q-input
-        v-model="name"
+        v-model="authStore.userDetails.name"
         outlined
         label="Name"
         dense
@@ -16,15 +16,15 @@
       <p>Email Id</p>
       <!-- Email Input -->
       <q-input
-        v-model="email"
+        v-model="authStore.userDetails.phone_or_email"
         outlined
-        label="Email or @username"
+        label="Email address"
         dense
         :rules="[(val) => !!val || 'Email is required']"
       />
     </div>
 
-    <div class="input-group">
+    <!-- <div class="input-group">
       <div class="label-container">
         <p>Password</p>
         <span
@@ -33,9 +33,9 @@
         >
           Forgot Password?
         </span>
-      </div>
-      <!-- Password Input -->
-      <q-input
+      </div> -->
+    <!-- Password Input -->
+    <!-- <q-input
         v-model="password"
         type="password"
         outlined
@@ -43,9 +43,9 @@
         dense
         :rules="[(val) => !!val || 'Password is required']"
       >
-      </q-input>
-      <div>
-        <div class="q-mt-sm">
+      </q-input> -->
+    <!-- <div> -->
+    <!-- <div class="q-mt-sm">
           <q-icon
             v-if="passwordStrengthIcon"
             :name="passwordStrengthIcon"
@@ -58,17 +58,49 @@
             ]"
           />
           Password Strength: {{ passwordStrengthText }}
-        </div>
+        </div> -->
 
-        <!-- Validation List -->
-        <ul class="validation-list q-mb-md">
+    <!-- Validation List -->
+    <!-- <ul class="validation-list q-mb-md">
           <li v-for="(rule, index) in passwordRules" :key="index">
             <q-icon v-if="rule.valid" name="check" class="text-blue q-mr-sm" />
             <q-icon v-else name="close" class="text-red q-mr-sm" />
             {{ rule.message }}
           </li>
         </ul>
-      </div>
+      </div> -->
+    <!-- </div> -->
+
+    <div class="input-group">
+      <p>Date of birth</p>
+      <q-input
+        v-model="authStore.userDetails.dob"
+        outlined
+        label="Date of birth"
+        readonly
+        placeholder="Date of birth"
+      >
+        <template #append>
+          <q-icon
+            name="event"
+            class="cursor-pointer"
+            @click="showPopup = true"
+          />
+        </template>
+
+        <q-popup-proxy
+          v-model="showPopup"
+          transition-show="scale"
+          transition-hide="scale"
+        >
+          <!-- Date picker with max date set to today -->
+          <q-date
+            v-model="authStore.userDetails.dob"
+            mask="DD-MM-YYYY"
+            :max="today"
+          />
+        </q-popup-proxy>
+      </q-input>
     </div>
 
     <div>
@@ -80,7 +112,8 @@
           unelevated
           class="login-btn"
           :disable="!isFormValid"
-          @click="$emit('submitted', email)"
+          :loading="isLoading"
+          @click="handleSubmit"
         />
       </div>
 
@@ -119,91 +152,132 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useAuthStore } from "src/stores/authstore";
+// import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 
-defineEmits(['submitted']);
+const emit = defineEmits(["submitted"]);
 
-const router = useRouter();
-const name = ref("");
-const email = ref("");
-const password = ref("");
-const passwordStrengthText = ref("Weak");
-const passwordStrengthIcon = ref("close");
+// const router = useRouter();
+// const name = ref("");
+// const email = ref("");
+// const password = ref("");
+// const passwordStrengthText = ref("Weak");
+// const passwordStrengthIcon = ref("close");
+const today = ref(new Date().toISOString().split("T")[0]);
+const showPopup = ref(false);
+const authStore = useAuthStore();
+const isLoading = ref(false);
+const $q = useQuasar();
 
 // Define password validation rules
-const passwordRules = ref([
-  {
-    message: "Cannot contain your name or email address",
-    valid: false,
-  },
-  {
-    message: "At least 8 characters",
-    valid: false,
-  },
-  {
-    message: "Contains a number or symbol",
-    valid: false,
-  },
-]);
+// const passwordRules = ref([
+//   {
+//     message: "Cannot contain your name or email address",
+//     valid: false,
+//   },
+//   {
+//     message: "At least 8 characters",
+//     valid: false,
+//   },
+//   {
+//     message: "Contains a number or symbol",
+//     valid: false,
+//   },
+// ]);
 
 // Watch the password input for changes and run validations
-watch(password, (newPassword) => {
-  checkPassword(newPassword);
-});
+// watch(password, (newPassword) => {
+//   checkPassword(newPassword);
+// });
+
+const parseDate = (dateString) => {
+  const [day, month, year] = dateString.split("-");
+  return new Date(`${year}-${month}-${day}`);
+};
 
 // Method to check password strength and validation
-const checkPassword = (newPassword) => {
-  const containsNameOrEmail = checkContainsNameOrEmail(newPassword);
-  const isLongEnough = newPassword.length >= 8;
-  const containsNumberOrSymbol = checkContainsNumberOrSymbol(newPassword);
+// const checkPassword = (newPassword) => {
+//   const containsNameOrEmail = checkContainsNameOrEmail(newPassword);
+//   const isLongEnough = newPassword.length >= 8;
+//   const containsNumberOrSymbol = checkContainsNumberOrSymbol(newPassword);
 
-  // Update the validity of password rules
-  passwordRules.value[0].valid = !containsNameOrEmail;
-  passwordRules.value[1].valid = isLongEnough;
-  passwordRules.value[2].valid = containsNumberOrSymbol;
+//   // Update the validity of password rules
+//   passwordRules.value[0].valid = !containsNameOrEmail;
+//   passwordRules.value[1].valid = isLongEnough;
+//   passwordRules.value[2].valid = containsNumberOrSymbol;
 
-  // Determine password strength
-  if (isLongEnough && containsNumberOrSymbol && !containsNameOrEmail) {
-    passwordStrengthText.value = "Strong";
-    passwordStrengthIcon.value = "check";
-  } else if (isLongEnough && (containsNumberOrSymbol || !containsNameOrEmail)) {
-    passwordStrengthText.value = "Medium";
-    passwordStrengthIcon.value = "check";
-  } else {
-    passwordStrengthText.value = "Weak";
-    passwordStrengthIcon.value = "warning";
-  }
-};
+//   // Determine password strength
+//   if (isLongEnough && containsNumberOrSymbol && !containsNameOrEmail) {
+//     passwordStrengthText.value = "Strong";
+//     passwordStrengthIcon.value = "check";
+//   } else if (isLongEnough && (containsNumberOrSymbol || !containsNameOrEmail)) {
+//     passwordStrengthText.value = "Medium";
+//     passwordStrengthIcon.value = "check";
+//   } else {
+//     passwordStrengthText.value = "Weak";
+//     passwordStrengthIcon.value = "warning";
+//   }
+// };
 
 // Helper Functions
-const checkContainsNameOrEmail = (password) => {
-  // Ensure name and email are non-empty before checking .includes()
-  const containsName =
-    name.value && password.toLowerCase().includes(name.value.toLowerCase());
-  const containsEmail =
-    email.value && password.toLowerCase().includes(email.value.toLowerCase());
+// const checkContainsNameOrEmail = (password) => {
+//   // Ensure name and email are non-empty before checking .includes()
+//   const containsName =
+//     name.value && password.toLowerCase().includes(name.value.toLowerCase());
+//   const containsEmail =
+//     email.value && password.toLowerCase().includes(email.value.toLowerCase());
 
-  return containsName || containsEmail;
-};
+//   return containsName || containsEmail;
+// };
 
-const checkContainsNumberOrSymbol = (password) => {
-  return /[0-9!@#$%^&*]/.test(password);
-};
+// const checkContainsNumberOrSymbol = (password) => {
+//   return /[0-9!@#$%^&*]/.test(password);
+// };
 
 // Computed property to enable/disable the button based on form validation
 const isFormValid = computed(() => {
   // Check if name and email are filled in and valid
-  const isNameValid = name.value.trim() !== "";
-  const isEmailValid = email.value.trim() !== "";
+  const isNameValid = authStore.userDetails.name.trim() !== "";
+  const isEmailValid = authStore.userDetails.phone_or_email.trim() !== "";
 
   // Check if all password rules are valid
-  const isPasswordValid = passwordRules.value.every((rule) => rule.valid);
-  const isStrength = passwordStrengthText.value !== "Weak";
+  // const isPasswordValid = passwordRules.value.every((rule) => rule.valid);
+  // const isStrength = passwordStrengthText.value !== "Weak";
+
+  let isValid = false;
+  // Validate date of birth (dob)
+  if (!authStore.userDetails.dob) {
+    isValid = false;
+  } else {
+    const today = new Date().toISOString().split("T")[0];
+    const dob = parseDate(authStore.userDetails.dob);
+    isValid = !(dob > new Date(today));
+  }
 
   // The form is valid if all fields are valid
-  return isNameValid && isEmailValid && isPasswordValid && isStrength;
+  return isNameValid && isEmailValid && isValid;
 });
+
+// Updated function to handle form submission
+const handleSubmit = async () => {
+  if (isFormValid.value) {
+    isLoading.value = true;
+    const res = await authStore.registerStep1(authStore.userDetails);
+    isLoading.value = false;
+    if (!res?.status) {
+      $q.notify({
+        color: "negative",
+        message: res,
+        position: "top",
+        icon: "error",
+      });
+    } else {
+      emit("submitted", authStore.userDetails.phone_or_email.trim())
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -233,6 +307,7 @@ const isFormValid = computed(() => {
     }
   }
   .button-container {
+    margin-top: 16px;
     :deep(.q-btn__content) {
       text-transform: none;
     }
@@ -297,5 +372,31 @@ const isFormValid = computed(() => {
   padding: 10px 20px;
   border-radius: 8px;
   border: 1px solid rgba(70, 95, 241, 0.4);
+}
+
+:deep(.input-group) {
+  .q-field--outlined.q-field--readonly .q-field__control:before {
+    border-style: solid !important; /* Force solid border */
+    border-width: 1px !important; /* Adjust thickness to match other inputs */
+    border-color: rgba(
+      0,
+      0,
+      0,
+      0.24
+    ) !important; /* Adjust color to match theme */
+  }
+  .q-field__control {
+    height: 40px;
+  }
+  .q-field--labeled .q-field__native, .q-field--labeled .q-field__prefix, .q-field--labeled .q-field__suffix {
+    padding-bottom: 2px;
+    padding-top: 16px;
+  }
+  .q-field__marginal {
+    height: 42px;
+  }
+  .q-field__label {
+    top: 11px;
+  }
 }
 </style>

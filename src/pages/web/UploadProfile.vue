@@ -9,10 +9,11 @@
 
       <!-- Profile Picture Upload -->
       <div
-        :class="['profile-container', { 'file-uploaded': !!profilePicture }]"
+        :class="['profile-container', { 'file-uploaded': !!authStore.userDetails.profilePicture }]"
       >
         <q-img
-          :src="profilePicture || placeholderImage"
+          :src="authStore.userDetails.profilePicture || authStore.placeholderImage"
+          style="height: 150px; max-width: 150px; object-fit: cover; border-radius: 50%;"
           @click="uploadProfile"
         />
 
@@ -42,7 +43,8 @@
           label="Next"
           color="primary"
           unelevated
-          :disable="!profilePicture"
+          :disable="!authStore.userDetails.profilePicture"
+          @click="navigateToAddBio"
         />
       </div>
     </div>
@@ -51,17 +53,13 @@
 
 <script setup>
 import { ref, nextTick } from "vue";
-// import { useRouter } from "vue-router";
-import confetti from "canvas-confetti";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
+import confetti from 'canvas-confetti';
 
 // Setup router
-// const router = useRouter();
-
-// Refs for the profile picture and placeholder
-const profilePicture = ref(null);
-const placeholderImage = ref(
-  new URL("../../assets/icons/placeholder-icon.svg", import.meta.url).href
-);
+const router = useRouter();
+const authStore = useAuthStore();
 
 // Refs for the confetti canvas and container
 const confettiContainer = ref(null);
@@ -92,20 +90,16 @@ const triggerConfetti = () => {
 const onFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      profilePicture.value = reader.result; // Update the picture source
-    };
+    authStore.setProfilePicture(file);
     // Trigger the confetti animation once the picture is uploaded
     triggerConfetti();
-    reader.readAsDataURL(file);
   }
 };
 
 // Function to set profile picture and move to the next page
-// const setProfilePicture = () => {
-//   router.push({ name: "add-bio" });
-// };
+const navigateToAddBio = () => {
+  router.push({ name: "web-set-bio" });
+};
 </script>
 
 <style scoped lang="scss">
@@ -181,6 +175,9 @@ const onFileChange = (e) => {
     }
     button {
       width: 100%;
+    }
+    :deep(.q-btn__content) {
+      text-transform: none;
     }
   }
 }

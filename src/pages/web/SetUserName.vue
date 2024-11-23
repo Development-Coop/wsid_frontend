@@ -10,11 +10,11 @@
       <!-- Code Input Boxes (use q-input with narrow width or custom styling) -->
       <div class="input-wrapper">
         <q-input
-          v-model="username"
+          v-model="authStore.userDetails.username"
           type="text"
           outlined
           placeholder="Set your username"
-          :error="!isValidUsername"
+          :error="!authStore.isValidUsername"
           error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."
           @focus="moveIconToRight"
           @update:model-value="validateUsername"
@@ -26,7 +26,7 @@
 
         <!-- Suggestions as a static list (No dropdown) -->
         <div
-          v-if="filteredSuggestions.length"
+          v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length"
           v-motion-slide-left
           :delay="800"
           class="suggestions-list"
@@ -45,7 +45,7 @@
 
           <!-- Show more/less option -->
           <p
-            v-if="filteredSuggestions.length > visibleCount"
+            v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length > visibleCount"
             class="text-green-5 show-more q-mt-sm cursor-pointer"
             @click="toggleShowAll"
           >
@@ -65,6 +65,7 @@
           color="primary"
           unelevated
           :disable="!isCodeValid"
+          :loading="isLoading"
           @click="setUserName"
         />
       </div>
@@ -75,6 +76,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
 const username = ref("");
@@ -82,6 +84,8 @@ const isValidUsername = ref(true);
 const iconRight = ref(false);
 const showSuggestions = ref(true);
 const showAll = ref(false);
+const authStore = useAuthStore();
+const isLoading = ref(false);
 
 // List of suggestions
 const suggestions = ref([
@@ -114,7 +118,7 @@ const visibleSuggestions = computed(() => {
 
 // Select a suggestion and fill the input
 const selectSuggestion = (suggestion) => {
-  username.value = suggestion.replace("@", "");
+  authStore.setUsername(suggestion.replace("@", ""));
   showSuggestions.value = false; // Hide suggestions after selection
 };
 
@@ -124,7 +128,7 @@ const toggleShowAll = () => {
 };
 
 const isCodeValid = computed(() => {
-  return !!username.value;
+  return !!authStore.userDetails.username && authStore.isValidUsername;
 });
 const moveIconToRight = () => {
   iconRight.value = true;
@@ -154,7 +158,8 @@ const validateUsername = (event) => {
 };
 
 const setUserName = () => {
-  router.push({ name: "web-set-bio" });
+  authStore.setUsername(authStore.userDetails.username);
+  router.push({ name: "web-set-profile" });
 };
 </script>
 
@@ -210,11 +215,18 @@ const setUserName = () => {
     button {
       width: 100%;
     }
+    :deep(.q-btn__content) {
+      text-transform: none;
+    }
   }
   :deep(.q-field__control) {
+    height: 40px;
     input {
       font-size: 16px;
     }
+  }
+  :deep(.q-field__marginal) {
+    height: 42px;
   }
 }
 </style>
