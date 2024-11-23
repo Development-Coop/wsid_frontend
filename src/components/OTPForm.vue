@@ -27,6 +27,7 @@
         unelevated
         :class="{ 'btn-active': isCodeValid }"
         :disable="!isCodeValid"
+        :loading="isLoading"
         @click="getOtp"
       />
     </div>
@@ -41,8 +42,10 @@
 <script setup>
 import { ref, nextTick, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
+import { useQuasar } from "quasar";
 
-defineProps({
+const props = defineProps({
   email: {
     type: String,
     default: "",
@@ -53,6 +56,9 @@ const router = useRouter();
 // const route = useRoute();
 const otp = ref(new Array(6).fill(""));
 const otpInput = ref([]);
+const authStore = useAuthStore();
+const isLoading = ref(false);
+const $q = useQuasar();
 
 // Computed property to check if all inputs are valid (filled)
 const isCodeValid = computed(() => {
@@ -104,11 +110,21 @@ const handleKeydown = (index, event) => {
 };
 
 // Function to combine the OTP and display it
-const getOtp = () => {
-  // Join all the elements to form a single OTP string
+const getOtp = async() => {
   const otpString = otp.value.join("");
-  console.log("Entered OTP:", otpString);
-  router.push({ name: "web-set-username" });
+  isLoading.value = true;
+  const res = await authStore.registerStep2(otpString, props.email);
+  isLoading.value = false;
+  if (!res?.status) {
+    $q.notify({
+      color: "negative",
+      message: res,
+      position: "top",
+      icon: "error"
+    });
+  } else {
+    router.push({ name: "web-set-password" });
+  }
 };
 </script>
 

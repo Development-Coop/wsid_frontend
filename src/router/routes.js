@@ -15,9 +15,19 @@ const routes = [
         component: () => import("pages/web/Auth.vue"),
       },
       {
+        path: "web-set-password",
+        name: "web-set-password",
+        component: () => import("pages/web/SetPassword.vue"),
+      },
+      {
         path: "web-forgot-password",
         name: "web-forgot-password",
         component: () => import("pages/web/ForgotPassword.vue"),
+      },
+      {
+        path: "web-reset-password",
+        name: "web-reset-password",
+        component: () => import("pages/web/ResetPassword.vue"),
       },
       {
         path: "web-set-username",

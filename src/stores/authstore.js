@@ -166,6 +166,8 @@ export const useAuthStore = defineStore('auth', () => {
 
       console.log("Registration step 3 successful:", response.data);
       sessionStorage.clear();
+      localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
+      localStorage.setItem("access-token", response?.data?.data?.accessToken);
       return response?.data;
     } catch (error) {
       console.error("Registration step 3 error:", error);

@@ -12,11 +12,12 @@
       <!-- Code Input Boxes (use q-input with narrow width or custom styling) -->
       <div class="input-wrapper">
         <q-input
-          v-model="bio"
+          v-model="authStore.userDetails.bio"
           type="textarea"
           :maxlength="160"
           outlined
           placeholder="Enter bio"
+          @update:model-value="authStore.setBio"
         >
         </q-input>
       </div>
@@ -31,8 +32,9 @@
           label="Next"
           color="primary"
           unelevated
-          :disable="!bio.length"
-          @click="setBio"
+          :disable="!authStore.isBioValid"
+          :loading="isLoading"
+          @click="navigateToNextStep"
         />
       </div>
     </div>
@@ -42,11 +44,46 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/authstore";
+import { useQuasar } from "quasar";
 
 const router = useRouter();
-const bio = ref("");
-const setBio = () => {
-  router.push({ name: "web-set-profile" });
+const authStore = useAuthStore();
+const $q = useQuasar();
+const isLoading = ref(false);
+const navigateToNextStep = async () => {
+  try {
+    isLoading.value = true;
+    const res = await authStore.registerStep3();
+    isLoading.value = false;
+    if (!res?.status) {
+      $q.notify({
+        color: "negative",
+        message: res,
+        position: "top",
+        icon: "error",
+      });
+    } else {
+      $q.notify({
+        message: "Account created successfully!",
+        color: "positive", // You can use different colors like 'negative', 'warning', 'info'
+        position: "top", // Position can be 'top', 'bottom', 'left', 'right'
+        timeout: 3000, // Duration the toast will be visible, in milliseconds
+        icon: "check_circle", // Optional: adds an icon, Quasar icons or Material Icons can be used
+      });
+      router.push({ name: "web-dashboard-trending" });
+    }
+  } catch (error) {
+    console.error("Registration error:", error);
+    $q.notify({
+      color: "negative",
+      message: "An error occurred. Please try again.",
+      position: "top",
+      icon: "error",
+    });
+  } finally {
+    console.log("Completed");
+  }
 };
 </script>
 
@@ -87,6 +124,9 @@ const setBio = () => {
     }
     button {
       width: 100%;
+    }
+    :deep(.q-btn__content) {
+      text-transform: none;
     }
   }
   :deep(.q-field__control) {
