@@ -110,9 +110,9 @@
           class="flex items-center w-full q-px-lg"
           :class="$route.path.includes('/profile') && 'is-active'"
         >
-          <q-btn flat no-caps round to="/setting">
+          <q-btn flat no-caps round to="/web/settings">
             <div class="flex items-center w-full">
-              <q-icon v-if="$route.path === '/setting'" size="24px">
+              <q-icon v-if="$route.path === '/web/settings'" size="24px">
                 <img src="~src/assets/icons/settings-active.svg" alt="" />
               </q-icon>
               <q-icon v-else size="24px">

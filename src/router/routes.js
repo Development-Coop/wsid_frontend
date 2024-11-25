@@ -2,7 +2,10 @@ const routes = [
   {
     path: "",
     component: () => import("layouts/RegularLayout.vue"),
-    children: [{ path: "", component: () => import("src/pages/web/Home.vue") }],
+    children: [
+      { path: "", component: () => import("src/pages/web/Home.vue") },
+      { path: "beta", component: () => import("src/pages/web/Beta.vue") },
+    ],
   },
   {
     path: "/auth",
@@ -54,13 +57,19 @@ const routes = [
         path: "/web/dashboard/trending",
         name: "web-dashboard-trending",
         component: () => import("src/pages/web/dashboard/trending.vue"),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: "/web/dashboard/profile",
         name: "web-dashboard-profile",
         component: () => import("src/pages/web/dashboard/profile.vue"),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/web/settings",
+        name: "web-settings",
+        component: () => import("src/pages/web/settings.vue"),
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -172,7 +181,8 @@ const routes = [
               {
                 path: "", // Default child route for "layout"
                 name: "trending",
-                component: () => import("src/pages/app/view/dashboard/trending.vue"),
+                component: () =>
+                  import("src/pages/app/view/dashboard/trending.vue"),
                 meta: { requiresAuth: true },
               },
               {
@@ -202,7 +212,7 @@ const routes = [
             name: "view-question",
             component: () =>
               import("src/pages/app/view/dashboard/view-question.vue"),
-              meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
           },
         ],
       },
@@ -213,7 +223,7 @@ const routes = [
           {
             path: "",
             component: () => import("src/pages/app/view/dashboard/temp.vue"),
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
           },
         ],
       },
@@ -226,7 +236,7 @@ const routes = [
             path: "",
             component: () =>
               import("src/pages/app/view/dashboard/ask-question.vue"),
-              meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
           },
         ],
       },
@@ -238,7 +248,19 @@ const routes = [
             path: "",
             component: () =>
               import("src/pages/app/view/dashboard/profile/profile.vue"),
-              meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
+          },
+          {
+            path: "edit-profile",
+            component: () =>
+              import("src/pages/app/view/dashboard/profile/editProfile.vue"),
+            meta: { requiresAuth: true },
+          },
+          {
+            path: "settings",
+            component: () =>
+              import("src/pages/app/view/dashboard/profile/settings.vue"),
+            meta: { requiresAuth: true },
           },
         ],
       },
@@ -249,7 +271,7 @@ const routes = [
           {
             path: "",
             component: () => import("src/pages/app/view/dashboard/temp.vue"),
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
           },
         ],
       },

@@ -1,19 +1,26 @@
 <template>
   <q-page>
-    <div class="q-pa-lg">
+    <img
+      src="https://media.sproutsocial.com/uploads/3a_facebook-cover-photo_labels@2x-1.png"
+      alt=""
+      class="cover-img"
+      style="height: 150px; width: 100%; object-fit: cover"
+    />
+    <div class="q-px-lg q-py-md">
       <div class="flex justify-end">
-        <q-icon size="24px" class="q-mr-md">
-          <img src="~src/assets/icons/edit.svg" alt="edit" />
-        </q-icon>
-        <q-icon size="24px">
-          <img src="~src/assets/icons/settings.svg" alt="settings" />
-        </q-icon>
+        <q-btn flat no-caps size="xs" to="/app/profile/edit-profile">
+          <q-icon size="24px">
+            <img src="~src/assets/icons/edit.svg" alt="edit" />
+          </q-icon>
+        </q-btn>
+        <q-btn flat no-caps size="xs" to="/app/profile/settings">
+          <q-icon size="24px">
+            <img src="~src/assets/icons/settings.svg" alt="settings" />
+          </q-icon>
+        </q-btn>
       </div>
       <div class="flex no-wrap items-center profile-wrapper">
-        <q-img
-          class="profile-img"
-          :src="user?.profilePic"
-        />
+        <q-img class="profile-img" :src="user?.profilePic" />
         <div>
           <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
           <p class="text-grey-7">
@@ -23,15 +30,21 @@
       </div>
       <div class="flex justify-around q-my-lg">
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">{{ user?.followersCount }}</p>
+          <p class="text-h6 text-weight-medium text-primary">
+            {{ user?.followersCount }}
+          </p>
           <p>Followers</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">{{ user?.followingCount }}</p>
+          <p class="text-h6 text-weight-medium text-primary">
+            {{ user?.followingCount }}
+          </p>
           <p>Following</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">{{ user?.likesCount }}</p>
+          <p class="text-h6 text-weight-medium text-primary">
+            {{ user?.likesCount }}
+          </p>
           <p>Likes</p>
         </div>
       </div>
@@ -91,7 +104,7 @@ const posts = ref([]);
 const profileStore = useProfileStore();
 const $q = useQuasar();
 
-const user = computed(()=> {
+const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
 });
 
@@ -114,12 +127,11 @@ const handleSubmit = async () => {
   }
 };
 
-onMounted(()=> {
-  if(!user.value?.name) {
+onMounted(() => {
+  if (!user.value?.name) {
     handleSubmit();
   }
-})
-
+});
 </script>
 
 <style scoped lang="scss">
@@ -129,6 +141,7 @@ onMounted(()=> {
   .q-tab-panels {
     background-color: #f1efef;
     height: 100%;
+    min-height: 400px;
   }
 }
 .profile-wrapper {
