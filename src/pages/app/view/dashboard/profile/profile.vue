@@ -1,7 +1,8 @@
 <template>
   <q-page>
     <img
-      src="https://media.sproutsocial.com/uploads/3a_facebook-cover-photo_labels@2x-1.png"
+      v-if="user?.coverPic"
+      :src="user?.coverPic"
       alt=""
       class="cover-img"
       style="height: 150px; width: 100%; object-fit: cover"
