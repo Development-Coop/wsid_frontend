@@ -13,7 +13,15 @@
             life altering.
           </p>
           <div class="banner-buttons">
-            <q-input v-model="email" standout outlined label="Enter your email" :error="emailError" :error-message="emailErrorMessage" @change="validateEmail">
+            <q-input
+              v-model="email"
+              standout
+              outlined
+              label="Enter your email"
+              :error="emailError"
+              :error-message="emailErrorMessage"
+              @change="validateEmail"
+            >
               <template #after>
                 <q-btn
                   no-caps
@@ -169,23 +177,34 @@ const subscribeToNewsletter = async () => {
 
   // Check if the email is valid
   if (!emailPattern.test(email.value)) {
+    emailError.value = true;
+    emailErrorMessage.value = "Please enter a valid email address.";
+    return; // Exit the function if the email is invalid
+  }
+
+  try {
+    const isSubscribed = await commonStore.subscribeToNewsletter(email.value);
+    if (isSubscribed) {
+      emailError.value = false;
+      emailErrorMessage.value = "";
+      $q.notify({
+        message: isSubscribed,
+        color: "positive",
+        position: "top",
+        timeout: 3000,
+      });
+    }
+  } catch (error) {
+    emailError.value = true;
+    emailErrorMessage.value = "Failed to subscribe. Please try again.";
     $q.notify({
-      message: "Please enter a valid email address.",
+      message: "Failed to subscribe. Please try again.",
       color: "negative",
       position: "top",
       timeout: 3000,
     });
-    return; // Exit the function if the email is invalid
-  }
-
-  const isSubscribed = await commonStore.subscribeToNewsletter(email.value);
-  if (isSubscribed) {
-    $q.notify({
-      message: isSubscribed,
-      color: "positive",
-      position: "top",
-      timeout: 3000,
-    });
+  } finally {
+    email.value = "";
   }
 };
 
