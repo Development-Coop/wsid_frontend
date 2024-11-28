@@ -13,16 +13,15 @@
             life altering.
           </p>
           <div class="banner-buttons">
-            <q-input standout outlined label="Enter your email" maxlength="12">
+            <q-input v-model="email" standout outlined label="Enter your email" :error="emailError" :error-message="emailErrorMessage" @change="validateEmail">
               <template #after>
                 <q-btn
-                  v-motion-pop
                   no-caps
-                  :delay="700"
                   block
                   label="Join Waitlist"
                   color="primary"
                   unelevated
+                  @click="subscribeToNewsletter"
                 />
               </template>
             </q-input>
@@ -132,7 +131,9 @@ import CommentCard from "../../components/CommentCard.vue";
 import CommentsSlider from "../../components/CommentsSlider.vue";
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import { useCommonStore } from "../../stores/commonstore";
 
+const commonStore = useCommonStore();
 const $q = useQuasar();
 const commentsList = ref([
   {
@@ -158,6 +159,49 @@ const commentsList = ref([
 ]);
 
 const isMobile = computed(() => $q.screen.width < 992);
+const email = ref("");
+const emailError = ref(false);
+const emailErrorMessage = ref("");
+
+const subscribeToNewsletter = async () => {
+  // Email validation regex
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Check if the email is valid
+  if (!emailPattern.test(email.value)) {
+    $q.notify({
+      message: "Please enter a valid email address.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+    });
+    return; // Exit the function if the email is invalid
+  }
+
+  const isSubscribed = await commonStore.subscribeToNewsletter(email.value);
+  if (isSubscribed) {
+    $q.notify({
+      message: isSubscribed,
+      color: "positive",
+      position: "top",
+      timeout: 3000,
+    });
+  }
+};
+
+const validateEmail = () => {
+  // Email validation regex
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Check if the email is valid
+  if (!emailPattern.test(email.value)) {
+    emailError.value = true;
+    emailErrorMessage.value = "Please enter a valid email address.";
+  } else {
+    emailError.value = false;
+    emailErrorMessage.value = "";
+  }
+};
 </script>
 
 <style scoped lang="scss">

@@ -107,18 +107,23 @@ const isEmailValid = computed(() => {
 });
 
 const submitEmail = async () => {
-  if (isValidEmail) {
+  if (isEmailValid.value) {
     isLoading.value = true;
-    isSubmitted.value = await authStore.forgotPassword(email.value);
-    isLoading.value = false;
-    if (!isSubmitted.value) {
+    try {
+      isSubmitted.value = await authStore.forgotPassword(email.value);
+      if (!isSubmitted.value) {
+        throw new Error("Failed to send password reset email.");
+      }
+    } catch (error) {
       $q.notify({
-        message: "Something went wrong!",
-        color: "negative", // You can use different colors like 'negative', 'warning', 'info'
-        position: "top", // Position can be 'top', 'bottom', 'left', 'right'
-        timeout: 3000, // Duration the toast will be visible, in milliseconds
-        icon: "error", // Optional: adds an icon, Quasar icons or Material Icons can be used
+        message: error.message || "Something went wrong!",
+        color: "negative",
+        position: "top",
+        timeout: 3000,
+        icon: "error",
       });
+    } finally {
+      isLoading.value = false;
     }
   }
 };
