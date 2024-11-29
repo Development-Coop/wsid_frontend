@@ -82,15 +82,16 @@ const handleSubmit = async () => {
   try {
     await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: 'web-dashboard-trending' });
+    router.push({ name: "web-dashboard-trending" });
   } catch (error) {
     $q.notify({
-        color: "negative",
-        message: error.response?.data?.message || "Login failed. Please try again.",
-        position: "top",
-        icon: "error",
-        autoClose: true
-      });
+      color: "negative",
+      message:
+        error.response?.data?.message || "Login failed. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
   } finally {
     loading.value = false;
   }

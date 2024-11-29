@@ -150,7 +150,7 @@ const getOtp = async () => {
       color: "negative",
       message: res,
       position: "top",
-      icon: "error"
+      icon: "error",
     });
   } else {
     router.push({ name: "set-password" });

@@ -50,7 +50,10 @@
 
           <!-- Suggestions as a static list (No dropdown) -->
           <div
-            v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length"
+            v-if="
+              authStore.filteredSuggestions &&
+              authStore.filteredSuggestions.length
+            "
             v-motion-slide-left
             :delay="800"
             class="suggestions-list"
@@ -69,7 +72,10 @@
 
             <!-- Show more/less option -->
             <p
-              v-if="authStore.filteredSuggestions && authStore.filteredSuggestions.length > visibleCount"
+              v-if="
+                authStore.filteredSuggestions &&
+                authStore.filteredSuggestions.length > visibleCount
+              "
               class="text-green-5 show-more q-mt-sm cursor-pointer"
               @click="toggleShowAll"
             >

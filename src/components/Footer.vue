@@ -106,7 +106,7 @@ const message = ref("");
       @media screen and (max-width: 992px) {
         max-width: 100%;
         font-size: 32px;
-    }
+      }
       span {
         color: #a3a3a3;
         font-size: 16px;
@@ -187,8 +187,8 @@ const message = ref("");
           height: 40px;
           width: 40px;
           img {
-          width: 20px;
-        }
+            width: 20px;
+          }
         }
       }
     }

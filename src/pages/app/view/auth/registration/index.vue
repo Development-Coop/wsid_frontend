@@ -131,9 +131,7 @@ const validateForm = () => {
   if (!authStore.userDetails.phone_or_email.trim()) {
     errors.value.phone_or_email = "Email is required.";
     isValid = false;
-  } else if (
-    !isValidEmail(authStore.userDetails.phone_or_email)
-  ) {
+  } else if (!isValidEmail(authStore.userDetails.phone_or_email)) {
     errors.value.phone_or_email = "Enter a valid Email.";
     isValid = false;
   }

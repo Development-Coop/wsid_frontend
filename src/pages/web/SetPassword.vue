@@ -29,7 +29,7 @@
         </q-input>
 
         <!-- Reveal Password Text -->
-        <div :class="['text-right', {'q-mt-md': !!errorMessage}]">
+        <div :class="['text-right', { 'q-mt-md': !!errorMessage }]">
           <p
             class="cursor-pointer toggle-password"
             @click="showPassword = !showPassword"

@@ -25,11 +25,21 @@
 
         <!-- Profile Picture Upload -->
         <div
-          :class="['profile-container', { 'file-uploaded': !!authStore.userDetails.profilePicture }]"
+          :class="[
+            'profile-container',
+            { 'file-uploaded': !!authStore.userDetails.profilePicture },
+          ]"
         >
           <q-img
-            :src="authStore.userDetails.profilePicture || authStore.placeholderImage"
-            style="height: 150px; max-width: 150px; object-fit: cover; border-radius: 50%;"
+            :src="
+              authStore.userDetails.profilePicture || authStore.placeholderImage
+            "
+            style="
+              height: 150px;
+              max-width: 150px;
+              object-fit: cover;
+              border-radius: 50%;
+            "
             @click="uploadProfile"
           />
 
@@ -68,7 +78,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -82,7 +92,7 @@ const triggerConfetti = () => {
   confetti({
     particleCount: 150,
     spread: 60,
-    origin: { y: 0.6 }
+    origin: { y: 0.6 },
   });
 };
 
@@ -141,8 +151,7 @@ const navigateToAddBio = () => {
       :deep(.q-img__image) {
         border-radius: 50%;
         height: 150px;
-        border: 1px solid #9FA3B3;
-;
+        border: 1px solid #9fa3b3;
       }
     }
   }

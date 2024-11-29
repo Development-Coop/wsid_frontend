@@ -60,7 +60,10 @@
           <p
             class="popup-btn"
             @click="
-              router.push({ name: 'web-reset-password', query: { email: email } })
+              router.push({
+                name: 'web-reset-password',
+                query: { email: email },
+              })
             "
           >
             OK

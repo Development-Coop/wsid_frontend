@@ -13,7 +13,12 @@
             life altering.
           </p>
           <div class="banner-buttons">
-            <button v-motion-pop :delay="700" class="btn btn-primary" @click="router.push({ path: '/auth/web-login?tab=login' })">
+            <button
+              v-motion-pop
+              :delay="700"
+              class="btn btn-primary"
+              @click="router.push({ path: '/auth/web-login?tab=login' })"
+            >
               Get Started
             </button>
             <button v-motion-pop :delay="700" class="btn btn-secondary">
@@ -28,7 +33,12 @@
           :key="index"
           :class="[`comments-list-${index}`, 'comments-list']"
         >
-          <CommentCard v-motion-slide-right :delay="index == 0 ? 500: 600" :image-src="comment.imgSrc" :text="comment.comment" />
+          <CommentCard
+            v-motion-slide-right
+            :delay="index == 0 ? 500 : 600"
+            :image-src="comment.imgSrc"
+            :text="comment.comment"
+          />
         </div>
         <div class="primary-img">
           <span class="shadow"></span>

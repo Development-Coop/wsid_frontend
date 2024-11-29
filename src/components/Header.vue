@@ -37,7 +37,9 @@
           </li>
         </ul>
       </nav>
-      <button class="button"><a href="mailto:admin@wsid.com">Contact</a></button>
+      <button class="button">
+        <a href="mailto:admin@wsid.com">Contact</a>
+      </button>
     </div>
   </header>
 </template>

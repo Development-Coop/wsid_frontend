@@ -136,16 +136,20 @@
                 <span class="q-mr-md">{{
                   voteOptions.find((option) => option.id === selectedVote).label
                 }}</span>
-                <span class="q-ml-auto q-mr-md">{{
-                  voteOptions.find((option) => option.id === selectedVote)
-                    .percentage
-                }}%</span>
+                <span class="q-ml-auto q-mr-md"
+                  >{{
+                    voteOptions.find((option) => option.id === selectedVote)
+                      .percentage
+                  }}%</span
+                >
                 <span>•</span>
-                <span class="q-ml-md">{{
-                  voteOptions.find((option) => option.id === selectedVote)
-                    .votes
-                }}
-                  Votes</span>
+                <span class="q-ml-md"
+                  >{{
+                    voteOptions.find((option) => option.id === selectedVote)
+                      .votes
+                  }}
+                  Votes</span
+                >
               </div>
               <q-linear-progress
                 size="8px"
@@ -302,7 +306,7 @@ const showVotesResult = (option) => {
   font-weight: 500;
 
   &.selected-option {
-    background-color: #F49D37;
+    background-color: #f49d37;
     color: #fff;
   }
 }

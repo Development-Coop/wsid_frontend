@@ -35,8 +35,10 @@
           able to opt-out from receiving. We also may send you other kinds of
           emails, which you can opt-out of either from your Account Settings
           page or by using the “Opt-Out” link in the emails themselves.
-          <b>Note that we will never email you to ask for your password or other
-            Account Information</b>
+          <b
+            >Note that we will never email you to ask for your password or other
+            Account Information</b
+          >
         </p>
       </section>
 

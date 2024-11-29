@@ -9,11 +9,21 @@
 
       <!-- Profile Picture Upload -->
       <div
-        :class="['profile-container', { 'file-uploaded': !!authStore.userDetails.profilePicture }]"
+        :class="[
+          'profile-container',
+          { 'file-uploaded': !!authStore.userDetails.profilePicture },
+        ]"
       >
         <q-img
-          :src="authStore.userDetails.profilePicture || authStore.placeholderImage"
-          style="height: 150px; max-width: 150px; object-fit: cover; border-radius: 50%;"
+          :src="
+            authStore.userDetails.profilePicture || authStore.placeholderImage
+          "
+          style="
+            height: 150px;
+            max-width: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+          "
           @click="uploadProfile"
         />
 
@@ -55,7 +65,7 @@
 import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 
 // Setup router
 const router = useRouter();
@@ -106,8 +116,8 @@ const navigateToAddBio = () => {
 .upload-profile {
   position: relative;
   display: grid;
-	min-width: 400px;
-	@media screen and (max-width: 557px) {
+  min-width: 400px;
+  @media screen and (max-width: 557px) {
     min-width: 300px;
   }
 

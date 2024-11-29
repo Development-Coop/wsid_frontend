@@ -274,7 +274,7 @@ const handleSubmit = async () => {
         icon: "error",
       });
     } else {
-      emit("submitted", authStore.userDetails.phone_or_email.trim())
+      emit("submitted", authStore.userDetails.phone_or_email.trim());
     }
   }
 };
@@ -388,7 +388,9 @@ const handleSubmit = async () => {
   .q-field__control {
     height: 40px;
   }
-  .q-field--labeled .q-field__native, .q-field--labeled .q-field__prefix, .q-field--labeled .q-field__suffix {
+  .q-field--labeled .q-field__native,
+  .q-field--labeled .q-field__prefix,
+  .q-field--labeled .q-field__suffix {
     padding-bottom: 2px;
     padding-top: 16px;
   }

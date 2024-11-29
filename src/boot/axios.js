@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: "https://wsi-be.netlify.app/api",
   headers: {
     "Content-Type": "application/json",
-  }
+  },
 });
 
 export default boot(({ app }) => {

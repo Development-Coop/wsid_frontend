@@ -6,11 +6,12 @@
         <div class="banner-content">
           <span class="banner-subtitle">What Should I Do?</span>
           <h1 v-motion-slide-left :delay="500" class="banner-title">
-            What is the best action movie for some one who hates action?
+            Redefining how you ask &mdash; coming your way soon!
           </h1>
           <p class="banner-description">
-            Submit questions to find assistance, ranging from being trivial to
-            life altering.
+            Don&rsquo;t miss out! Be the first to experience the future of
+            decision-making. Join our waitlist for updates and exclusive early
+            access!
           </p>
           <div class="banner-buttons">
             <q-input

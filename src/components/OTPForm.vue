@@ -110,7 +110,7 @@ const handleKeydown = (index, event) => {
 };
 
 // Function to combine the OTP and display it
-const getOtp = async() => {
+const getOtp = async () => {
   const otpString = otp.value.join("");
   isLoading.value = true;
   const res = await authStore.registerStep2(otpString, props.email);
@@ -120,7 +120,7 @@ const getOtp = async() => {
       color: "negative",
       message: res,
       position: "top",
-      icon: "error"
+      icon: "error",
     });
   } else {
     router.push({ name: "web-set-password" });

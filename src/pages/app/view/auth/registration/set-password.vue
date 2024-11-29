@@ -96,8 +96,10 @@ const isCodeValid = computed(() => {
   const hasLowerCase = /[a-z]/.test(passwordValue);
   const hasNumber = /\d/.test(passwordValue);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue);
-  
-  return hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+
+  return (
+    hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar
+  );
 });
 
 const moveIconToRight = () => {
@@ -106,7 +108,8 @@ const moveIconToRight = () => {
 
 const validatePasswordOnBlur = () => {
   if (!isCodeValid.value) {
-    errorMessage.value = "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
+    errorMessage.value =
+      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
   } else {
     errorMessage.value = ""; // Clear error if valid
   }

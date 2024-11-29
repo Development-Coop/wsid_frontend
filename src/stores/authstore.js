@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { api } from 'boot/axios';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import { api } from "boot/axios";
 
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthStore = defineStore("auth", () => {
   const userDetails = ref({
     name: "",
     phone_or_email: "",
@@ -30,7 +30,9 @@ export const useAuthStore = defineStore('auth', () => {
   const isValidUsername = ref(true);
 
   const filteredSuggestions = computed(() => {
-    const searchTerm = userDetails.value.username.toLowerCase().replace("@", "");
+    const searchTerm = userDetails.value.username
+      .toLowerCase()
+      .replace("@", "");
     return suggestions.value.filter((suggestion) =>
       suggestion.toLowerCase().includes(searchTerm)
     );
@@ -45,10 +47,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   const registerStep1 = async (userData) => {
     try {
-      const response = await api.post('/auth/register-step1', {
+      const response = await api.post("/auth/register-step1", {
         name: userData.name,
         email: userData.phone_or_email, // Assuming it's an email
-        dateOfBirth: userData.dob.split('-').reverse().join('/') // Convert DD-MM-YYYY to YYYY/MM/DD
+        dateOfBirth: userData.dob.split("-").reverse().join("/"), // Convert DD-MM-YYYY to YYYY/MM/DD
       });
 
       console.log("Registration step 1 successful:", response.data);
@@ -63,13 +65,13 @@ export const useAuthStore = defineStore('auth', () => {
 
   const registerStep2 = async (otp, email) => {
     try {
-      const response = await api.post('/auth/register-step2', {
+      const response = await api.post("/auth/register-step2", {
         otp: otp,
-        email: email
+        email: email,
       });
       return response?.data;
     } catch (error) {
-      console.error('Error during OTP verification:', error);
+      console.error("Error during OTP verification:", error);
       return error?.response?.data?.message || "Something went wrong!";
     }
   };
@@ -158,10 +160,10 @@ export const useAuthStore = defineStore('auth', () => {
 
       formData.append("bio", userDetails.value.bio);
 
-      const response = await api.post('/auth/register-step3', formData, {
+      const response = await api.post("/auth/register-step3", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       console.log("Registration step 3 successful:", response.data);
@@ -181,20 +183,25 @@ export const useAuthStore = defineStore('auth', () => {
     });
     errors.value.login = ""; // Clear previous errors
     try {
-      const response = await api.post('/auth/login', {
-        emailOrUsername: userDetails.value.phone_or_email,
-        password: userDetails.value.password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await api.post(
+        "/auth/login",
+        {
+          emailOrUsername: userDetails.value.phone_or_email,
+          password: userDetails.value.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
       localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
       localStorage.setItem("access-token", response?.data?.data?.accessToken);
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
-      errors.value.login = error.response?.data?.message || "Login failed. Please try again.";
+      errors.value.login =
+        error.response?.data?.message || "Login failed. Please try again.";
       throw error;
     }
   };
@@ -205,13 +212,17 @@ export const useAuthStore = defineStore('auth', () => {
     });
     errors.value.fp = ""; // Clear previous errors
     try {
-      const response = await api.post('/auth/forgot-password', {
-        email
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await api.post(
+        "/auth/forgot-password",
+        {
+          email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
       return response.data.status;
     } catch (error) {
       return false;
@@ -220,15 +231,19 @@ export const useAuthStore = defineStore('auth', () => {
 
   const resetPassword = async (email, otp, password) => {
     try {
-      const response = await api.post('/auth/reset-password', {
-        email,
-        otp,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await api.post(
+        "/auth/reset-password",
+        {
+          email,
+          otp,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
       return response?.data;
     } catch (error) {
       return error?.response?.data?.message || "Something went wrong!";
@@ -270,6 +285,6 @@ export const useAuthStore = defineStore('auth', () => {
     errors,
     clearErrors,
     forgotPassword,
-    resetPassword
+    resetPassword,
   };
 });

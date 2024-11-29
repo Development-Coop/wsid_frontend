@@ -67,8 +67,7 @@ const handleSubmit = () => {
       query: { contactDetail: authStore.userDetails.phone_or_email.trim() },
     });
   } else {
-    authStore.errors.phone_or_email =
-      "Email, or username is required.";
+    authStore.errors.phone_or_email = "Email, or username is required.";
   }
 };
 </script>

@@ -18,7 +18,7 @@
         <h4 class="text-h5 text-center text-weight-medium q-mb-xl">
           Enter your password
         </h4>
-    
+
         <q-form class="q-gutter-md" @submit.prevent="handleSubmit">
           <q-input
             v-model="authStore.userDetails.phone_or_email"
@@ -47,7 +47,10 @@
               type="submit"
               :loading="loading"
             />
-            <RouterLink class="text-center q-mt-lg" to="/app/auth/forgot-password">
+            <RouterLink
+              class="text-center q-mt-lg"
+              to="/app/auth/forgot-password"
+            >
               <p class="text-body2 text-weight-medium">Forgot password?</p>
             </RouterLink>
           </div>
@@ -72,7 +75,7 @@
     </q-dialog>
   </q-page>
 </template>
-    
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -94,7 +97,7 @@ const handleSubmit = async () => {
   try {
     await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: 'trending' });
+    router.push({ name: "trending" });
   } catch (error) {
     showError.value = true;
   } finally {
