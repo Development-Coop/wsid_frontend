@@ -39,8 +39,8 @@
           <q-icon
             v-if="
               $route.path === '/app/profile' ||
-              $route.path === '/app/profile/settings' ||
-              $route.path === '/app/profile/edit-profile'
+                $route.path === '/app/profile/settings' ||
+                $route.path === '/app/profile/edit-profile'
             "
             size="24px"
           >

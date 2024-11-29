@@ -37,9 +37,7 @@
       />
       <div class="text-center relative-position q-py-lg q-mb-md">
         <hr class="divider q-my-none" />
-        <span class="bg-white q-px-sm absolute-center text-h6 text-grey-7"
-          >or</span
-        >
+        <span class="bg-white q-px-sm absolute-center text-h6 text-grey-7">or</span>
       </div>
       <q-btn
         v-motion-pop
