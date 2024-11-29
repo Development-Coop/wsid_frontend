@@ -49,14 +49,11 @@
           no-caps
           flat
           round
-          to="/web/dashboard/trending"
-          :class="$route.path.includes('/trending') && 'is-active'"
+          to="/web/dashboard/home"
+          :class="$route.path.includes('/dashboard/home') && 'is-active'"
         >
           <div class="flex items-center w-full q-px-lg">
-            <q-icon
-              v-if="$route.path.includes('/dashboard/trending')"
-              size="27px"
-            >
+            <q-icon v-if="$route.path.includes('/dashboard/home')" size="27px">
               <img src="~src/assets/icons/nav-home-active.svg" alt="" />
             </q-icon>
             <q-icon v-else size="27px">
@@ -72,8 +69,8 @@
           no-caps
           flat
           round
-          to="/trending"
-          :class="$route.path.includes('/trendings') && 'is-active'"
+          to="/web/dashboard/trending"
+          :class="$route.path.includes('/trending') && 'is-active'"
         >
           <div class="flex items-center w-full q-px-lg">
             <q-icon v-if="$route.path === '/trending'" size="24px">
@@ -106,22 +103,25 @@
           </div>
         </q-btn>
 
-        <div
-          class="flex items-center w-full q-px-lg"
-          :class="$route.path.includes('/profile') && 'is-active'"
+        <q-btn
+          class="w-full"
+          unelevated
+          no-caps
+          flat
+          round
+          to="/web/settings"
+          :class="$route.path.includes('/settings') && 'is-active'"
         >
-          <q-btn flat no-caps round to="/web/settings">
-            <div class="flex items-center w-full">
-              <q-icon v-if="$route.path === '/web/settings'" size="24px">
-                <img src="~src/assets/icons/settings-active.svg" alt="" />
-              </q-icon>
-              <q-icon v-else size="24px">
-                <img src="~src/assets/icons/settings.svg" alt="" />
-              </q-icon>
-              <span class="q-ml-md">Setting</span>
-            </div>
-          </q-btn>
-        </div>
+          <div class="flex items-center w-full q-px-lg">
+            <q-icon v-if="$route.path === '/web/settings'" size="24px">
+              <img src="~src/assets/icons/settings-active.svg" alt="" />
+            </q-icon>
+            <q-icon v-else size="24px">
+              <img src="~src/assets/icons/settings.svg" alt="" />
+            </q-icon>
+            <span class="q-ml-md">Setting</span>
+          </div>
+        </q-btn>
       </q-toolbar>
 
       <div

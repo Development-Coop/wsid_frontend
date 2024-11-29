@@ -5,8 +5,17 @@ const routes = [
     children: [
       { path: "", component: () => import("src/pages/web/Home.vue") },
       { path: "beta", component: () => import("src/pages/web/Beta.vue") },
-      { path: "terms-conditions", name: "terms-conditions", component: () => import("src/pages/TermsConditions/TermsAndConditions.vue") },
-      { path: "privacy-policy", name: "privacy-policy", component: () => import("src/pages/TermsConditions/PrivacyPolicy.vue") },
+      {
+        path: "terms-conditions",
+        name: "terms-conditions",
+        component: () =>
+          import("src/pages/TermsConditions/TermsAndConditions.vue"),
+      },
+      {
+        path: "privacy-policy",
+        name: "privacy-policy",
+        component: () => import("src/pages/TermsConditions/PrivacyPolicy.vue"),
+      },
     ],
   },
   {
@@ -55,6 +64,12 @@ const routes = [
     path: "/web",
     component: () => import("src/pages/web/layout.vue"),
     children: [
+      {
+        path: "/web/dashboard/home",
+        name: "web-dashboard-home",
+        component: () => import("src/pages/web/dashboard/dashboardhome.vue"),
+        meta: { requiresAuth: true },
+      },
       {
         path: "/web/dashboard/trending",
         name: "web-dashboard-trending",
