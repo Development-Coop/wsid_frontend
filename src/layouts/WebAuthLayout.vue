@@ -43,7 +43,7 @@
             <router-view />
           </div>
           <p class="terms">
-            By signing up to create an account I accept WSID’s <br /><span><a>Terms of use</a> & <a>Privacy Policy</a></span>.
+            By signing up to create an account I accept WSID’s <br /><span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a> & <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
           </p>
         </q-page-container>
       </section>
@@ -52,9 +52,8 @@
 </template>
 
 <script setup>
-defineOptions({
-  name: "WebAuthLayout",
-});
+import { useRouter } from "vue-router";
+const router = useRouter();
 </script>
 
 <style scoped lang="scss">
