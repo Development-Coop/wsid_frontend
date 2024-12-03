@@ -85,6 +85,22 @@
               unelevated
             />
           </div>
+          <div v-else class="post-wrapper">
+            <Posts
+              v-for="post in posts"
+              :key="post.id"
+              class="q-pa-md"
+              :post-id="post.id"
+              :user-image="post.user.profilePicUrl"
+              :user-id="post.user.id"
+              :username="post.user.name"
+              :time-ago="post.timeAgo"
+              :post-content="post.description"
+              :post-images="post.images"
+              :votes="post.votesCount"
+              :comments="post.commentsCount"
+            />
+          </div>
         </q-tab-panel>
 
         <q-tab-panel class="q-pa-lg" name="Activity">
@@ -99,11 +115,15 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
+import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading } from "quasar";
+import Posts from "../../../components/posts.vue";
+
 const tab = ref("Posts");
 const posts = ref([]);
 const profileStore = useProfileStore();
 const $q = useQuasar();
+const postStore = usePostStore();
 
 const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
@@ -128,10 +148,11 @@ const handleSubmit = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (!user.value?.name) {
-    handleSubmit();
+    await handleSubmit();
   }
+  posts.value = await postStore.getPostList()
 });
 </script>
 

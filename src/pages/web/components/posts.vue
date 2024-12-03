@@ -1,5 +1,6 @@
 <template>
   <div class="post">
+    <!-- Header with user image, details, and action menu -->
     <div class="flex items-center no-wrap">
       <q-img
         class="post-img"
@@ -11,21 +12,68 @@
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
-          <span v-if="timeAgo" class="text-grey-7"> • {{ timeAgo }}</span>
+          <span v-if="timeAgo" class="text-grey-7"> • {{ calculateTimeAgo() }}</span>
           <!-- Dynamic time -->
         </p>
       </div>
+      <!-- Three Dots Dropdown Menu -->
+      <q-btn-dropdown
+        v-if="isOwnPosts"
+        flat
+        dense
+        icon="more_vert"
+        class="menu-btn"
+        no-caps
+        no-icon-animation
+        content-class="no-arrow"
+      >
+        <q-list>
+          <q-item v-close-popup clickable @click="onEdit">
+            <q-item-section> Edit </q-item-section>
+          </q-item>
+          <q-item v-close-popup clickable @click="onDelete">
+            <q-item-section> Delete </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </div>
+
+    <!-- Post Content -->
     <p class="text-grey-9 q-mb-sm q-mt-sm">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
+
+    <!-- Single Post Image -->
     <q-img
       v-if="postImage"
       :src="postImage"
       spinner-color="white"
       fit="contain"
+      class="q-mb-sm"
     />
+
+    <!-- Multiple Post Images Grid -->
+    <div v-if="postImages.length > 0" class="post-images-grid q-mb-sm">
+      <div
+        v-for="(image, index) in postImages.slice(0, 4)"
+        :key="index"
+        class="image-wrapper"
+      >
+        <q-img
+          :src="image"
+          spinner-color="white"
+          fit="cover"
+          class="image-item"
+        />
+        <!-- Overlay for additional images -->
+        <div v-if="index === 3 && postImages.length > 4" class="overlay-more">
+          +{{ postImages.length - 4 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer with votes, comments, and action button -->
     <div
       class="flex no-wrap items-center q-pt-md q-mt-lg"
       style="gap: 10px; border-top: 2px solid #f1f2f5"
@@ -46,7 +94,19 @@
 </template>
 
 <script setup>
-defineProps({
+import { usePostStore } from "src/stores/postStore";
+import { useQuasar, Loading } from "quasar";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const postStore = usePostStore();
+const $q = useQuasar();
+
+const props = defineProps({
+  postId: {
+    type: String,
+    required: true, // Required since it's used as the key
+  },
   userImage: {
     type: String,
     default: "", // Default value for userImage
@@ -67,6 +127,10 @@ defineProps({
     type: String,
     default: "", // Default value for postImage
   },
+  postImages: {
+    type: Array,
+    default: () => [], // Default value for postImages as an empty array
+  },
   votes: {
     type: Number,
     default: 0, // Default value for votes
@@ -75,7 +139,65 @@ defineProps({
     type: Number,
     default: 0, // Default value for comments
   },
+  isOwnPosts: {
+    type: Boolean,
+    default: false, // Default value for comments
+  },
 });
+
+const calculateTimeAgo = () => {
+  const now = Date.now();
+  const secondsAgo = Math.floor((now - props.timeAgo) / 1000);
+
+  if (secondsAgo < 60) {
+    return `${secondsAgo} seconds ago`;
+  } else if (secondsAgo < 3600) {
+    const minutes = Math.floor(secondsAgo / 60);
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else if (secondsAgo < 86400) {
+    const hours = Math.floor(secondsAgo / 3600);
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (secondsAgo < 604800) {
+    const days = Math.floor(secondsAgo / 86400);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (secondsAgo < 2419200) {
+    const weeks = Math.floor(secondsAgo / 604800);
+    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+  } else {
+    const months = Math.floor(secondsAgo / 2419200);
+    return `${months} month${months > 1 ? 's' : ''} ago`;
+  }
+};
+
+const onEdit = () => {
+  router.push({ path: '/app/ask-question', query: { postId: props.postId } })
+}
+
+const onDelete = async () => {
+  try {
+    Loading.show();
+    await postStore.deletePost(props.postId)
+    $q.notify({
+      message: "Successfully deleted!",
+      color: "positive",
+      position: "top",
+      timeout: 3000,
+      icon: "check_circle",
+    });
+  } catch (e) {
+    $q.notify({
+      color: "negative",
+      message:
+        e?.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -84,6 +206,8 @@ defineProps({
   gap: 16px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+
   .post-img {
     flex-shrink: 0;
     height: 44px;
@@ -91,6 +215,48 @@ defineProps({
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #aeaeb2;
+  }
+
+  .post-images-grid {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    margin-top: 8px;
+  }
+
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100px; /* Adjust as needed */
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .image-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay-more {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+:deep(.q-btn) {
+  .q-btn-dropdown__arrow {
+    display: none;
   }
 }
 </style>

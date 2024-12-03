@@ -3,68 +3,84 @@
     <div class="q-mb-sm text-body1 text-weight-bold text-grey-7">
       Recent questions from people you follow
     </div>
-    <div class="post-wrapper">
+    <div ref="postContainer" class="post-wrapper">
       <Posts
         v-for="post in posts"
-        :key="post.username"
+        :key="post.id"
         class="q-pa-md"
-        :user-image="post.userImage"
-        :username="post.username"
-        :time-ago="post.timeAgo"
-        :post-content="post.postContent"
-        :post-image="post.postImage"
-        :votes="post.votes"
-        :comments="post.comments"
+        :post-id="post.id"
+        :user-image="post.user.profilePicUrl"
+        :user-id="post.user.id"
+        :username="post.user.name"
+        :time-ago="post.createdAt"
+        :post-content="post.description"
+        :post-images="post.images"
+        :votes="post.votesCount"
+        :comments="post.commentsCount"
       />
+      <q-spinner v-if="isLoading" color="primary" />
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from "vue";
 import Posts from "../components/posts.vue";
+import { usePostStore } from "src/stores/postStore";
 
-function* generateDummyContent() {
-  const userImages = [
-    "https://avatar.iran.liara.run/public/girl",
-    "https://avatar.iran.liara.run/public/boy",
-    "https://avatar.iran.liara.run/public",
-  ];
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hank",
-    "Ivy",
-    "Jack",
-  ];
-  const postContents = [
-    "Hello world!",
-    "This is a test post.",
-    "I love coding.",
-    "Today is a great day.",
-    "I am learning new things.",
-  ];
-  for (let i = 1; i <= 10; i++) {
-    yield {
-      userImage: userImages[Math.floor(Math.random() * userImages.length)],
-      username: names[Math.floor(Math.random() * names.length)],
-      timeAgo: "Just now",
-      postContent: `${
-        postContents[Math.floor(Math.random() * postContents.length)]
-      } Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum delectus, voluptatem laboriosam in veritatis modi nisi doloribus cupiditate optio accusantium.
-   `,
-      postImage: "https://placehold.co/800x400",
-      votes: Math.floor(Math.random() * 100),
-      comments: Math.floor(Math.random() * 50),
-    };
+const posts = ref([]);
+const currentPage = ref(1); // Tracks the current page
+const isLoading = ref(false); // Tracks the loading state
+const hasMoreData = ref(true); // Tracks if more data is available
+const postContainer = ref(null); // Ref for the container
+const postStore = usePostStore();
+
+// Function to fetch posts
+const fetchPosts = async () => {
+  if (isLoading.value || !hasMoreData.value) return;
+
+  isLoading.value = true;
+  try {
+    const newPosts = await postStore.getPostList({
+      all: true,
+      page: currentPage.value,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+    // Check if newPosts contains data
+    if (newPosts.length > 0) {
+      posts.value = [...posts.value, ...newPosts];
+      currentPage.value++;
+    } else {
+      hasMoreData.value = false; // No more data to load
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  } finally {
+    isLoading.value = false;
   }
-}
+};
 
-const posts = Array.from(generateDummyContent());
+// Infinite scroll handler
+const onScroll = () => {
+  const container = postContainer.value;
+  if (
+    container.scrollTop + container.clientHeight >= container.scrollHeight - 50 // Trigger when near the bottom
+  ) {
+    fetchPosts();
+  }
+};
+
+// Add event listeners
+onMounted(async () => {
+  await fetchPosts(); // Load initial posts
+  postContainer.value?.addEventListener("scroll", onScroll);
+});
+
+onUnmounted(() => {
+  postContainer.value?.removeEventListener("scroll", onScroll);
+});
 </script>
 
 <style scoped>
@@ -82,5 +98,16 @@ const posts = Array.from(generateDummyContent());
 .post-wrapper {
   display: grid;
   gap: 26px;
+}
+
+.post-container {
+  height: 100vh; /* Adjust height as needed */
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.q-spinner {
+  display: block;
+  margin: 20px auto;
 }
 </style>
