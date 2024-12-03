@@ -20,6 +20,7 @@
         color="primary"
         label="Submit"
         style="width: 80px"
+        @click="createPost"
       />
     </div>
     <div class="q-ma-md">
@@ -67,7 +68,7 @@
               size="18px"
               name="close"
               color="white"
-              style="top: 2px; right: 2px"
+              style="top: 2px; right: 2px; cursor: pointer"
               @click="removeImage(index)"
             >
             </q-icon>
@@ -130,9 +131,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useQuasar, Loading } from "quasar";
+import { usePostStore } from "src/stores/postStore";
+
 const router = useRouter();
+const route = useRoute();
 const title = ref(""); // Separate ref for Title/Question
 const description = ref(""); // Separate ref for Description
 const descriptionImages = ref([]);
@@ -140,6 +145,8 @@ const options = ref([
   { text: "", image: null },
   { text: "", image: null },
 ]); // Initialize with two empty options
+const $q = useQuasar();
+const postStore = usePostStore();
 
 const uploadDescriptionImages = () => {
   const input = document.createElement("input");
@@ -187,6 +194,114 @@ const removeOptionImage = (index) => {
 const addOption = () => {
   options.value.push({ text: "", image: null }); // Add a new empty option
 };
+
+const createPost = async () => {
+  Loading.show();
+  try {
+    // Prepare form data
+    const formData = new FormData();
+
+    // Add title
+    formData.append("title", title.value);
+
+    // Add description
+    formData.append("description", description.value);
+
+    // Add options as a JSON string and files dynamically
+    const optionsArray = options.value.map((option, index) => {
+      // Generate a unique fieldname for the file
+      const fileFieldname = `file${index + 1}`;
+
+      // Attach the file if it exists
+      if (option.image) {
+        formData.append(fileFieldname, option.image); // Append the file with the generated fieldname
+      }
+
+      // Return the structured object for the options array
+      return {
+        text: option.text,
+        fileName: fileFieldname, // Map this fieldname for backend use
+      };
+    });
+
+    formData.append("options", JSON.stringify(optionsArray));
+
+    // Add postImages (multiple images)
+    descriptionImages.value.forEach((image) => {
+      formData.append("postImages", image);
+    });
+
+    const postId = route.query.postId;
+    if (postId) {
+      await postStore.updatePost(formData, postId);
+      $q.notify({
+        message: "Successfully updated!",
+        color: "positive",
+        position: "top",
+        timeout: 3000,
+        icon: "check_circle",
+      });
+    } else {
+      await postStore.createPost(formData);
+      $q.notify({
+        message: "Successfully posted!",
+        color: "positive",
+        position: "top",
+        timeout: 3000,
+        icon: "check_circle",
+      });
+    }
+
+    // Make API request
+    router.back();
+  } catch (e) {
+    console.log(e)
+    $q.notify({
+      color: "negative",
+      message:
+        e?.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
+const fetchPostDetails = async (postId) => {
+  try {
+    Loading.show();
+    const postDetails = await postStore.getPostDetails(postId);
+    // Populate the fields with fetched data
+    title.value = postDetails.title;
+    description.value = postDetails.description;
+    descriptionImages.value = postDetails.images || [];
+    options.value = postDetails.options.map((option) => ({
+      text: option.text,
+      image: option.image,
+    }));
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message: "Failed to fetch post details. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
+// Fetch post details if postId is present
+onMounted(async () => {
+  const postId = route.query.postId;
+  if (postId) {
+    await fetchPostDetails(postId);
+  }
+});
 </script>
 
 <style scoped lang="scss">
