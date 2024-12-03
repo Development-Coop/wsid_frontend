@@ -13,7 +13,7 @@
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
           <span v-if="timeAgo" class="text-grey-7">
-            • {{ calculateTimeAgo() }}</span>
+            • {{ calculateTimeAgo }}</span>
           <!-- Dynamic time -->
         </p>
       </div>
@@ -118,7 +118,7 @@
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading } from "quasar";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, computed, onUnmounted, onMounted } from "vue";
 
 const router = useRouter();
 const postStore = usePostStore();
@@ -175,9 +175,20 @@ const openImage = (image) => {
   isDialogOpen.value = true;
 };
 
-const calculateTimeAgo = () => {
-  const now = Date.now();
-  const secondsAgo = Math.floor((now - props.timeAgo) / 1000);
+let interval;
+onMounted(() => {
+  interval = setInterval(() => {
+    now.value = Date.now();
+  }, 1000); // Update every second
+});
+
+onUnmounted(() => {
+  clearInterval(interval); // Cleanup on component unmount
+});
+
+const now = ref(Date.now());
+const calculateTimeAgo = computed(() => {
+  const secondsAgo = Math.floor((now.value - props.timeAgo) / 1000);
 
   if (secondsAgo < 60) {
     return `${secondsAgo} seconds ago`;
@@ -197,7 +208,7 @@ const calculateTimeAgo = () => {
     const months = Math.floor(secondsAgo / 2419200);
     return `${months} month${months > 1 ? "s" : ""} ago`;
   }
-};
+});
 
 const onEdit = () => {
   router.push({ path: "/app/ask-question", query: { postId: props.postId } });
