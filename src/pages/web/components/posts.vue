@@ -12,7 +12,8 @@
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
-          <span v-if="timeAgo" class="text-grey-7"> • {{ calculateTimeAgo() }}</span>
+          <span v-if="timeAgo" class="text-grey-7">
+            • {{ calculateTimeAgo() }}</span>
           <!-- Dynamic time -->
         </p>
       </div>
@@ -65,6 +66,8 @@
           spinner-color="white"
           fit="cover"
           class="image-item"
+          style="cursor: pointer"
+          @click="openImage(image)"
         />
         <!-- Overlay for additional images -->
         <div v-if="index === 3 && postImages.length > 4" class="overlay-more">
@@ -91,12 +94,31 @@
       />
     </div>
   </div>
+  <q-dialog v-model="isDialogOpen" persistent>
+    <q-card class="q-pa-none">
+      <q-img
+        :src="currentImage"
+        spinner-color="white"
+        fit="contain"
+        class="large-image"
+      />
+      <q-btn
+        flat
+        round
+        dense
+        icon="close"
+        class="close-button"
+        @click="isDialogOpen = false"
+      />
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading } from "quasar";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 const router = useRouter();
 const postStore = usePostStore();
@@ -145,6 +167,14 @@ const props = defineProps({
   },
 });
 
+const isDialogOpen = ref(false);
+const currentImage = ref("");
+
+const openImage = (image) => {
+  currentImage.value = image;
+  isDialogOpen.value = true;
+};
+
 const calculateTimeAgo = () => {
   const now = Date.now();
   const secondsAgo = Math.floor((now - props.timeAgo) / 1000);
@@ -153,30 +183,30 @@ const calculateTimeAgo = () => {
     return `${secondsAgo} seconds ago`;
   } else if (secondsAgo < 3600) {
     const minutes = Math.floor(secondsAgo / 60);
-    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
   } else if (secondsAgo < 86400) {
     const hours = Math.floor(secondsAgo / 3600);
-    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
   } else if (secondsAgo < 604800) {
     const days = Math.floor(secondsAgo / 86400);
-    return `${days} day${days > 1 ? 's' : ''} ago`;
+    return `${days} day${days > 1 ? "s" : ""} ago`;
   } else if (secondsAgo < 2419200) {
     const weeks = Math.floor(secondsAgo / 604800);
-    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
   } else {
     const months = Math.floor(secondsAgo / 2419200);
-    return `${months} month${months > 1 ? 's' : ''} ago`;
+    return `${months} month${months > 1 ? "s" : ""} ago`;
   }
 };
 
 const onEdit = () => {
-  router.push({ path: '/app/ask-question', query: { postId: props.postId } })
-}
+  router.push({ path: "/app/ask-question", query: { postId: props.postId } });
+};
 
 const onDelete = async () => {
   try {
     Loading.show();
-    await postStore.deletePost(props.postId)
+    await postStore.deletePost(props.postId);
     $q.notify({
       message: "Successfully deleted!",
       color: "positive",
@@ -197,7 +227,7 @@ const onDelete = async () => {
   } finally {
     Loading.hide();
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -258,5 +288,28 @@ const onDelete = async () => {
   .q-btn-dropdown__arrow {
     display: none;
   }
+}
+
+.image-item {
+  width: 100px; /* Adjust as needed */
+  height: 100px; /* Adjust as needed */
+  margin: 8px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.large-image {
+  min-width: 300px;
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh; /* Limit height for better UX */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
 }
 </style>
