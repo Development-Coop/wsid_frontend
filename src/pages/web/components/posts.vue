@@ -167,6 +167,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["deleted"]);
+
 const isDialogOpen = ref(false);
 const currentImage = ref("");
 
@@ -225,6 +227,7 @@ const onDelete = async () => {
       timeout: 3000,
       icon: "check_circle",
     });
+    emit("deleted", true);
   } catch (e) {
     $q.notify({
       color: "negative",

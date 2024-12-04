@@ -8,7 +8,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       const response = await api.post("post/create", data, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       });
@@ -23,7 +23,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       const response = await api.put(`post/update/${postId}`, data, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       });
