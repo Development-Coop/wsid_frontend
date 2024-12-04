@@ -6,13 +6,12 @@ export const usePostStore = defineStore("post", () => {
 
   const createPost = async (data) => {
     try {
-      const response = await api.post("post/create", data, {
+      await api.post("post/create", data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       });
-      console.log(response);
     } catch (error) {
       console.error(error);
       throw error;
@@ -21,13 +20,12 @@ export const usePostStore = defineStore("post", () => {
 
   const updatePost = async (data, postId) => {
     try {
-      const response = await api.put(`post/update/${postId}`, data, {
+      await api.put(`post/update/${postId}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       });
-      console.log(response);
     } catch (error) {
       console.error(error);
       throw error;
@@ -53,7 +51,6 @@ export const usePostStore = defineStore("post", () => {
         },
       });
 
-      console.log(response.data);
       return response?.data?.data?.posts || [];
     } catch (error) {
       console.error(error);
@@ -89,11 +86,29 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const getTrendingList = async () => {
+    try {
+
+      // Make a GET request with the constructed query string
+      const response = await api.get(`post/trending`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+        },
+      });
+      return response?.data?.data?.posts || [];
+    } catch (error) {
+      console.error(error);
+      return []
+    }
+  };
+
   return {
     createPost,
     getPostList,
     deletePost,
     getPostDetails,
-    updatePost
+    updatePost,
+    getTrendingList
   };
 });
