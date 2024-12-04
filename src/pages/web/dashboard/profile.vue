@@ -152,7 +152,7 @@ const fetchPosts = async () => {
   isLoading.value = true;
   try {
     const newPosts = await postStore.getPostList({
-      all: true,
+      all: false,
       page: currentPage.value,
       limit: 10,
       sortBy: "createdAt",

@@ -157,8 +157,8 @@ const uploadDescriptionImages = () => {
     const files = Array.from(event.target.files);
     files.forEach((file) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        descriptionImages.value.push(e.target.result);
+      reader.onload = () => {
+        descriptionImages.value.push(reader.result);
       };
       reader.readAsDataURL(file);
     });
@@ -178,8 +178,8 @@ const uploadOptionImage = (index) => {
     const file = event.target.files[0]; // Get the first file
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        options.value[index].image = e.target.result; // Store the image in the option
+      reader.onload = () => {
+        options.value[index].image = reader.result;
       };
       reader.readAsDataURL(file);
     }
@@ -208,28 +208,40 @@ const createPost = async () => {
     formData.append("description", description.value);
 
     // Add options as a JSON string and files dynamically
-    const optionsArray = options.value.map((option, index) => {
-      // Generate a unique fieldname for the file
-      const fileFieldname = `file${index + 1}`;
+    const optionsArray = await Promise.all(
+      options.value.map(async (option, index) => {
+        const fileFieldname = `file${index + 1}`;
 
-      // Attach the file if it exists
-      if (option.image) {
-        formData.append(fileFieldname, option.image); // Append the file with the generated fieldname
-      }
+        // Attach the image to FormData if available
+        if (option.image && !(typeof option.image === "string" && option.image.startsWith("http"))) {
+          const response = await fetch(option.image); // Fetch the image URL
+          const blob = await response.blob();
+          formData.append(fileFieldname, blob, `file${index + 1}`); // Append the file with the generated fieldname
+        }
 
-      // Return the structured object for the options array
-      return {
-        text: option.text,
-        fileName: fileFieldname, // Map this fieldname for backend use
-      };
-    });
+        // Return the option object structure for the backend
+        return {
+          text: option.text,
+          ...(option.image ? { fileName: fileFieldname } : {}),
+        };
+      })
+    );
 
+    // Add the resolved `optionsArray` to FormData
     formData.append("options", JSON.stringify(optionsArray));
 
     // Add postImages (multiple images)
-    descriptionImages.value.forEach((image) => {
-      formData.append("postImages", image);
-    });
+    await Promise.all(
+      descriptionImages.value.map(async (image) => {
+        if (typeof image === "string" && image.startsWith("http")) {
+          // Ignore the image if it's already a link
+          return;
+        }
+        const response = await fetch(image);
+        const blob = await response.blob();
+        formData.append("postImages", blob);
+      })
+    );
 
     const postId = route.query.postId;
     if (postId) {
@@ -255,7 +267,7 @@ const createPost = async () => {
     // Make API request
     router.back();
   } catch (e) {
-    console.log(e)
+    console.log(e);
     $q.notify({
       color: "negative",
       message:
