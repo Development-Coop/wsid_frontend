@@ -39,7 +39,7 @@ const items = [
 ];
 
 const logout = () => {
-  localStorage.removeItem("token");
+  localStorage.clear();
   router.push("/auth/web-login?tab=login");
 };
 </script>
