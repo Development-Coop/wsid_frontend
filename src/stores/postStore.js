@@ -8,8 +8,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       await api.post("post/create", data, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+          "Content-Type": "multipart/form-data"
         },
       });
     } catch (error) {
@@ -22,8 +21,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       await api.put(`post/update/${postId}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+          "Content-Type": "multipart/form-data"
         },
       });
     } catch (error) {
@@ -44,12 +42,7 @@ export const usePostStore = defineStore("post", () => {
       });
 
       // Make a GET request with the constructed query string
-      const response = await api.get(`post/get?${queryParams.toString()}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      });
+      const response = await api.get(`post/get?${queryParams.toString()}`);
 
       return response?.data?.data?.posts || [];
     } catch (error) {
@@ -60,11 +53,7 @@ export const usePostStore = defineStore("post", () => {
 
   const deletePost = async (postId) => {
     try {
-      const response = await api.delete(`post/delete/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      });
+      const response = await api.delete(`post/delete/${postId}`);
       return response.data; // Return response if needed
     } catch (error) {
       console.error("Error deleting the post:", error.response?.data || error.message);
@@ -74,11 +63,7 @@ export const usePostStore = defineStore("post", () => {
 
   const getPostDetails = async (postId) => {
     try {
-      const response = await api.get(`post/get/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      });
+      const response = await api.get(`post/get/${postId}`);
       return response?.data?.data; // Return response if needed
     } catch (error) {
       console.error("Error deleting the post:", error.response?.data || error.message);
@@ -92,8 +77,7 @@ export const usePostStore = defineStore("post", () => {
       // Make a GET request with the constructed query string
       const response = await api.get(`post/trending`, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+          "Content-Type": "application/json"
         },
       });
       return response?.data?.data?.posts || [];
@@ -103,12 +87,32 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const createVote = async (data) => {
+    try {
+      await api.post("vote/create", data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const createComment = async (data) => {
+    try {
+      await api.post("comment/create", data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   return {
     createPost,
     getPostList,
     deletePost,
     getPostDetails,
     updatePost,
-    getTrendingList
+    getTrendingList,
+    createVote,
+    createComment
   };
 });

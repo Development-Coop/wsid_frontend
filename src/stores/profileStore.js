@@ -19,12 +19,7 @@ export const useProfileStore = defineStore("profile", () => {
 
   const getProfileDetails = async () => {
     try {
-      const response = await api.get("/user/view", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      });
+      const response = await api.get("/user/view");
       const data = response?.data?.data;
       userDetails.value = {
         id: data?.user?.id,
@@ -47,12 +42,7 @@ export const useProfileStore = defineStore("profile", () => {
 
   const updateProfileDetails = async (data) => {
     try {
-      const response = await api.put("user/edit", data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access-token")}`,
-        },
-      });
+      const response = await api.put("user/edit", data);
       console.log(response);
     } catch (error) {
       console.error(error);
