@@ -1,14 +1,14 @@
 <template>
   <div class="post">
     <!-- Header with user image, details, and action menu -->
-    <div class="flex items-center no-wrap">
+    <div class="flex items-center no-wrap" @click.self="router.push({name:'view-question', query: { postId }})">
       <q-img
         class="post-img"
         :src="userImage"
         spinner-color="primary"
         spinner-size="22px"
       />
-      <div style="flex-grow: 1" class="q-ml-sm">
+      <div style="flex-grow: 1;" class="q-ml-sm">
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm">
+    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="router.push({name:'view-question', query: { postId }})">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
