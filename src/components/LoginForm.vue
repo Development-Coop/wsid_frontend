@@ -64,17 +64,31 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
 import { useQuasar } from "quasar";
 
 const router = useRouter();
+const route = useRoute()
 const authStore = useAuthStore();
 
 const loading = ref(false);
 const showError = ref(false);
 const $q = useQuasar();
+
+onMounted(()=> {
+  const params = route?.query?.expired?.trim().toLowerCase();
+  if (params === "true") {
+    $q.notify({
+      color: "negative",
+      message: "Session is expired! Please login to continue.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  }
+})
 
 const handleSubmit = async () => {
   loading.value = true;
