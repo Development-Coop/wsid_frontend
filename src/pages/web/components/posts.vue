@@ -80,9 +80,10 @@
     <div
       class="flex no-wrap items-center q-pt-md q-mt-lg"
       style="gap: 10px; border-top: 2px solid #f1f2f5"
+      @click="router.push({name:'view-question', query: { postId }})"
     >
-      <span>{{ votes }} <span class="text-grey-7">Votes</span></span> •
-      <span>{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <span style="cursor: pointer;">{{ votes }} <span class="text-grey-7">Votes</span></span> •
+      <span style="cursor: pointer;">{{ comments }} <span class="text-grey-7">Comments</span></span>
       <q-btn
         no-caps
         size="md"
@@ -91,15 +92,15 @@
         text-color="black"
         label="Answer"
         class="q-ml-auto"
+        style="cursor: pointer;"
       />
     </div>
   </div>
-  <q-dialog v-model="isDialogOpen" persistent>
+  <q-dialog v-model="isDialogOpen" @hide="isDialogOpen = false">
     <q-card class="q-pa-none">
       <q-img
         :src="currentImage"
         spinner-color="white"
-        fit="contain"
         class="large-image"
       />
       <q-btn
