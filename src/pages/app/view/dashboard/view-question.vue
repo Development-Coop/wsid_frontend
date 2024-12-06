@@ -30,7 +30,7 @@
             <span class="text-grey-7"> • {{ calculateTimeAgo }}</span>
             <!-- Dynamic time -->
           </p>
-          <p class="text-grey-9 q-mb-sm">
+          <p class="text-grey-9 q-mb-sm" style="font-weight: 600;">
             <span>{{ postDetails?.title }}</span>
           </p>
           <p>{{ postDetails?.description }}</p>

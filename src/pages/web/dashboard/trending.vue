@@ -3,7 +3,10 @@
     <div class="q-mb-sm text-body1 text-weight-bold text-grey-7">
       Recent questions from people you follow
     </div>
-    <div ref="postContainer" class="post-wrapper">
+    <div
+      ref="postContainer"
+      :class="['post-wrapper', { 'post-wrapper-loader': isLoading }]"
+    >
       <Posts
         v-for="post in posts"
         :key="post.id"
@@ -78,7 +81,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .profile-wrapper {
   gap: 12px;
   .profile-img {
@@ -93,5 +96,8 @@ onUnmounted(() => {
 .post-wrapper {
   display: grid;
   gap: 26px;
+  &-loader {
+    justify-content: center;
+  }
 }
 </style>
