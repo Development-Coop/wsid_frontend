@@ -82,7 +82,7 @@
 
       <q-tab-panels v-model="tab" class="q-pb-lg">
         <q-tab-panel class="q-pa-lg" name="Votes">
-          <div class="q-gutter-md q-mb-xl">
+          <div v-if="!selectedVote" class="q-gutter-md q-mb-xl">
             <q-card
               v-for="option in postDetails.options"
               :key="option.id"
@@ -110,23 +110,25 @@
               />
             </q-card>
           </div>
-          <div v-if="selectedVote" class="q-gutter-md">
-            <q-card class="votes-result" flat>
+          <div v-else class="q-gutter-md">
+            <q-card
+              v-for="option in postDetails.options"
+              :key="option.id"
+              class="votes-result"
+              flat
+            >
               <div class="flex items-center justify-between w-full">
-                <span class="q-mr-md">{{
-                  postDetails.options.find((option) => option.id === selectedVote)?.text
-                }}</span>
-                <!-- <span class="q-ml-auto q-mr-md">{{ postDetails.options.find((option) => option.id === selectedVote)?.percentage }}%</span> -->
-                <!-- <span>•</span> -->
-                <span class="q-ml-md">{{ postDetails.options.find((option) => option.id === selectedVote)?.votesCount + 1 }} Votes</span>
+                <span class="q-mr-md">{{ option.text }}</span>
+                <span class="q-ml-auto q-mr-md">{{ option.percentage }}%</span>
+                <span>•</span>
+                <span class="q-ml-md">{{ option.votesCount }} Votes</span>
               </div>
-              <!-- <q-linear-progress
+              <q-linear-progress
                 size="8px"
-                :value="
-                  postDetails.options.find((option) => option.id === selectedVote)
-                    .percentage / 100
-                "
-              /> -->
+                :value="option.percentage / 100"
+                :color="option.trackColor"
+                :track-color="option.trackColor"
+              />
             </q-card>
           </div>
         </q-tab-panel>
@@ -290,6 +292,18 @@ const calculateTimeAgo = computed(() => {
   }
 });
 
+const calculateOptionsWithColors = (options, totalCount) => {
+  const colors = ['red', 'orange', 'blue', 'green', 'purple'];
+  return options.map((option, index) => {
+    const percentage = totalCount > 0 ? (option.votesCount / totalCount) * 100 : 0;
+    return {
+      ...option,
+      percentage: Math.round(percentage),
+      trackColor: colors[index % colors.length],
+    };
+  });
+};
+
 const fetchPostDetails = async (postId) => {
   try {
     Loading.show();
@@ -313,6 +327,7 @@ const fetchPostDetails = async (postId) => {
     selectedVote.value = postDetails.value.options.find((option) => option.hasVoted)?.id || "";
     let totalCount = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
     totalVotes.value = `Vote (${totalCount})`;
+    postDetails.value.options = calculateOptionsWithColors(postDetails.value.options, totalCount);
   } catch (error) {
     $q.notify({
       color: "negative",
@@ -413,7 +428,7 @@ const showVotesResult = async (option) => {
   }
 }
 .votes-result {
-  height: 48px;
+  height: 55px;
   background-color: #f0f2f5;
   display: flex;
   align-items: center;
