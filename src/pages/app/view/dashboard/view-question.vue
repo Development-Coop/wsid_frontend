@@ -22,7 +22,7 @@
           spinner-size="22px"
         />
         <div style="flex-grow: 1">
-          <p>
+          <p style="margin-bottom: 4px;">
             <span class="text-weight-medium">{{
               postDetails?.user?.name
             }}</span>
