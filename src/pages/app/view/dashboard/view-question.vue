@@ -37,7 +37,7 @@
 
           <div
             v-if="postDetails?.images?.length > 0"
-            class="flex q-gutter-md q-mt-sm"
+            class="flex q-gutter-md q-mt-md"
             style="border-top: 1px solid #dddddd"
           >
             <div
