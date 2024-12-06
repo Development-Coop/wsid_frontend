@@ -74,7 +74,7 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="Votes" label="Votes (3)" />
+        <q-tab name="Votes" :label="totalVotes" />
         <q-tab name="Comments" label="Comments (1)" />
       </q-tabs>
 
@@ -87,9 +87,12 @@
               v-for="option in postDetails.options"
               :key="option.id"
               class="vote-options"
-              :class="{ 'selected-option': selectedVote === option.id }"
+              :class="{ 
+                'selected-option': selectedVote === option.id,
+                'disabled-option': !!selectedVote
+              }"
               flat
-              @click="showVotesResult(option.id)"
+              @click="!!!selectedVote && showVotesResult(option.id)"
             >
               {{ option.text }}
               <q-img
@@ -230,6 +233,7 @@ const text = ref("");
 const dialog = ref(false); // Control dialog visibility
 const imageSrc = ref(""); // Store image source
 const selectedVote = ref(null); // Track the selected vote option
+const totalVotes = ref("Votes (0)")
 
 const postDetails = ref({
   id: "",
@@ -306,6 +310,9 @@ const fetchPostDetails = async (postId) => {
       },
       options: data.options || [],
     };
+    selectedVote.value = postDetails.value.options.find((option) => option.hasVoted)?.id || "";
+    let totalCount = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
+    totalVotes.value = `Vote (${totalCount})`;
   } catch (error) {
     $q.notify({
       color: "negative",
@@ -418,5 +425,11 @@ const showVotesResult = async (option) => {
     bottom: 0;
     left: 0px;
   }
+}
+
+.vote-options.disabled-option {
+  opacity: 0.5;
+  pointer-events: none; /* Prevent any interaction */
+  cursor: not-allowed;
 }
 </style>
