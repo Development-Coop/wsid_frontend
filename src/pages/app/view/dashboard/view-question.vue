@@ -157,18 +157,20 @@
                   <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
                   <span class="q-mr-md flex items-center cursor-pointer">
                     <img
-                      src="../../../../assets/icons/happy.svg"
+                      src="../../../../assets/images/like.png"
                       alt="like-icon"
                       class="q-mr-xs"
+                      style="height: 20px;"
                     />
                     {{ comment?.likesCount }}
                   </span>
                   <span class="q-mr-sm flex items-center cursor-pointer">
                     <img
-                      src="../../../../assets/icons/sad.svg"
+                      src="../../../../assets/images/dislike.png"
                       alt="like-icon"
                       srcset=""
                       class="q-mr-xs"
+                      style="height: 20px;"
                     />
                     {{ comment?.dislikesCount }}
                   </span>
@@ -196,18 +198,20 @@
                       <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
                       <span class="q-mr-md flex items-center cursor-pointer">
                         <img
-                          src="../../../../assets/icons/happy.svg"
+                          src="../../../../assets/images/like.png"
                           alt="like-icon"
                           class="q-mr-xs"
+                          style="height: 20px;"
                         />
                         {{ reply?.likesCount }}
                       </span>
                       <span class="q-mr-sm flex items-center cursor-pointer">
                         <img
-                          src="../../../../assets/icons/sad.svg"
+                          src="../../../../assets/images/dislike.png"
                           alt="like-icon"
                           srcset=""
                           class="q-mr-xs"
+                          style="height: 20px;"
                         />
                         {{ reply?.dislikesCount }}
                       </span>
