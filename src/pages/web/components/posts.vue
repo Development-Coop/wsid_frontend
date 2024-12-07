@@ -19,7 +19,6 @@
       </div>
       <!-- Three Dots Dropdown Menu -->
       <q-btn-dropdown
-        v-if="isOwnPosts"
         flat
         dense
         icon="more_vert"
@@ -28,12 +27,18 @@
         no-icon-animation
         content-class="no-arrow"
       >
-        <q-list>
+        <q-list v-if="isOwnPosts">
           <q-item v-close-popup clickable @click="onEdit">
             <q-item-section> Edit </q-item-section>
           </q-item>
           <q-item v-close-popup clickable @click="onDelete">
             <q-item-section> Delete </q-item-section>
+          </q-item>
+        </q-list>
+
+        <q-list v-else>
+          <q-item v-close-popup clickable @click="sharePost">
+            <q-item-section> Copy link </q-item-section>
           </q-item>
         </q-list>
       </q-btn-dropdown>
@@ -117,7 +122,7 @@
 
 <script setup>
 import { usePostStore } from "src/stores/postStore";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar, Loading, copyToClipboard } from "quasar";
 import { useRouter } from "vue-router";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 
@@ -215,6 +220,18 @@ const calculateTimeAgo = computed(() => {
 
 const onEdit = () => {
   router.push({ path: "/app/ask-question", query: { postId: props.postId } });
+};
+
+const sharePost = () => {
+  const baseUrl = `${window.location.origin}/#/app/view-question?postId=${props.postId}`;
+  copyToClipboard(baseUrl);
+  $q.notify({
+    message: "Copied to clipboard",
+    color: "positive",
+    position: "top",
+    timeout: 3000,
+    icon: "check_circle",
+  });
 };
 
 const onDelete = async () => {

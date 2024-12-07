@@ -95,8 +95,9 @@ const handleSubmit = async () => {
   authStore.clearErrors();
   try {
     await authStore.login();
-    // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: "web-dashboard-trending" });
+    const redirectTo = router.currentRoute.value.query.redirectTo || "web-dashboard-trending";
+    // Redirect to the specified path or default to the dashboard
+    router.push(redirectTo);
   } catch (error) {
     $q.notify({
       color: "negative",
