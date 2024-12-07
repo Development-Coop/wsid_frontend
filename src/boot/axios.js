@@ -40,10 +40,11 @@ export default boot(({ app, router }) => {
         localStorage.clear(); // Clear stored tokens or sensitive data
 
         const isMobile = window.innerWidth <= 768;
+        const redirectTo = router.currentRoute.value.fullPath;
         if (isMobile) {
-          router.push({ name: "login", query: { expired: "true" } }); // Redirect to mobile login route
+          router.push({ name: "login", query: { expired: "true", redirectTo } }); // Redirect to mobile login route
         } else {
-          router.push({ name: "web-login", query: { expired: "true" } }); // Redirect to desktop login route
+          router.push({ name: "web-login", query: { expired: "true", redirectTo } }); // Redirect to desktop login route
         }
       }
 
