@@ -27,7 +27,7 @@
               postDetails?.user?.name
             }}</span>
             <!-- Dynamic username -->
-            <span class="text-grey-7"> • {{ calculateTimeAgo }}</span>
+            <span v-show="postDetails?.user?.name" class="text-grey-7"> • {{ calculateTimeAgo(postDetails.createdAt) }}</span>
             <!-- Dynamic time -->
           </p>
           <p class="text-grey-9 q-mb-sm" style="font-weight: 600;">
@@ -74,8 +74,8 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="Votes" :label="totalVotes" />
-        <q-tab name="Comments" label="Comments (1)" />
+        <q-tab name="Votes" :label="`Votes (${totalVotes})`" />
+        <q-tab name="Comments" :label="`Comments (${totalComments})`" />
       </q-tabs>
 
       <q-separator />
@@ -133,71 +133,99 @@
           </div>
         </q-tab-panel>
         <q-tab-panel class="q-pa-lg" name="Comments">
-          <div class="flex no-wrap post">
-            <q-img
-              class="post-img"
-              src="https://avatar.iran.liara.run/public/girl"
-              spinner-color="primary"
-              spinner-size="22px"
-            />
-            <div style="flex-grow: 1">
-              <p>
-                <span class="text-weight-medium">Kal Azar</span>
-                <span class="text-grey-7"> • 30 mins ago</span>
-              </p>
-              <p class="text-weight-medium text-weight-bold">
-                Choose Option B: Figma
-              </p>
-              <p class="text-grey-9">
-                <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
-                  suscipit!
-                </span>
-              </p>
-              <p class="flex items-center q-mt-sm q-mb-md">
-                <span class="q-mr-md cursor-pointer">Reply</span>
-                <span class="q-mr-md flex items-center cursor-pointer">
-                  <img
-                    src="../../../../assets/icons/happy.svg"
-                    alt="like-icon"
-                    srcset=""
-                    class="q-mr-xs"
+          <div v-if="comments?.length === 0" class="text-center q-mt-md">
+            <p class="text-grey-7">Break the silence, leave a comment!</p>
+          </div>
+          <div v-else class="comments-list">
+            <div v-for="comment in comments" :key="comment.id" class="flex no-wrap post">
+              <q-img
+                class="post-img"
+                :src="comment?.createdBy?.profilePicUrl"
+                spinner-color="primary"
+                spinner-size="22px"
+              />
+              <div style="flex-grow: 1">
+                <p>
+                  <span class="text-weight-medium">{{ comment?.createdBy?.name }}</span>
+                  <span class="text-grey-7"> • {{ calculateTimeAgo(comment?.createdAt) }}</span>
+                </p>
+                <!-- <p class="text-weight-medium text-weight-bold">{{ comment.text }}</p> -->
+                <p class="text-grey-9 q-mt-xs">
+                  <span>{{ comment?.text }}</span>
+                </p>
+                <p class="flex items-center q-mt-sm q-mb-md">
+                  <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                  <span class="q-mr-md flex items-center cursor-pointer">
+                    <img
+                      src="../../../../assets/icons/happy.svg"
+                      alt="like-icon"
+                      class="q-mr-xs"
+                    />
+                    {{ comment?.likesCount }}
+                  </span>
+                  <span class="q-mr-sm flex items-center cursor-pointer">
+                    <img
+                      src="../../../../assets/icons/sad.svg"
+                      alt="like-icon"
+                      srcset=""
+                      class="q-mr-xs"
+                    />
+                    {{ comment?.dislikesCount }}
+                  </span>
+                </p>
+                <div
+                  v-for="reply in (comment.showAllReplies ? comment.replies : comment.replies.slice(0, 1))"
+                  :key="reply.id"
+                  class="flex no-wrap post"
+                >
+                  <q-img
+                    class="post-img"
+                    :src="reply.createdBy.profilePicUrl"
+                    spinner-color="primary"
+                    spinner-size="22px"
                   />
-                  2
-                </span>
-                <span class="q-mr-sm flex items-center">
-                  <img
-                    src="../../../../assets/icons/sad.svg"
-                    alt="like-icon"
-                    srcset=""
-                    class="q-mr-xs"
-                  />2
-                </span>
-              </p>
-              <div class="flex no-wrap post">
-                <q-img
-                  class="post-img"
-                  src="https://avatar.iran.liara.run/public/girl"
-                  spinner-color="primary"
-                  spinner-size="22px"
-                />
-                <div style="flex-grow: 1">
-                  <p>
-                    <span class="text-weight-medium">Kal Azar</span>
-                    <span class="text-grey-7"> • 30 mins ago</span>
-                  </p>
-                  <p class="text-grey-9 q-mb-sm">
-                    <span>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ad, suscipit!
-                    </span>
-                  </p>
+                  <div style="flex-grow: 1">
+                    <p>
+                      <span class="text-weight-medium">{{ reply?.createdBy?.name }}</span>
+                      <span class="text-grey-7"> • {{ calculateTimeAgo(reply?.createdAt) }}</span>
+                    </p>
+                    <p class="text-grey-9 q-mb-xs">
+                      <span>{{ reply?.text }}</span>
+                    </p>
+                    <p class="flex items-center q-mt-sm q-mb-md">
+                      <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                      <span class="q-mr-md flex items-center cursor-pointer">
+                        <img
+                          src="../../../../assets/icons/happy.svg"
+                          alt="like-icon"
+                          class="q-mr-xs"
+                        />
+                        {{ reply?.likesCount }}
+                      </span>
+                      <span class="q-mr-sm flex items-center cursor-pointer">
+                        <img
+                          src="../../../../assets/icons/sad.svg"
+                          alt="like-icon"
+                          srcset=""
+                          class="q-mr-xs"
+                        />
+                        {{ reply?.dislikesCount }}
+                      </span>
+                    </p>
+                  </div>
                 </div>
+                <button
+                  v-if="comment?.replies?.length > 1"
+                  class="text-md q-mb-md cursor-pointer show-more"
+                  @click="comment.showAllReplies = !comment?.showAllReplies"
+                >
+                  {{ comment?.showAllReplies ? "Hide replies" : "View more replies" }}
+                </button>
               </div>
             </div>
           </div>
           <div class="q-pa-md fixed w-full bg-white" style="bottom: 0; left: 0">
-            <q-input v-model="text" outlined>
+            <q-input ref="replyInput" v-model="text" outlined @keyup.enter="addComment">
               <template #after>
                 <q-btn
                   round
@@ -222,7 +250,7 @@
 
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-import { ref, computed, onUnmounted, onMounted } from "vue";
+import { ref, onUnmounted, onMounted, nextTick } from "vue";
 import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 
@@ -235,7 +263,11 @@ const text = ref("");
 const dialog = ref(false); // Control dialog visibility
 const imageSrc = ref(""); // Store image source
 const selectedVote = ref(null); // Track the selected vote option
-const totalVotes = ref("Votes (0)")
+const totalVotes = ref(0);
+const totalComments = ref(0);
+const comments = ref([]);
+const commentParentId = ref(null);
+const replyInput = ref(null);
 
 const postDetails = ref({
   id: "",
@@ -261,6 +293,7 @@ onMounted(async () => {
   const postId = route.query.postId;
   if (postId) {
     await fetchPostDetails(postId);
+    await fetchComments(postId);
   }
 });
 
@@ -269,8 +302,8 @@ onUnmounted(() => {
 });
 
 const now = ref(Date.now());
-const calculateTimeAgo = computed(() => {
-  const secondsAgo = Math.floor((now.value - postDetails.value.createdAt) / 1000);
+const calculateTimeAgo = (dateTime) => {
+  const secondsAgo = Math.floor((now.value - dateTime) / 1000);
 
   if (secondsAgo < 60) {
     return `${secondsAgo} seconds ago`;
@@ -290,7 +323,7 @@ const calculateTimeAgo = computed(() => {
     const months = Math.floor(secondsAgo / 2419200);
     return `${months} month${months > 1 ? "s" : ""} ago`;
   }
-});
+};
 
 const calculateOptionsWithColors = (options, totalCount) => {
   const colors = ['red', 'orange', 'blue', 'green', 'purple'];
@@ -302,6 +335,40 @@ const calculateOptionsWithColors = (options, totalCount) => {
       trackColor: colors[index % colors.length],
     };
   });
+};
+
+const focusReplyInput = async(commentId) => {
+  commentParentId.value = commentId; // Set the comment being replied to
+  // Wait for the DOM to update and then focus the input box
+  await nextTick(() => {
+    const inputElement = replyInput.value?.$el.querySelector('input');
+    console.log(inputElement, ":::")
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
+const fetchComments = async (postId) => {
+  try {
+    Loading.show();
+    comments.value = await postStore.getCommentsList(postId);
+    totalComments.value = comments.value?.length ?? 0;
+    comments.value = comments.value.map((comment) => ({
+      ...comment,
+      showAllReplies: false
+    }));
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message: "Failed to fetch post details. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
 };
 
 const fetchPostDetails = async (postId) => {
@@ -325,9 +392,8 @@ const fetchPostDetails = async (postId) => {
       options: data.options || [],
     };
     selectedVote.value = postDetails.value.options.find((option) => option.hasVoted)?.id || "";
-    let totalCount = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
-    totalVotes.value = `Vote (${totalCount})`;
-    postDetails.value.options = calculateOptionsWithColors(postDetails.value.options, totalCount);
+    totalVotes.value = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
+    postDetails.value.options = calculateOptionsWithColors(postDetails.value.options, totalVotes.value);
   } catch (error) {
     $q.notify({
       color: "negative",
@@ -355,10 +421,15 @@ const addComment = async () => {
     Loading.show();
     const data = {
       "postId": postDetails.value.id,
-      "text": text.value
-      //"parentId": "wmWtCqfndNt5eDxCwCEB"
+      "text": text.value,
+      ...(
+        commentParentId.value ? { parentId: commentParentId.value } : {}
+      )
     }
     await postStore.createComment(data);
+    await fetchComments(postDetails.value.id);
+    text.value = "";
+    commentParentId.value = null;
   } catch (e) {
     $q.notify({
       color: "negative",
@@ -381,7 +452,6 @@ const showVotesResult = async (option) => {
     }
     await postStore.createVote(data);
     selectedVote.value = option; // Set the selected option
-    await fetchPostDetails(postDetails.value.id);
   } catch (e) {
     $q.notify({
       color: "negative",
@@ -446,5 +516,14 @@ const showVotesResult = async (option) => {
   opacity: 0.5;
   pointer-events: none; /* Prevent any interaction */
   cursor: not-allowed;
+}
+
+.comments-list {
+  display: grid;
+  grid-gap: 12px;
+  .show-more {
+    background: transparent;
+    font-weight: 600;
+  }
 }
 </style>

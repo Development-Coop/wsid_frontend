@@ -105,6 +105,21 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const getCommentsList = async (postId) => {
+    try {
+      // Make a GET request with the constructed query string
+      const response = await api.get(`comment/get/${postId}`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      return response?.data?.data || [];
+    } catch (error) {
+      console.error(error);
+      return []
+    }
+  };
+
   return {
     createPost,
     getPostList,
@@ -113,6 +128,7 @@ export const usePostStore = defineStore("post", () => {
     updatePost,
     getTrendingList,
     createVote,
-    createComment
+    createComment,
+    getCommentsList
   };
 });
