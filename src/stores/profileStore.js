@@ -42,8 +42,24 @@ export const useProfileStore = defineStore("profile", () => {
 
   const updateProfileDetails = async (data) => {
     try {
-      const response = await api.put("user/edit", data);
-      console.log(response);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("username", data.username);
+
+      // Convert base64 to Blob
+      if (data.profilePic && !(typeof data.profilePic === "string" && data.profilePic.startsWith("http"))) {
+        const response = await fetch(data.profilePic);
+        const blob = await response.blob();
+        formData.append("profilePic", blob, "profile.png");
+      }
+      formData.append("bio", data.bio);
+      formData.append("dateOfBirth", data.dateOfBirth);
+      await api.post("user/edit", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      await getProfileDetails();
     } catch (error) {
       console.error(error);
       throw error;
