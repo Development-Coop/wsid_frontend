@@ -79,7 +79,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 const currentYear = ref(new Date().getFullYear());
+const router = useRouter()
 </script>
 
 <style scoped lang="scss">
