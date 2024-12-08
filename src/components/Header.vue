@@ -55,7 +55,7 @@ const drawerLeft = ref(false);
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
+  { name: "About", path: "/about-us" },
   { name: "Login", path: "/auth/web-login?tab=login" },
   { name: "Register", path: "/auth/web-login?tab=signup" },
 ];

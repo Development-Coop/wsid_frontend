@@ -145,9 +145,21 @@
       </div>
 
       <div class="q-pa-lg q-mt-md" style="border-top: 1px solid #f1f2f5">
-        <p class="text-grey-7">
-          Privacy • Terms and Conditions • Cookies • More • About Us • Careers |
-          WSID@2024
+        <p class="text-grey-7 footer-links">
+          <a class="footer-link" @click="router.push({ name: 'privacy-policy' })">
+            Privacy Policy
+          </a>
+          •
+          <a class="footer-link" @click="router.push({ name: 'terms-conditions' })">
+            Terms and Conditions
+          </a>
+          •
+          <a class="footer-link" @click="router.push({ name: 'about-us' })">
+            About Us
+          </a>
+          <span class="footer-copyright">
+            | WSID@{{ currentYear }}
+          </span>
         </p>
       </div>
     </q-drawer>
@@ -172,11 +184,14 @@
 import { ref, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useQuasar, Loading } from "quasar";
+import { useRouter } from "vue-router";
 
 const leftDrawerOpen = ref(false);
 // const rightDrawerOpen = ref(false);
 const $q = useQuasar();
 const profileStore = useProfileStore();
+const router = useRouter();
+const currentYear = ref(new Date().getFullYear());
 
 const handleSubmit = async () => {
   Loading.show();
@@ -246,5 +261,23 @@ const toggleLeftDrawer = () => {
 .post-wrapper {
   display: grid;
   gap: 26px;
+}
+.footer-links {
+  font-size: 14px;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-link {
+  text-decoration: none; /* Remove underline */
+  cursor: pointer;
+}
+
+.footer-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.footer-copyright {
+  font-weight: bold;
 }
 </style>
