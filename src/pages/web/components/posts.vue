@@ -1,7 +1,7 @@
 <template>
-  <div class="post">
+  <div class="post cursor-pointer" @click.self="openPost">
     <!-- Header with user image, details, and action menu -->
-    <div class="flex items-center no-wrap" @click.self="router.push({name:'view-question', query: { postId }})">
+    <div class="flex items-center no-wrap" @click.self="openPost">
       <q-img
         class="post-img"
         :src="userImage"
@@ -28,7 +28,7 @@
         content-class="no-arrow"
       >
         <q-list v-if="isOwnPosts">
-          <q-item v-close-popup clickable @click="onEdit">
+          <q-item v-close-popup clickable @click="emit('edit', postId)">
             <q-item-section> Edit </q-item-section>
           </q-item>
           <q-item v-close-popup clickable @click="onDelete">
@@ -45,7 +45,7 @@
     </div>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="router.push({name:'view-question', query: { postId }})">
+    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
@@ -75,7 +75,7 @@
           @click="openImage(image)"
         />
         <!-- Overlay for additional images -->
-        <div v-if="index === 3 && postImages.length > 4" class="overlay-more">
+        <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost">
           +{{ postImages.length - 4 }}
         </div>
       </div>
@@ -85,7 +85,7 @@
     <div
       class="flex no-wrap items-center q-pt-md q-mt-lg"
       style="gap: 10px; border-top: 2px solid #f1f2f5"
-      @click="router.push({name:'view-question', query: { postId }})"
+      @click="openPost"
     >
       <span style="cursor: pointer;">{{ votes }} <span class="text-grey-7">Votes</span></span> •
       <span style="cursor: pointer;">{{ comments }} <span class="text-grey-7">Comments</span></span>
@@ -105,7 +105,8 @@
     <q-card class="q-pa-none">
       <q-img
         :src="currentImage"
-        spinner-color="white"
+        spinner-color="primary"
+        spinner-size="22px"
         class="large-image"
       />
       <q-btn
@@ -118,15 +119,34 @@
       />
     </q-card>
   </q-dialog>
+  <q-dialog v-model="showViewQuePopup" persistent>
+    <div class="popup-container">
+      <ViewQuestion
+        v-if="showViewQuePopup"
+        :post-id="postId"
+        :is-popup="true"
+        @close="showViewQuePopup = false"
+      />
+      <q-btn
+        flat
+        round
+        dense
+        icon="close"
+        class="close-button"
+        @click="showViewQuePopup = false"
+      />
+    </div>
+  </q-dialog>
 </template>
 
 <script setup>
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading, copyToClipboard } from "quasar";
-import { useRouter } from "vue-router";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 
-const router = useRouter();
+// components
+import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
+
 const postStore = usePostStore();
 const $q = useQuasar();
 
@@ -173,10 +193,15 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["deleted"]);
+const emit = defineEmits(["deleted", "edit"]);
 
 const isDialogOpen = ref(false);
 const currentImage = ref("");
+const showViewQuePopup = ref(false);
+
+const openPost = () => {
+  showViewQuePopup.value = true;
+}
 
 const openImage = (image) => {
   currentImage.value = image;
@@ -218,12 +243,8 @@ const calculateTimeAgo = computed(() => {
   }
 });
 
-const onEdit = () => {
-  router.push({ path: "/app/ask-question", query: { postId: props.postId } });
-};
-
 const sharePost = () => {
-  const baseUrl = `${window.location.origin}/#/app/view-question?postId=${props.postId}`;
+  const baseUrl = `${window.location.origin}/#/web/dashboard/home?postId=${props.postId}`;
   copyToClipboard(baseUrl);
   $q.notify({
     message: "Copied to clipboard",
@@ -289,7 +310,8 @@ const onDelete = async () => {
   .image-wrapper {
     position: relative;
     width: 100%;
-    height: 100px; /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
+    max-height: 500px;
     overflow: hidden;
     border-radius: 4px;
   }
@@ -302,7 +324,7 @@ const onDelete = async () => {
 
   .overlay-more {
     position: absolute;
-    top: 0;
+    top: 7px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -313,6 +335,7 @@ const onDelete = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 4px;
   }
 }
 
@@ -332,11 +355,17 @@ const onDelete = async () => {
 
 .large-image {
   min-width: 300px;
-  max-width: 100%;
   height: auto;
   max-height: 80vh; /* Limit height for better UX */
 }
 
+.popup-container {
+  width: 90vw;
+  max-width: 600px;
+  padding: 16px;
+  background: #fff;
+  position: relative;
+}
 .close-button {
   position: absolute;
   top: 10px;

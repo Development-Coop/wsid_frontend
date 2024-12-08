@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pb-xl">
-    <div class="flex justify-between q-pa-md sticky-header">
+  <q-page :class="{'q-pb-xl': !isPopup, 'custom-page': isPopup}">
+    <div v-if="!isPopup" class="flex justify-between q-pa-md sticky-header">
       <q-btn
         no-caps
         block
@@ -17,7 +17,7 @@
       <div class="flex no-wrap post">
         <q-img
           class="post-img"
-          src="https://avatar.iran.liara.run/public/girl"
+          :src="postDetails?.user?.profilePicUrl"
           spinner-color="primary"
           spinner-size="22px"
         />
@@ -80,7 +80,7 @@
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" class="q-pb-lg">
+      <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
         <q-tab-panel class="q-pa-lg" name="Votes">
           <div v-if="!selectedVote" class="q-gutter-md q-mb-xl">
             <q-card
@@ -110,7 +110,7 @@
               />
             </q-card>
           </div>
-          <div v-else class="q-gutter-md">
+          <div v-else :class="['q-gutter-md', {'option-container-grid': isPopup && postDetails?.options?.length > 2}]">
             <q-card
               v-for="option in postDetails.options"
               :key="option.id"
@@ -133,7 +133,7 @@
           </div>
         </q-tab-panel>
         <q-tab-panel class="q-pa-lg" name="Comments">
-          <div v-if="comments?.length === 0" class="text-center q-mt-md">
+          <div v-if="comments?.length === 0" :class="['text-center', { 'q-mt-md': !isPopup }]">
             <p class="text-grey-7">Break the silence, leave a comment!</p>
           </div>
           <div v-else class="comments-list">
@@ -228,7 +228,7 @@
               </div>
             </div>
           </div>
-          <div class="q-pa-md fixed w-full bg-white" style="bottom: 0; left: 0">
+          <div :class="['q-pa-md','w-full','bg-white', { 'input-container': !isPopup, 'input-container-popup': isPopup }]">
             <q-input ref="replyInput" v-model="text" outlined @keyup.enter="addComment">
               <template #after>
                 <q-btn
@@ -273,6 +273,17 @@ const comments = ref([]);
 const commentParentId = ref(null);
 const replyInput = ref(null);
 
+const props = defineProps({
+  postId: {
+    type: String,
+    default: "",
+  },
+  isPopup: {
+    type: Boolean,
+    default: false,
+  }
+});
+
 const postDetails = ref({
   id: "",
   description: "",
@@ -294,7 +305,7 @@ onMounted(async () => {
   interval = setInterval(() => {
     now.value = Date.now();
   }, 1000); // Update every second
-  const postId = route.query.postId;
+  const postId = route?.query?.postId || props?.postId;
   if (postId) {
     await fetchPostDetails(postId);
     await fetchComments(postId);
@@ -528,6 +539,28 @@ const showVotesResult = async (option) => {
   .show-more {
     background: transparent;
     font-weight: 600;
+  }
+}
+
+.custom-page {
+  display: grid;
+  grid-template-rows: auto !important;
+  min-height: fit-content !important;
+  position: relative;
+}
+.option-container-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 16px;
+}
+.input-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  &-popup {
+    position: sticky;
+    bottom: 0;
+    left: 0;
   }
 }
 </style>
