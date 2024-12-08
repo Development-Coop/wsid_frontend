@@ -164,7 +164,7 @@ const props = defineProps({
     default: "", // Default value for username
   },
   timeAgo: {
-    type: String,
+    type: [String, Number],
     default: "", // Default value for timeAgo
   },
   postContent: {

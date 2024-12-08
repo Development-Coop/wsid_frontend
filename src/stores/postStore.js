@@ -71,11 +71,17 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
-  const getTrendingList = async () => {
+  const getTrendingList = async ({ all = true, page = 1, limit = 10, sortBy = "createdAt", order = "desc" }) => {
     try {
-
+      const queryParams = new URLSearchParams({
+        all: all.toString(),
+        page: page.toString(),
+        limit: limit.toString(),
+        sortBy,
+        order,
+      });
       // Make a GET request with the constructed query string
-      const response = await api.get(`post/trending`, {
+      const response = await api.get(`post/trending?${queryParams.toString()}`, {
         headers: {
           "Content-Type": "application/json"
         },

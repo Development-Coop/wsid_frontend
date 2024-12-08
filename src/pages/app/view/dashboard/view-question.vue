@@ -364,11 +364,27 @@ const focusReplyInput = async(commentId) => {
   });
 }
 
+const countTotalComments = (comments) => {
+  let count = 0;
+
+  const traverse = (commentList) => {
+    for (const comment of commentList) {
+      count++; // Count the current comment
+      if (comment.replies && comment.replies.length > 0) {
+        traverse(comment.replies); // Recursively count replies
+      }
+    }
+  };
+
+  traverse(comments);
+  return count;
+};
+
 const fetchComments = async (postId) => {
   try {
     Loading.show();
     comments.value = await postStore.getCommentsList(postId);
-    totalComments.value = comments.value?.length ?? 0;
+    totalComments.value = countTotalComments(comments.value);
     comments.value = comments.value.map((comment) => ({
       ...comment,
       showAllReplies: false

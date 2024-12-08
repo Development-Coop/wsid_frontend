@@ -4,8 +4,7 @@
       Recent questions from people you follow
     </div>
     <div
-      ref="postContainer"
-      :class="['post-wrapper', { 'post-wrapper-loader': isLoading }]"
+      :class="['post-wrapper', { 'post-wrapper-loader': isLoading && posts?.length == 0 }]"
     >
       <Posts
         v-for="post in posts"
@@ -21,7 +20,7 @@
         :votes="post.votesCount"
         :comments="post.commentsCount"
       />
-      <q-spinner v-if="isLoading" color="primary" />
+      <q-spinner v-if="isLoading" color="primary" class="spinner" />
     </div>
   </div>
 </template>
@@ -30,13 +29,14 @@
 import Posts from "../components/posts.vue";
 import { ref, onMounted, onUnmounted } from "vue";
 import { usePostStore } from "src/stores/postStore";
+import { useQuasar } from "quasar";
 
 const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
-const postContainer = ref(null); // Ref for the container
 const postStore = usePostStore();
+const $q = useQuasar();
 
 // Function to fetch posts
 const fetchPosts = async () => {
@@ -44,44 +44,62 @@ const fetchPosts = async () => {
 
   isLoading.value = true;
   try {
-    const newPosts = await postStore.getTrendingList();
+    const newPosts = await postStore.getTrendingList({
+      all: true,
+      page: currentPage.value,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
     // Check if newPosts contains data
+    // Check if there are new posts
     if (newPosts.length > 0) {
-      posts.value = [...posts.value, ...newPosts];
-      currentPage.value++;
+      // Append new posts to the existing list
+      posts.value.push(...newPosts); // Using .push() for better performance
+      currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load
     }
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    $q.notify({
+      message: "Failed to load posts. Please try again later.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+      icon: "error",
+    });
   } finally {
     isLoading.value = false;
   }
 };
 
 // Infinite scroll handler
-const onScroll = () => {
-  const container = postContainer.value;
-  if (
-    container.scrollTop + container.clientHeight >=
-    container.scrollHeight - 50 // Trigger when near the bottom
-  ) {
-    fetchPosts();
+const onScroll = async () => {
+  const scrollTop = window.scrollY; // Current scroll position from top
+  const viewportHeight = window.innerHeight; // Height of the visible area
+  const documentHeight = document.documentElement.scrollHeight; // Total height of the document
+  if (scrollTop + viewportHeight >= documentHeight - 50) {
+    // Near the bottom of the page
+    await fetchPosts();
   }
 };
 
 // Add event listeners
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
-  postContainer.value?.addEventListener("scroll", onScroll);
+  window.addEventListener("scroll", onScroll);
 });
 
 onUnmounted(() => {
-  postContainer.value?.removeEventListener("scroll", onScroll);
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 
 <style lang="scss" scoped>
+html, body {
+  height: 100%;
+  overflow-y: scroll;
+}
 .profile-wrapper {
   gap: 12px;
   .profile-img {
@@ -99,5 +117,8 @@ onUnmounted(() => {
   &-loader {
     justify-content: center;
   }
+}
+.spinner {
+  justify-self: center;
 }
 </style>

@@ -28,7 +28,7 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      width="320"
+      :width="320"
       show-if-above
       side="left"
       bordered
