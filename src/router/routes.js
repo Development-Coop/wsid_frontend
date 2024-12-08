@@ -16,6 +16,11 @@ const routes = [
         name: "privacy-policy",
         component: () => import("src/pages/TermsConditions/PrivacyPolicy.vue"),
       },
+      {
+        path: "about-us",
+        name: "about-us",
+        component: () => import("src/pages/AboutUs.vue"),
+      }
     ],
   },
   {
