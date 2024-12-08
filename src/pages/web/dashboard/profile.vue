@@ -62,7 +62,7 @@
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel class="q-pa-lg" name="Posts">
           <div
-            v-if="!posts.length"
+            v-if="!posts.length && !isLoading"
             class="text-center flex flex-col justify-center items-center h-full"
           >
             <div class="text-h6 text-weight-bold">Ask Question</div>
@@ -72,15 +72,15 @@
               :delay="100"
               no-caps
               size="md"
-              to="/app/ask-question"
               label="Ask Question"
               color="primary"
               unelevated
+              @click="showPopup=true"
             />
           </div>
-          <div v-else ref="postContainer" class="post-wrapper">
+          <div v-else ref="postContainer" :class="['post-wrapper', { 'post-wrapper-loader': isLoading }]">
             <q-spinner v-if="isLoading" color="primary" />
-            <div class="ask-question-container">
+            <div v-else class="ask-question-container">
               <q-img
                 :src="user?.profilePic"
                 class="user-avatar"
@@ -92,10 +92,10 @@
                   flat
                   icon="add"
                   color="rgba(255, 87, 50, 0.08)"
-                  to="/app/ask-question"
                   label="Ask a Question"
                   class="ask-question-btn"
                   unelevated
+                  @click="showPopup=true"
                 />
               </div>
             </div>
@@ -113,17 +113,46 @@
               :votes="post.votesCount"
               :comments="post.commentsCount"
               :is-own-posts="true"
+              @edit="editQuestion"
             />
           </div>
         </q-tab-panel>
 
-        <q-tab-panel class="q-pa-lg" name="Activity">
-          <div class="text-h6">Activity</div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <q-tab-panel class="q-pa-lg activity-section text-center" name="Activity">
+          <div class="activity-container">
+            <q-icon
+              name="timeline"
+              size="48px"
+              color="primary"
+              class="q-mb-md"
+            />
+            <div class="text-h6 text-primary">No Activity Yet</div>
+            <p class="text-grey-7 q-mt-sm">
+              Stay tuned! Your activity history will be displayed here soon.
+            </p>
+          </div>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
   </div>
+
+  <q-dialog v-model="showPopup" persistent>
+    <div class="popup-container">
+      <AskQuestion
+        :is-popup="true"
+        :post-id="editPostId"
+        @close="closePopup"
+      />
+      <q-btn
+        flat
+        round
+        dense
+        icon="close"
+        class="close-button"
+        @click="closePopup"
+      />
+    </div>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -131,6 +160,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
+import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();
@@ -144,6 +174,8 @@ const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postContainer = ref(null); // Ref for the container
 const postStore = usePostStore();
+const showPopup = ref(false);
+const editPostId = ref("");
 
 // Function to fetch posts
 const fetchPosts = async () => {
@@ -171,6 +203,16 @@ const fetchPosts = async () => {
     isLoading.value = false;
   }
 };
+
+const editQuestion = (id) => {
+  editPostId.value = id;
+  showPopup.value = true;
+};
+
+const closePopup = () => {
+  showPopup.value = false;
+  editPostId.value = "";
+}
 
 // Infinite scroll handler
 const onScroll = () => {
@@ -222,6 +264,9 @@ onUnmounted(() => {
 .post-wrapper {
   display: grid;
   gap: 26px;
+  &-loader {
+    justify-content: center;
+  }
 }
 
 .ask-question-container {
@@ -261,5 +306,29 @@ onUnmounted(() => {
 
 :deep(.q-btn__content) {
   text-transform: none;
+}
+.activity-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensures full height usage */
+  background: white;
+  padding: 24px;
+}
+
+.popup-container {
+  width: 90vw;
+  max-width: 600px;
+  padding: 16px;
+  background: #fff;
+  position: relative;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
 }
 </style>

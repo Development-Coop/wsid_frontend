@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pb-xl">
-    <div class="flex justify-between q-pa-md sticky-header">
+  <q-page :class="{'q-pb-xl': !isPopup, 'custom-page': isPopup}">
+    <div v-if="!isPopup" :class="['flex','justify-between','q-pa-md','sticky-header']">
       <q-btn
         no-caps
         block
@@ -24,11 +24,12 @@
       />
     </div>
     <div class="q-ma-md">
-      <div class="text-h6 text-weight-bold text-uppercase text-center">
+      <div :class="['text-h6','text-weight-bold','text-uppercase', {'text-center': !isPopup}]">
         Ask Question
       </div>
+      <p v-if="isPopup">What do you want to ask the community?</p>
 
-      <div class="q-mt-xl">
+      <div :class="{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup}">
         <div class="q-gutter-y-md column">
           <q-input v-model="title" outlined label="Title/Question" />
           <q-input
@@ -76,7 +77,7 @@
         </div>
       </div>
 
-      <div class="option-container q-mt-xl">
+      <div :class="[{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup, 'option-container-grid': isPopup && options.length > 2}, 'option-container']">
         <div
           v-for="(option, index) in options"
           :key="index"
@@ -126,6 +127,17 @@
       >
         + Add Option
       </q-btn>
+      <div class="q-mt-lg flex self-end justify-center">
+        <q-btn
+          v-if="isPopup"
+          no-caps
+          unelevated
+          size="md"
+          color="primary"
+          label="Submit"
+          @click="createPost"
+        />
+      </div>
     </div>
   </q-page>
 </template>
@@ -147,6 +159,18 @@ const options = ref([
 ]); // Initialize with two empty options
 const $q = useQuasar();
 const postStore = usePostStore();
+
+const props = defineProps({
+  postId: {
+    type: String,
+    default: "",
+  },
+  isPopup: {
+    type: Boolean,
+    default: false,
+  }
+});
+const emit = defineEmits(["close"]);
 
 const uploadDescriptionImages = () => {
   const input = document.createElement("input");
@@ -255,6 +279,9 @@ const createPost = async () => {
       });
     } else {
       await postStore.createPost(formData);
+      if (props.isPopup) {
+        emit("close")
+      }
       $q.notify({
         message: "Successfully posted!",
         color: "positive",
@@ -309,7 +336,7 @@ const fetchPostDetails = async (postId) => {
 
 // Fetch post details if postId is present
 onMounted(async () => {
-  const postId = route.query.postId;
+  const postId = route?.query?.postId || props?.postId;
   if (postId) {
     await fetchPostDetails(postId);
   }
@@ -321,5 +348,15 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 16px;
+  }
+}
+.custom-page {
+  display: grid;
+  grid-template-rows: auto !important;
+  min-height: fit-content !important;
 }
 </style>

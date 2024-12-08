@@ -15,14 +15,14 @@
           <div class="text-h5 text-weight-bold">WSID</div>
         </q-toolbar-title>
 
-        <q-btn
+        <!-- <q-btn
           v-if="$q.screen.lt.sm"
           dense
           flat
           round
           icon="menu"
           @click="toggleRightDrawer"
-        />
+        /> -->
       </q-toolbar>
     </q-header>
 
@@ -152,7 +152,7 @@
       </div>
     </q-drawer>
 
-    <q-drawer
+    <!-- <q-drawer
       v-model="rightDrawerOpen"
       show-if-above
       side="right"
@@ -160,7 +160,7 @@
       bordered
     >
       <div class="q-pa-lg text-body1 text-weight-bold">Top Trending</div>
-    </q-drawer>
+    </q-drawer> -->
 
     <q-page-container>
       <router-view />
@@ -174,7 +174,7 @@ import { useProfileStore } from "src/stores/profileStore";
 import { useQuasar, Loading } from "quasar";
 
 const leftDrawerOpen = ref(false);
-const rightDrawerOpen = ref(false);
+// const rightDrawerOpen = ref(false);
 const $q = useQuasar();
 const profileStore = useProfileStore();
 
@@ -205,9 +205,9 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
-const toggleRightDrawer = () => {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-};
+// const toggleRightDrawer = () => {
+//   rightDrawerOpen.value = !rightDrawerOpen.value;
+// };
 </script>
 
 <style scoped>
