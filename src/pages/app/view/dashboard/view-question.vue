@@ -307,8 +307,10 @@ onMounted(async () => {
   }, 1000); // Update every second
   const postId = route?.query?.postId || props?.postId;
   if (postId) {
+    Loading.show();
     await fetchPostDetails(postId);
     await fetchComments(postId);
+    Loading.hide();
   }
 });
 
@@ -382,7 +384,6 @@ const countTotalComments = (comments) => {
 
 const fetchComments = async (postId) => {
   try {
-    Loading.show();
     comments.value = await postStore.getCommentsList(postId);
     totalComments.value = countTotalComments(comments.value);
     comments.value = comments.value.map((comment) => ({
@@ -397,14 +398,11 @@ const fetchComments = async (postId) => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
 const fetchPostDetails = async (postId) => {
   try {
-    Loading.show();
     const data = await postStore.getPostDetails(postId);
     // Populate the fields with fetched data
     postDetails.value = {
@@ -433,8 +431,6 @@ const fetchPostDetails = async (postId) => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
