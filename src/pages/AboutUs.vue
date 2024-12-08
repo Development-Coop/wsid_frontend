@@ -18,7 +18,7 @@
               </p>
               <p style="display: flex;">
                 <img
-                  src="src/assets/images/radix.png"
+                  src="../assets/images/radix.png"
                   alt="radix-icon"
                   class="q-mr-sm"
                   style="height: 18px;"
