@@ -22,22 +22,24 @@
     <div class="q-mb-sm text-body1 text-weight-bold text-grey-7">
       Recent questions from people you follow
     </div>
-    <div ref="postContainer" class="post-wrapper">
-      <Posts
-        v-for="post in posts"
-        :key="post.id"
-        class="q-pa-md"
-        :post-id="post.id"
-        :user-image="post.user.profilePicUrl"
-        :user-id="post.user.id"
-        :username="post.user.name"
-        :time-ago="post.createdAt"
-        :post-content="post.description"
-        :post-images="post.images"
-        :votes="post.votesCount"
-        :comments="post.commentsCount"
-      />
-      <q-spinner v-if="isLoading" color="primary" />
+    <div class="post-container">
+      <div class="post-wrapper">
+        <Posts
+          v-for="post in posts"
+          :key="post.id"
+          class="q-pa-md"
+          :post-id="post.id"
+          :user-image="post.user.profilePicUrl"
+          :user-id="post.user.id"
+          :username="post.user.name"
+          :time-ago="post.createdAt"
+          :post-content="post.description"
+          :post-images="post.images"
+          :votes="post.votesCount"
+          :comments="post.commentsCount"
+        />
+        <q-spinner v-if="isLoading" color="primary" />
+      </div>
     </div>
   </div>
 
@@ -83,6 +85,7 @@ import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRoute, useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 // components
 import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
 import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
@@ -91,13 +94,13 @@ const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
-const postContainer = ref(null); // Ref for the container
 const postStore = usePostStore();
 const profileStore = useProfileStore();
 const showViewQuePopup = ref(false);
 const route = useRoute();
 const router = useRouter();
 const showAskQuePopup = ref(false);
+const $q = useQuasar();
 
 const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
@@ -113,10 +116,13 @@ const closeModal = () => {
 
 // Function to fetch posts
 const fetchPosts = async () => {
+  // Prevent duplicate requests or unnecessary calls
   if (isLoading.value || !hasMoreData.value) return;
 
   isLoading.value = true;
+
   try {
+    // Fetch new posts
     const newPosts = await postStore.getPostList({
       all: true,
       page: currentPage.value,
@@ -124,47 +130,61 @@ const fetchPosts = async () => {
       sortBy: "createdAt",
       order: "desc",
     });
-    // Check if newPosts contains data
+
+    // Check if there are new posts
     if (newPosts.length > 0) {
-      posts.value = [...posts.value, ...newPosts];
-      currentPage.value++;
+      // Append new posts to the existing list
+      posts.value.push(...newPosts); // Using .push() for better performance
+      currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load
     }
   } catch (error) {
     console.error("Error fetching posts:", error);
+
+    // Optional: Show a notification to the user
+    $q.notify({
+      message: "Failed to load posts. Please try again later.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+      icon: "error",
+    });
   } finally {
-    isLoading.value = false;
+    isLoading.value = false; // Reset the loading flag
   }
 };
 
-// Infinite scroll handler
-const onScroll = () => {
-  const container = postContainer.value;
-  if (
-    container.scrollTop + container.clientHeight >= container.scrollHeight - 50 // Trigger when near the bottom
-  ) {
-    fetchPosts();
+const onScroll = async () => {
+  const scrollTop = window.scrollY; // Current scroll position from top
+  const viewportHeight = window.innerHeight; // Height of the visible area
+  const documentHeight = document.documentElement.scrollHeight; // Total height of the document
+  if (scrollTop + viewportHeight >= documentHeight - 50) {
+    // Near the bottom of the page
+    await fetchPosts();
   }
 };
 
-// Add event listeners
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
-  postContainer.value?.addEventListener("scroll", onScroll);
+  window.addEventListener("scroll", onScroll); // Attach to window scroll
   const postId = route?.query?.postId;
   if (postId) {
     showViewQuePopup.value = true;
-
   }
 });
 
+
 onUnmounted(() => {
-  postContainer.value?.removeEventListener("scroll", onScroll);
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+html, body {
+  height: 100%;
+  overflow-y: scroll;
+}
 .profile-wrapper {
   gap: 12px;
   .profile-img {
@@ -179,11 +199,6 @@ onUnmounted(() => {
 .post-wrapper {
   display: grid;
   gap: 26px;
-}
-.post-container {
-  height: 100vh; /* Adjust height as needed */
-  overflow-y: auto;
-  padding: 16px;
 }
 .q-spinner {
   display: block;

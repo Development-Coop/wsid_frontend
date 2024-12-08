@@ -78,8 +78,8 @@
               @click="showPopup=true"
             />
           </div>
-          <div v-else ref="postContainer" :class="['post-wrapper', { 'post-wrapper-loader': isLoading }]">
-            <q-spinner v-if="isLoading" color="primary" />
+          <div v-else :class="['post-wrapper']">
+            <q-spinner v-if="isLoading" color="primary" class="spinner" />
             <div v-else class="ask-question-container">
               <q-img
                 :src="user?.profilePic"
@@ -189,7 +189,6 @@ const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
-const postContainer = ref(null); // Ref for the container
 const postStore = usePostStore();
 const showPopup = ref(false);
 const editPostId = ref("");
@@ -233,23 +232,24 @@ const closePopup = () => {
 }
 
 // Infinite scroll handler
-const onScroll = () => {
-  const container = postContainer.value;
-  if (
-    container.scrollTop + container.clientHeight >= container.scrollHeight - 50 // Trigger when near the bottom
-  ) {
-    fetchPosts();
+const onScroll = async () => {
+  const scrollTop = window.scrollY; // Current scroll position from top
+  const viewportHeight = window.innerHeight; // Height of the visible area
+  const documentHeight = document.documentElement.scrollHeight; // Total height of the document
+  if (scrollTop + viewportHeight >= documentHeight - 50) {
+    // Near the bottom of the page
+    await fetchPosts();
   }
 };
 
 // Add event listeners
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
-  postContainer.value?.addEventListener("scroll", onScroll);
+  window.addEventListener("scroll", onScroll);
 });
 
 onUnmounted(() => {
-  postContainer.value?.removeEventListener("scroll", onScroll);
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 
@@ -348,5 +348,8 @@ onUnmounted(() => {
   right: 10px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
+}
+.spinner {
+  justify-self: center;
 }
 </style>
