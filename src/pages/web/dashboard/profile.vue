@@ -2,7 +2,7 @@
   <div>
     <div class="q-pa-lg profile">
       <div class="flex justify-end">
-        <q-btn flat no-caps class="q-pa-none" to="/web/profile/edit-profile">
+        <q-btn flat no-caps class="q-pa-none cursor-pointer" @click="showEditProfilePopup=true">
           <q-icon size="24px" class="q-mr-md">
             <img src="~src/assets/icons/edit.svg" alt="edit" />
           </q-icon>
@@ -153,6 +153,22 @@
       />
     </div>
   </q-dialog>
+  <q-dialog v-model="showEditProfilePopup" persistent>
+    <div class="popup-container">
+      <EditProfile
+        :is-popup="true"
+        @close="showEditProfilePopup=false"
+      />
+      <q-btn
+        flat
+        round
+        dense
+        icon="close"
+        class="close-button"
+        @click="showEditProfilePopup=false"
+      />
+    </div>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -161,6 +177,7 @@ import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
+import EditProfile from "src/pages/app/view/dashboard/profile/editProfile.vue";
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();
@@ -176,6 +193,7 @@ const postContainer = ref(null); // Ref for the container
 const postStore = usePostStore();
 const showPopup = ref(false);
 const editPostId = ref("");
+const showEditProfilePopup = ref(false);
 
 // Function to fetch posts
 const fetchPosts = async () => {
