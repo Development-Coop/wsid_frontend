@@ -155,24 +155,45 @@
                 </p>
                 <p class="flex items-center q-mt-sm q-mb-md">
                   <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
-                  <span class="q-mr-md flex items-center cursor-pointer">
-                    <img
-                      src="../../../../assets/images/like.png"
-                      alt="like-icon"
-                      class="q-mr-xs"
-                      style="height: 20px;"
-                    />
-                    {{ comment?.likesCount }}
+                  <span 
+                    class="like-container q-mr-md flex items-center cursor-pointer"
+                    @click="toggleLike(comment?.id)"
+                  >
+                    <div 
+                      class="like-icon-wrapper q-mr-sm" 
+                      :class="{ 'liked-outline': comment?.hasLiked }"
+                    >
+                      <img
+                        :src="comment?.hasLiked ? likeImage : happyIcon"
+                        alt="like-icon"
+                        style="height: 20px;"
+                      />
+                    </div>
+                    <span
+                      :class="{ 'liked-text': comment?.hasLiked }"
+                    >
+                      {{ comment?.likesCount }}
+                    </span>
                   </span>
-                  <span class="q-mr-sm flex items-center cursor-pointer">
-                    <img
-                      src="../../../../assets/images/dislike.png"
-                      alt="like-icon"
-                      srcset=""
-                      class="q-mr-xs"
-                      style="height: 20px;"
-                    />
-                    {{ comment?.dislikesCount }}
+                  <span 
+                    class="like-container q-mr-md flex items-center cursor-pointer"
+                    @click="toggleDislike(comment?.id)"
+                  >
+                    <div 
+                      class="like-icon-wrapper q-mr-sm" 
+                      :class="{ 'liked-outline': comment?.hasDisliked }"
+                    >
+                      <img
+                        :src="comment?.hasDisliked ? dislikeImage : sadIcon"
+                        alt="dislike-icon"
+                        style="height: 20px;"
+                      />
+                    </div>
+                    <span
+                      :class="{ 'liked-text': comment?.hasDisliked }"
+                    >
+                      {{ comment?.dislikesCount }}
+                    </span>
                   </span>
                 </p>
                 <div
@@ -196,24 +217,45 @@
                     </p>
                     <p class="flex items-center q-mt-sm q-mb-md">
                       <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
-                      <span class="q-mr-md flex items-center cursor-pointer">
-                        <img
-                          src="../../../../assets/images/like.png"
-                          alt="like-icon"
-                          class="q-mr-xs"
-                          style="height: 20px;"
-                        />
-                        {{ reply?.likesCount }}
+                      <span 
+                        class="like-container q-mr-md flex items-center cursor-pointer"
+                        @click="toggleLike(reply.id)"
+                      >
+                        <div 
+                          class="like-icon-wrapper q-mr-sm" 
+                          :class="{ 'liked-outline': reply?.hasLiked }"
+                        >
+                          <img
+                            :src="reply?.hasLiked ? likeImage : happyIcon"
+                            alt="like-icon"
+                            style="height: 20px;"
+                          />
+                        </div>
+                        <span
+                          :class="[{ 'liked-text': reply?.hasLiked }]"
+                        >
+                          {{ reply?.likesCount }}
+                        </span>
                       </span>
-                      <span class="q-mr-sm flex items-center cursor-pointer">
-                        <img
-                          src="../../../../assets/images/dislike.png"
-                          alt="like-icon"
-                          srcset=""
-                          class="q-mr-xs"
-                          style="height: 20px;"
-                        />
-                        {{ reply?.dislikesCount }}
+                      <span 
+                        class="like-container q-mr-md flex items-center cursor-pointer"
+                        @click="toggleDislike(reply?.id)"
+                      >
+                        <div 
+                          class="like-icon-wrapper q-mr-sm" 
+                          :class="{ 'liked-outline': reply?.hasDisliked }"
+                        >
+                          <img
+                            :src="reply?.hasDisliked ? dislikeImage : sadIcon"
+                            alt="dislike-icon"
+                            style="height: 20px;"
+                          />
+                        </div>
+                        <span
+                          :class="{ 'liked-text': reply?.hasDisliked }"
+                        >
+                          {{ reply?.dislikesCount }}
+                        </span>
                       </span>
                     </p>
                   </div>
@@ -257,6 +299,12 @@ import { useRouter, useRoute } from "vue-router";
 import { ref, onUnmounted, onMounted, nextTick } from "vue";
 import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
+
+// Image
+import likeImage from 'src/assets/images/like.png';
+import happyIcon from 'src/assets/icons/happy.svg';
+import dislikeImage from 'src/assets/images/dislike.png';
+import sadIcon from 'src/assets/icons/sad.svg';
 
 const postStore = usePostStore();
 const router = useRouter();
@@ -380,6 +428,24 @@ const countTotalComments = (comments) => {
 
   traverse(comments);
   return count;
+};
+
+const toggleLike = async (postId) => {
+  try {
+    await postStore.addLike(postId);
+    await fetchComments(postDetails.value.id);
+  } catch (error) {
+    console.error(error)
+  }
+};
+
+const toggleDislike = async (postId) => {
+  try {
+    await postStore.addDislike(postId);
+    await fetchComments(postDetails.value.id);
+  } catch (error) {
+    console.error(error)
+  }
 };
 
 const fetchComments = async (postId) => {
@@ -573,6 +639,24 @@ const showVotesResult = async (option) => {
     position: sticky;
     bottom: 0;
     left: 0;
+  }
+}
+
+.like-container {
+  .like-icon-wrapper {
+    display: inline-block;
+    border-radius: 50%; // Circular border
+    display: grid;
+  }
+
+  .like-icon {
+    height: 20px; // Icon size
+    transition: filter 0.3s ease; // Smooth transition for hover effects
+  }
+
+  .liked-text {
+    color: #f15b29; // Highlight text color
+    font-weight: 800; // Make text bold
   }
 }
 </style>

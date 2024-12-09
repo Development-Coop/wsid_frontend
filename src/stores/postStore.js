@@ -126,6 +126,24 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const addLike = async (postId) => {
+    try {
+      await api.post(`comment/like/${postId}`);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const addDislike = async (postId) => {
+    try {
+      await api.post(`comment/dislike/${postId}`);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   return {
     createPost,
     getPostList,
@@ -135,6 +153,8 @@ export const usePostStore = defineStore("post", () => {
     getTrendingList,
     createVote,
     createComment,
-    getCommentsList
+    getCommentsList,
+    addLike,
+    addDislike
   };
 });
