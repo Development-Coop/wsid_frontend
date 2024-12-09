@@ -1,71 +1,105 @@
 <template>
   <q-page class="q-pb-xl">
-    <div v-for="post in posts" :key="post.username" class="post-wrapper">
+    <div v-for="post in posts" :key="post.id" class="post-wrapper">
       <Posts
         class="q-pa-md"
-        :user-image="post.userImage"
-        :username="post.username"
-        :time-ago="post.timeAgo"
-        :post-content="post.postContent"
-        :post-image="post.postImage"
-        :votes="post.votes"
-        :comments="post.comments"
+        :post-id="post.id"
+        :user-image="post.user.profilePicUrl"
+        :user-id="post.user.id"
+        :username="post.user.name"
+        :time-ago="post.createdAt"
+        :post-content="post.description"
+        :post-images="post.images"
+        :votes="post.votesCount"
+        :comments="post.commentsCount"
       />
     </div>
+    <q-spinner v-if="isLoading" color="primary" class="spinner q-mt-md" />
   </q-page>
 </template>
 
 <script setup>
 import Posts from "../../components/posts.vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import { usePostStore } from "src/stores/postStore";
+import { useQuasar } from "quasar";
 
-function* generateDummyContent() {
-  const userImages = [
-    "https://avatar.iran.liara.run/public/girl",
-    "https://avatar.iran.liara.run/public/boy",
-    "https://avatar.iran.liara.run/public",
-  ];
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hank",
-    "Ivy",
-    "Jack",
-  ];
-  const postContents = [
-    "Hello world!",
-    "This is a test post.",
-    "I love coding.",
-    "Today is a great day.",
-    "I am learning new things.",
-  ];
-  for (let i = 1; i <= 10; i++) {
-    yield {
-      userImage: userImages[Math.floor(Math.random() * userImages.length)],
-      username: names[Math.floor(Math.random() * names.length)],
-      timeAgo: "Just now",
-      postContent: `${
-        postContents[Math.floor(Math.random() * postContents.length)]
-      } Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum delectus, voluptatem laboriosam in veritatis modi nisi doloribus cupiditate optio accusantium.
- `,
-      postImage: "https://placehold.co/800x400",
-      votes: Math.floor(Math.random() * 100),
-      comments: Math.floor(Math.random() * 50),
-    };
+const posts = ref([]);
+const currentPage = ref(1); // Tracks the current page
+const isLoading = ref(false); // Tracks the loading state
+const hasMoreData = ref(true); // Tracks if more data is available
+const postStore = usePostStore();
+const $q = useQuasar();
+
+// Function to fetch posts
+const fetchPosts = async () => {
+  if (isLoading.value || !hasMoreData.value) return;
+
+  isLoading.value = true;
+  try {
+    const newPosts = await postStore.getTrendingList({
+      all: true,
+      page: currentPage.value,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+    // Check if newPosts contains data
+    // Check if there are new posts
+    if (newPosts.length > 0) {
+      // Append new posts to the existing list
+      posts.value.push(...newPosts); // Using .push() for better performance
+      currentPage.value++; // Increment the page number
+    } else {
+      hasMoreData.value = false; // No more data to load
+    }
+  } catch (error) {
+    $q.notify({
+      message: "Failed to load posts. Please try again later.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+      icon: "error",
+    });
+  } finally {
+    isLoading.value = false;
   }
-}
+};
 
-const posts = Array.from(generateDummyContent());
+// Infinite scroll handler
+const onScroll = async () => {
+  const scrollTop = window.scrollY; // Current scroll position from top
+  const viewportHeight = window.innerHeight; // Height of the visible area
+  const documentHeight = document.documentElement.scrollHeight; // Total height of the document
+  if (scrollTop + viewportHeight >= documentHeight - 50) {
+    // Near the bottom of the page
+    await fetchPosts();
+  }
+};
+
+// Add event listeners
+onMounted(async () => {
+  await fetchPosts(); // Load initial posts
+  window.addEventListener("scroll", onScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", onScroll);
+});
+
 </script>
 
 <style scoped lang="scss">
+.q-page {
+  display: grid;
+}
 .post-wrapper {
+  display: grid;
   &:not(:last-child) {
     border-bottom: 1px solid #aeaeb2;
   }
+}
+.spinner {
+  justify-self: center;
 }
 </style>
