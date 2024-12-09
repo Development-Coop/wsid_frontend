@@ -3,12 +3,13 @@
     <!-- Header with user image, details, and action menu -->
     <div class="flex items-center no-wrap" @click.self="openPost">
       <q-img
-        class="post-img"
+        class="post-img cursor-pointer"
         :src="userImage"
         spinner-color="primary"
         spinner-size="22px"
+        @click="goToProfile"
       />
-      <div style="flex-grow: 1;" class="q-ml-sm">
+      <div style="flex-grow: 1;" class="q-ml-sm cursor-pointer" @click="goToProfile">
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
@@ -143,12 +144,16 @@
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading, copyToClipboard } from "quasar";
 import { ref, computed, onUnmounted, onMounted } from "vue";
+import { useProfileStore } from "src/stores/profileStore";
+import { useRouter } from "vue-router";
 
 // components
 import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
 
 const postStore = usePostStore();
 const $q = useQuasar();
+const profileStore = useProfileStore();
+const router = useRouter();
 
 const props = defineProps({
   postId: {
@@ -191,6 +196,10 @@ const props = defineProps({
     type: Boolean,
     default: false, // Default value for comments
   },
+  userId: {
+    type: String,
+    default: ""
+  }
 });
 
 const emit = defineEmits(["deleted", "edit"]);
@@ -201,12 +210,24 @@ const showViewQuePopup = ref(false);
 
 const openPost = () => {
   showViewQuePopup.value = true;
+};
+
+const goToProfile = () => {
+  if (props.userId === user.value.id) {
+    router.push({name: "web-dashboard-profile"});
+  } else {
+    router.push({name: "web-dashboard-view-profile", query: { uid: props.userId }});
+  }
 }
 
 const openImage = (image) => {
   currentImage.value = image;
   isDialogOpen.value = true;
 };
+
+const user = computed(() => {
+  return JSON.parse(JSON.stringify(profileStore?.userDetails));
+});
 
 let interval;
 onMounted(() => {

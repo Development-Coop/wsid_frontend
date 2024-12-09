@@ -93,6 +93,12 @@ const routes = [
         component: () => import("src/pages/web/settings.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "/web/dashboard/view-profile",
+        name: "web-dashboard-view-profile",
+        component: () => import("src/pages/web/dashboard/OthersProfile.vue"),
+        meta: { requiresAuth: true },
+      }
     ],
   },
   {

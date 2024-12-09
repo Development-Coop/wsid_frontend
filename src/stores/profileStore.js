@@ -17,23 +17,27 @@ export const useProfileStore = defineStore("profile", () => {
     coverPic: "",
   });
 
-  const getProfileDetails = async () => {
+  const getProfileDetails = async (uid="") => {
     try {
-      const response = await api.get("/user/view");
+      const response = await api.get(`/user/view?uid=${uid}`);
       const data = response?.data?.data;
-      userDetails.value = {
-        id: data?.user?.id,
-        name: data?.user?.name,
-        dateOfBirth: data?.user?.dateOfBirth,
-        username: data?.user?.username,
-        profilePic: data?.user?.profilePic,
-        bio: data?.user?.bio,
-        createdAt: data?.user?.createdAt,
-        likesCount: data?.likesCount,
-        followersCount: data?.followersCount,
-        followingCount: data?.followingCount,
-        coverPic: data?.user?.coverPic,
-      };
+      if (!uid) {
+        userDetails.value = {
+          id: data?.user?.id,
+          name: data?.user?.name,
+          dateOfBirth: data?.user?.dateOfBirth,
+          username: data?.user?.username,
+          profilePic: data?.user?.profilePic,
+          bio: data?.user?.bio,
+          createdAt: data?.user?.createdAt,
+          likesCount: data?.likesCount,
+          followersCount: data?.followersCount,
+          followingCount: data?.followingCount,
+          coverPic: data?.user?.coverPic,
+        };
+      } else {
+        return data;
+      }
     } catch (error) {
       console.error(error);
       throw error;

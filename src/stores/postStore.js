@@ -30,7 +30,7 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
-  const getPostList = async ({ all = true, page = 1, limit = 10, sortBy = "createdAt", order = "desc" }) => {
+  const getPostList = async ({ all = true, page = 1, limit = 10, sortBy = "createdAt", order = "desc", uid = "" }) => {
     try {
       // Construct the query string with the provided parameters
       const queryParams = new URLSearchParams({
@@ -39,6 +39,7 @@ export const usePostStore = defineStore("post", () => {
         limit: limit.toString(),
         sortBy,
         order,
+        uid,
       });
 
       // Make a GET request with the constructed query string
@@ -144,6 +145,15 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const followUser = async (data) => {
+    try {
+      await api.post("user/follow", data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   return {
     createPost,
     getPostList,
@@ -155,6 +165,7 @@ export const usePostStore = defineStore("post", () => {
     createComment,
     getCommentsList,
     addLike,
-    addDislike
+    addDislike,
+    followUser
   };
 });
