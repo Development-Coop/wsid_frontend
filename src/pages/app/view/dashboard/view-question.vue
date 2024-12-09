@@ -633,7 +633,7 @@ const showVotesResult = async (option) => {
 }
 .input-container {
   position: fixed;
-  top: 0;
+  left: 0;
   bottom: 0;
   &-popup {
     position: sticky;

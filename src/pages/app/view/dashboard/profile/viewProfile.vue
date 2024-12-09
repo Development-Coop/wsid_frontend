@@ -1,50 +1,49 @@
 <template>
   <q-page>
     <img
-      v-if="user?.coverPic"
-      :src="user?.coverPic"
+      v-if="userDetails?.coverPic"
+      :src="userDetails?.coverPic"
       alt=""
       class="cover-img"
       style="height: 150px; width: 100%; object-fit: cover"
     />
     <div class="q-px-lg q-py-md">
-      <div class="flex justify-end">
-        <q-btn flat no-caps size="xs" to="/app/profile/edit-profile">
-          <q-icon size="24px">
-            <img src="~src/assets/icons/edit.svg" alt="edit" />
-          </q-icon>
-        </q-btn>
-        <q-btn flat no-caps size="xs" to="/app/profile/settings">
-          <q-icon size="24px">
-            <img src="~src/assets/icons/settings.svg" alt="settings" />
-          </q-icon>
-        </q-btn>
-      </div>
       <div class="flex no-wrap items-center profile-wrapper-top">
-        <q-img class="profile-img" :src="user?.profilePic" />
+        <q-img class="profile-img" :src="userDetails?.profilePic" />
         <div>
-          <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
+          <p class="text-h6 text-weight-medium">{{ userDetails?.name }}</p>
           <p class="text-grey-7">
-            {{ user?.bio }}
+            {{ userDetails?.bio }}
           </p>
+        </div>
+        <div class="follow-button-wrapper">
+          <q-btn
+            :label="getFollowLabel"
+            :color="userDetails?.isFollowing ? 'primary' : 'positive'"
+            :outline="!userDetails.isFollowing"
+            class="follow-btn"
+            @mouseenter="hovered = true"
+            @mouseleave="hovered = false"
+            @click="toggleFollow"
+          />
         </div>
       </div>
       <div class="flex justify-around q-my-lg">
         <div class="text-center">
           <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.followersCount }}
+            {{ userDetails?.followersCount }}
           </p>
           <p>Followers</p>
         </div>
         <div class="text-center">
           <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.followingCount }}
+            {{ userDetails?.followingCount }}
           </p>
           <p>Following</p>
         </div>
         <div class="text-center">
           <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.likesCount }}
+            {{ userDetails?.likesCount }}
           </p>
           <p>Likes</p>
         </div>
@@ -60,8 +59,8 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="Posts" label="Posts" />
-        <q-tab name="Activity" label="Activity" />
+        <!-- <q-tab name="Posts" label="Posts" />
+        <q-tab name="Activity" label="Activity" /> -->
       </q-tabs>
 
       <q-separator />
@@ -72,44 +71,8 @@
         :style="posts.length == 0 ? { backgroundColor: '#f1efef' } : {}"
       >
         <q-tab-panel :class="{ 'q-pa-lg': posts?.length == 0 }" name="Posts">
-          <div
-            v-if="!posts.length && !isLoading"
-            class="text-center flex flex-col justify-center items-center h-full"
-          >
-            <div class="text-h6 text-weight-bold">Ask Question</div>
-            <p class="q-mb-md text-grey-7">You don't have any posts yet</p>
-            <q-btn
-              v-motion-pop
-              :delay="100"
-              no-caps
-              size="md"
-              to="/app/ask-question"
-              label="Ask Question"
-              color="primary"
-              unelevated
-            />
-          </div>
-          <div v-else :class="['post-wrapper']">
+          <div :class="['post-wrapper']">
             <q-spinner v-if="isLoading" color="primary" class="spinner" />
-            <div v-else class="ask-question-container">
-              <q-img
-                :src="user?.profilePic"
-                class="user-avatar"
-                spinner-color="primary"
-                spinner-size="20px"
-              />
-              <div class="question-box">
-                <q-btn
-                  flat
-                  icon="add"
-                  color="rgba(255, 87, 50, 0.08)"
-                  label="Ask a Question"
-                  to="/app/ask-question"
-                  class="ask-question-btn"
-                  unelevated
-                />
-              </div>
-            </div>
             <div v-for="post in posts" :key="post.id" class="post-container">
               <Posts
                 class="q-pa-md"
@@ -128,66 +91,40 @@
             </div>
           </div>
         </q-tab-panel>
-
-        <q-tab-panel class="q-pa-lg" name="Activity">
-          <div class="activity-container">
-            <q-icon
-              name="timeline"
-              size="48px"
-              color="primary"
-              class="q-mb-md"
-            />
-            <div class="text-h6 text-primary">No Activity Yet</div>
-            <p class="text-grey-7 q-mt-sm">
-              Stay tuned! Your activity history will be displayed here soon.
-            </p>
-          </div>
-        </q-tab-panel>
       </q-tab-panels>
     </q-card>
   </q-page>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useProfileStore } from "src/stores/profileStore";
-import { usePostStore } from "src/stores/postStore";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useQuasar, Loading } from "quasar";
-import { useRouter } from "vue-router";
+import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../../../components/posts.vue";
+import { usePostStore } from "src/stores/postStore";
+import { useRoute, useRouter } from "vue-router";
 
 const tab = ref("Posts");
-const posts = ref([]);
 const profileStore = useProfileStore();
+const userDetails = ref({});
 const $q = useQuasar();
-const postStore = usePostStore();
+
+const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
-const hasMoreData = ref(true);
+const hasMoreData = ref(true); // Tracks if more data is available
+const postStore = usePostStore();
 const router = useRouter();
+const route = useRoute();
+const hovered = ref(false);
 
-const user = computed(() => {
-  return JSON.parse(JSON.stringify(profileStore?.userDetails));
-});
-
-const handleSubmit = async () => {
-  Loading.show();
-  try {
-    await profileStore.getProfileDetails();
-  } catch (error) {
-    $q.notify({
-      color: "negative",
-      message:
-        error.response?.data?.message ||
-        "Something went wrong!. Please try again.",
-      position: "top",
-      icon: "error",
-      autoClose: true,
-    });
-  } finally {
-    Loading.hide();
+const getFollowLabel = computed(() => {
+  const isFollowing = userDetails.value?.isFollowing; // Check if the user is followed
+  if (hovered.value) {
+    return isFollowing ? "Unfollow" : "Follow";
   }
-};
+  return isFollowing ? "Following" : "Follow";
+});
 
 // Function to fetch posts
 const fetchPosts = async () => {
@@ -201,6 +138,7 @@ const fetchPosts = async () => {
       limit: 10,
       sortBy: "createdAt",
       order: "desc",
+      uid: userDetails.value?.id,
     });
     // Check if newPosts contains data
     if (newPosts.length > 0) {
@@ -216,6 +154,28 @@ const fetchPosts = async () => {
   }
 };
 
+const toggleFollow = async () => {
+  try {
+    Loading.show();
+    const req = {
+      targetUserId: userDetails.value.id,
+    };
+    await postStore.followUser(req);
+    await getDetails(userDetails.value.id);
+  } catch (e) {
+    $q.notify({
+      color: "negative",
+      message:
+        e.response?.data?.message || "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
+};
+
 // Infinite scroll handler
 const onScroll = async () => {
   const scrollTop = window.scrollY; // Current scroll position from top
@@ -227,25 +187,53 @@ const onScroll = async () => {
   }
 };
 
-const editQuestion = (id) => {
-  router.push({ path: "ask-question", query: { postId: id } });
+const getDetails = async (id) => {
+  Loading.show();
+  try {
+    const data = await profileStore.getProfileDetails(id);
+    userDetails.value = {
+      id: data?.user?.id,
+      name: data?.user?.name,
+      dateOfBirth: data?.user?.dateOfBirth,
+      username: data?.user?.username,
+      profilePic: data?.user?.profilePic,
+      bio: data?.user?.bio,
+      createdAt: data?.user?.createdAt,
+      likesCount: data?.likesCount,
+      followersCount: data?.followersCount,
+      followingCount: data?.followingCount,
+      coverPic: data?.user?.coverPic,
+      isFollowing: data?.isFollowing,
+    };
+  } catch (error) {
+    $q.notify({
+      color: "negative",
+      message:
+        error.response?.data?.message ||
+        "Something went wrong!. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
+  } finally {
+    Loading.hide();
+  }
 };
 
 // Add event listeners
 onMounted(async () => {
+  const userId = route?.query?.uid;
+  if (userId) {
+    await getDetails(userId);
+  } else {
+    router.back();
+  }
   await fetchPosts(); // Load initial posts
   window.addEventListener("scroll", onScroll);
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
-});
-
-onMounted(async () => {
-  if (!user.value?.name) {
-    await handleSubmit();
-  }
-  window.addEventListener("scroll", onScroll);
 });
 </script>
 
@@ -326,4 +314,15 @@ onMounted(async () => {
     border-bottom: 1px solid #aeaeb2;
   }
 }
+
+.follow-button-wrapper {
+    margin-left: 16px;
+    .follow-btn {
+      transition: background-color 0.3s ease, color 0.3s ease;
+      &:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+      }
+    }
+  }
 </style>

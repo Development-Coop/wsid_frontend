@@ -270,12 +270,21 @@ const routes = [
       },
       {
         path: "profile",
+        name: "app-profile",
         component: () => import("src/layouts/AppDashboardLayout.vue"),
         children: [
           {
             path: "",
+            name: "view-profile",
             component: () =>
               import("src/pages/app/view/dashboard/profile/profile.vue"),
+            meta: { requiresAuth: true },
+          },
+          {
+            path: "view",
+            name: "view",
+            component: () =>
+              import("src/pages/app/view/dashboard/profile/viewProfile.vue"),
             meta: { requiresAuth: true },
           },
           {
