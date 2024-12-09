@@ -95,7 +95,7 @@ const handleSubmit = async () => {
   authStore.clearErrors();
   try {
     await authStore.login();
-    const redirectTo = router.currentRoute.value.query.redirectTo || "web-dashboard-trending";
+    const redirectTo = router.currentRoute.value.query.redirectTo || { name: "web-dashboard-trending" };
     // Redirect to the specified path or default to the dashboard
     router.push(redirectTo);
   } catch (error) {
