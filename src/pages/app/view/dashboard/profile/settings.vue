@@ -32,6 +32,7 @@
         color="primary"
         class="w-full"
         label="Logout"
+        @click="logout"
       />
     </div>
   </q-page>
@@ -49,6 +50,10 @@ const items = [
   { id: 6, name: "Help" },
   { id: 7, name: "About" },
 ];
+const logout = () => {
+  localStorage.clear();
+  router.push("/app/auth/login");
+};
 </script>
 
 <style scoped lang="scss">
