@@ -80,7 +80,7 @@
                 :user-image="post.user.profilePicUrl"
                 :user-id="post.user.id"
                 :username="post.user.name"
-                :time-ago="post.timeAgo"
+                :time-ago="post.createdAt"
                 :post-content="post.description"
                 :post-images="post.images"
                 :votes="post.votesCount"
