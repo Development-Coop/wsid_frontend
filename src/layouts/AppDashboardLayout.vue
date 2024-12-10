@@ -15,7 +15,7 @@
           </q-icon>
         </q-btn>
         <q-btn flat round to="/app/search">
-          <q-icon v-if="$route.path === '/app/search'" size="22px">
+          <q-icon v-if="$route.path.includes('/app/search')" size="22px">
             <img src="~src/assets/icons/nav-search-active.svg" alt="" />
           </q-icon>
           <q-icon v-else size="22px">

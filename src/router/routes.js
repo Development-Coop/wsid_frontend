@@ -232,6 +232,33 @@ const routes = [
         ],
       },
       {
+        path: "search", // Ensure the path starts with a leading slash
+        name: "search",
+        component: () => import("src/layouts/AppDashboardLayout.vue"),
+        children: [
+          {
+            path: "", // Default child route for "dashboard"
+            component: () => import("src/pages/app/view/dashboard/search.vue"),
+            children: [
+              {
+                path: "", // Default child route for "layout"
+                name: "search",
+                component: () =>
+                  import("src/pages/app/view/dashboard/searchAccount.vue"),
+                meta: { requiresAuth: true },
+              },
+              {
+                path: "post",
+                name: "search-post",
+                component: () =>
+                  import("src/pages/app/view/dashboard/searchPost.vue"),
+                meta: { requiresAuth: true },
+              }
+            ],
+          },
+        ],
+      },
+      {
         path: "view-question",
         component: () => import("src/layouts/AppPlainLayout.vue"),
         children: [
@@ -240,17 +267,6 @@ const routes = [
             name: "view-question",
             component: () =>
               import("src/pages/app/view/dashboard/view-question.vue"),
-            meta: { requiresAuth: true },
-          },
-        ],
-      },
-      {
-        path: "search",
-        component: () => import("src/layouts/AppDashboardLayout.vue"),
-        children: [
-          {
-            path: "",
-            component: () => import("src/pages/app/view/dashboard/temp.vue"),
             meta: { requiresAuth: true },
           },
         ],
