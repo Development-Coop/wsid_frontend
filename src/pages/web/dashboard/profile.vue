@@ -107,7 +107,7 @@
               :user-image="post.user.profilePicUrl"
               :user-id="post.user.id"
               :username="post.user.name"
-              :time-ago="post.timeAgo"
+              :time-ago="post.createdAt"
               :post-content="post.description"
               :post-images="post.images"
               :votes="post.votesCount"
@@ -195,8 +195,8 @@ const editPostId = ref("");
 const showEditProfilePopup = ref(false);
 
 // Function to fetch posts
-const fetchPosts = async () => {
-  if (isLoading.value || !hasMoreData.value) return;
+const fetchPosts = async (fetch = false) => {
+  if ((isLoading.value || !hasMoreData.value) && !fetch) return;
 
   isLoading.value = true;
   try {
@@ -226,9 +226,10 @@ const editQuestion = (id) => {
   showPopup.value = true;
 };
 
-const closePopup = () => {
+const closePopup = async() => {
   showPopup.value = false;
   editPostId.value = "";
+  await fetchPosts(true);
 }
 
 // Infinite scroll handler
