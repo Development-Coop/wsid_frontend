@@ -154,8 +154,8 @@ const title = ref(""); // Separate ref for Title/Question
 const description = ref(""); // Separate ref for Description
 const descriptionImages = ref([]);
 const options = ref([
-  { text: "", image: null },
-  { text: "", image: null },
+  { text: "", image: null, id: "" },
+  { text: "", image: null, id: "" },
 ]); // Initialize with two empty options
 const $q = useQuasar();
 const postStore = usePostStore();
@@ -247,6 +247,7 @@ const createPost = async () => {
         return {
           text: option.text,
           ...(option.image ? { fileName: fileFieldname } : {}),
+          ...(option?.id ? { id: option.id } : {}),
         };
       })
     );
@@ -267,7 +268,7 @@ const createPost = async () => {
       })
     );
 
-    const postId = route.query.postId;
+    const postId = route.query.postId || props?.postId;
     if (postId) {
       await postStore.updatePost(formData, postId);
       $q.notify({
@@ -277,11 +278,11 @@ const createPost = async () => {
         timeout: 3000,
         icon: "check_circle",
       });
-    } else {
-      await postStore.createPost(formData);
       if (props.isPopup) {
         emit("close")
       }
+    } else {
+      await postStore.createPost(formData);
       $q.notify({
         message: "Successfully posted!",
         color: "positive",
@@ -290,9 +291,9 @@ const createPost = async () => {
         icon: "check_circle",
       });
     }
-
-    // Make API request
-    router.back();
+    if (!props.isPopup) {
+      router.back();
+    }
   } catch (e) {
     console.log(e);
     $q.notify({
@@ -320,6 +321,7 @@ const fetchPostDetails = async (postId) => {
     options.value = postDetails.options.map((option) => ({
       text: option.text,
       image: option.image,
+      id: option.id
     }));
   } catch (error) {
     $q.notify({
