@@ -14,15 +14,13 @@
         <q-toolbar-title>
           <div class="text-h5 text-weight-bold">WSID</div>
         </q-toolbar-title>
-
-        <!-- <q-btn
-          v-if="$q.screen.lt.sm"
+        <q-btn
           dense
           flat
           round
-          icon="menu"
-          @click="toggleRightDrawer"
-        /> -->
+          icon="search"
+          to="/web/dashboard/search"
+        />
       </q-toolbar>
     </q-header>
 
@@ -146,20 +144,24 @@
 
       <div class="q-pa-lg q-mt-md" style="border-top: 1px solid #f1f2f5">
         <p class="text-grey-7 footer-links">
-          <a class="footer-link" @click="router.push({ name: 'privacy-policy' })">
+          <a
+            class="footer-link"
+            @click="router.push({ name: 'privacy-policy' })"
+          >
             Privacy Policy
           </a>
           •
-          <a class="footer-link" @click="router.push({ name: 'terms-conditions' })">
+          <a
+            class="footer-link"
+            @click="router.push({ name: 'terms-conditions' })"
+          >
             Terms and Conditions
           </a>
           •
           <a class="footer-link" @click="router.push({ name: 'about-us' })">
             About Us
           </a>
-          <span class="footer-copyright">
-            | WSID@{{ currentYear }}
-          </span>
+          <span class="footer-copyright"> | WSID@{{ currentYear }} </span>
         </p>
       </div>
     </q-drawer>

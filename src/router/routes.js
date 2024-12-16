@@ -20,7 +20,7 @@ const routes = [
         path: "about-us",
         name: "about-us",
         component: () => import("src/pages/AboutUs.vue"),
-      }
+      },
     ],
   },
   {
@@ -76,6 +76,28 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/web/dashboard/search",
+        name: "web-dashboard-search",
+        component: () => import("src/pages/web/dashboard/search.vue"),
+        meta: { requiresAuth: true },
+        children: [
+          {
+            path: "", // Default child route for "layout"
+            name: "search",
+            component: () =>
+              import("src/pages/app/view/dashboard/searchAccount.vue"),
+            meta: { requiresAuth: true },
+          },
+          {
+            path: "post",
+            name: "search-post",
+            component: () =>
+              import("src/pages/app/view/dashboard/searchPost.vue"),
+            meta: { requiresAuth: true },
+          },
+        ],
+      },
+      {
         path: "/web/dashboard/trending",
         name: "web-dashboard-trending",
         component: () => import("src/pages/web/dashboard/trending.vue"),
@@ -98,7 +120,7 @@ const routes = [
         name: "web-dashboard-view-profile",
         component: () => import("src/pages/web/dashboard/OthersProfile.vue"),
         meta: { requiresAuth: true },
-      }
+      },
     ],
   },
   {
@@ -253,7 +275,7 @@ const routes = [
                 component: () =>
                   import("src/pages/app/view/dashboard/searchPost.vue"),
                 meta: { requiresAuth: true },
-              }
+              },
             ],
           },
         ],
@@ -323,7 +345,8 @@ const routes = [
         children: [
           {
             path: "",
-            component: () => import("src/pages/app/view/dashboard/temp.vue"),
+            component: () =>
+              import("src/pages/app/view/dashboard/trending.vue"),
             meta: { requiresAuth: true },
           },
         ],
