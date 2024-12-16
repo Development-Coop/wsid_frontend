@@ -154,22 +154,152 @@ const commentsList = ref([
   {
     imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
-    comment: "An App Idea in my mind, which tool should I use to prototype?",
+    comment:
+      "I have long hair and need trim. What’s the perfect haircut for my face shape?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
-    comment: "What is the best tea to loose belly fat real quick?",
+    comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
-    comment: "Should I break the law to save a loved one or cry in vain?",
+    comment: "Just came into some extra cash. How should I spend $10,000?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
-    comment: "That makes sense to me. I am in favor.",
+    comment: "2484 Votes (65%)",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+      .href,
+    comment: "What is the best tea to lose belly fat really quickly?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+      .href,
+    comment:
+      "Should I go back to school for computer science as a 38 year old?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+      .href,
+    comment: "Where do should I travel next?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+      .href,
+    comment:
+      "What’s a good action movie to show someone that hates action flicks?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+      .href,
+    comment: "What day of the week is best to break up with someone?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+      .href,
+    comment: "175 Votes (55%)",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+      .href,
+    comment: "Is this goal worth the cost?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+      .href,
+    comment: "That makes perfect sense to me.",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+      .href,
+    comment:
+      "I’ve been thinking about changing things up. What should I name my kid?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+      .href,
+    comment: "What should improve today the house or the car?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+      .href,
+    comment: "I strongly agree",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+      .href,
+    comment: "Should I break the law to save a loved one?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+      .href,
+    comment: "Which Martial Art is right for me?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+      .href,
+    comment: "2484 Votes (65%)",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+      .href,
+    comment: "Which is worse, failing or never trying?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+      .href,
+    comment: "388 Votes (12%)",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+      .href,
+    comment: "Other than that make sure it matches your style and personality.",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+      .href,
+    comment:
+      "Piano may sound daunting, but it’s actually easier than you think! play",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+      .href,
+    comment: "Where to move if you can’t afford NYC?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+      .href,
+    comment: "What profession is not a complete joke?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+      .href,
+    comment: "Agree, no need to watch the 1st one and skip the 3rd",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+      .href,
+    comment: "1802 Votes (15%)",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+      .href,
+    comment: "Why do I keep dreaming of balloons?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+      .href,
+    comment: "What is weighing me down that I don’t need in my life?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+      .href,
+    comment: "Nope",
   },
 ]);
 
