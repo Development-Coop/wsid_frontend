@@ -125,14 +125,14 @@
 
       <!-- Social Login Buttons -->
       <div class="social-login">
-        <q-btn round outline class="social-btn">
+        <q-btn round outline class="social-btn" @click="handleGoogleSignIn">
           <img
             src="../assets//icons//google-icon.svg"
             alt="google-icon"
             srcset=""
           />
         </q-btn>
-        <q-btn round outline class="social-btn">
+        <q-btn round outline class="social-btn" @click="handleAppleSignIn">
           <img
             src="../assets//icons//apple-icon.svg"
             alt="apple-icon"
@@ -154,8 +154,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useAuthStore } from "src/stores/authstore";
-// import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+import { useQuasar, Loading } from "quasar";
+import googleSignIn from "src/utils/googleSignIn";
+import appleSignIn from "src/utils/appleSignIn";
 
 const emit = defineEmits(["submitted"]);
 
@@ -170,6 +172,7 @@ const showPopup = ref(false);
 const authStore = useAuthStore();
 const isLoading = ref(false);
 const $q = useQuasar();
+const router = useRouter();
 
 // Define password validation rules
 // const passwordRules = ref([
@@ -191,6 +194,32 @@ const $q = useQuasar();
 // watch(password, (newPassword) => {
 //   checkPassword(newPassword);
 // });
+
+const handleSignIn = async (signInMethod, redirectTo = { name: "web-dashboard-trending" }) => {
+  try {
+    Loading.show(); // Show loading indicator
+    await signInMethod();
+    
+    // Redirect after successful sign-in
+    router.push(redirectTo);
+  } catch (error) {
+    console.error("Error during sign-in:", error);
+    $q.notify({
+      message: "Sign-in failed. Please try again.",
+      color: "negative",
+      position: "top",
+      icon: "error"
+    });
+  } finally {
+    Loading.hide(); // Hide loading indicator
+  }
+};
+
+// Usage for Google Sign-In
+const handleGoogleSignIn = () => handleSignIn(googleSignIn);
+
+// Usage for Apple Sign-In
+const handleAppleSignIn = () => handleSignIn(appleSignIn);
 
 const parseDate = (dateString) => {
   const [day, month, year] = dateString.split("-");
