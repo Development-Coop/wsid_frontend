@@ -24,6 +24,7 @@
         class="w-full"
         text-color="black"
         label="Continue with Google"
+        @click="handleGoogleSignIn"
       />
       <q-btn
         v-motion-pop
@@ -34,6 +35,7 @@
         class="w-full"
         text-color="black"
         label="Continue with Apple"
+        @click="handleAppleSignIn"
       />
       <div class="text-center relative-position q-py-lg q-mb-md">
         <hr class="divider q-my-none" />
@@ -59,7 +61,41 @@
   </q-page>
 </template>
 
-<script setup></script>
+<script setup>
+import { useRouter } from "vue-router";
+import { useQuasar, Loading } from "quasar";
+import googleSignIn from "src/utils/googleSignIn";
+import appleSignIn from "src/utils/appleSignIn";
+
+const $q = useQuasar();
+const router = useRouter();
+
+const handleSignIn = async (signInMethod, redirectTo = { name: "trending" }) => {
+  try {
+    Loading.show(); // Show loading indicator
+    await signInMethod();
+    
+    // Redirect after successful sign-in
+    router.push(redirectTo);
+  } catch (error) {
+    console.error("Error during sign-in:", error);
+    $q.notify({
+      message: "Sign-in failed. Please try again.",
+      color: "negative",
+      position: "top",
+      icon: "error"
+    });
+  } finally {
+    Loading.hide(); // Hide loading indicator
+  }
+};
+
+// Usage for Google Sign-In
+const handleGoogleSignIn = () => handleSignIn(googleSignIn);
+
+// Usage for Apple Sign-In
+const handleAppleSignIn = () => handleSignIn(appleSignIn);
+</script>
 
 <style scoped lang="scss">
 .q-page {

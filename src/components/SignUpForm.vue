@@ -139,13 +139,13 @@
             srcset=""
           />
         </q-btn>
-        <q-btn round outline class="social-btn">
+        <!-- <q-btn round outline class="social-btn">
           <img
             src="../assets//icons//microsoft-icon.svg"
             alt="microsoft-icon"
             srcset=""
           />
-        </q-btn>
+        </q-btn> -->
       </div>
     </div>
   </div>
@@ -388,7 +388,7 @@ const handleSubmit = async () => {
 
 .social-login {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   place-items: center;
   :deep(.q-btn--outline)::before {
     border: none;
