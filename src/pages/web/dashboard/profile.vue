@@ -14,7 +14,18 @@
         </q-btn>
       </div>
       <div class="flex no-wrap items-center profile-wrapper">
-        <q-img class="profile-img" :src="user?.profilePic" />
+        <q-img
+          v-if="user?.profilePic"
+          class="profile-img"
+          :src="user.profilePic"
+          alt="Profile Picture"
+        />
+        <div
+          v-else
+          class="profile-placeholder"
+        >
+          {{ user?.name?.charAt(0).toUpperCase() || "?" }}
+        </div>
         <div>
           <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
           <p class="text-grey-7">
@@ -278,6 +289,21 @@ onUnmounted(() => {
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #000;
+  }
+
+  & .profile-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: $primary; // SCSS variable for primary color
+    color: #FFFFFF; // SCSS variable for text color
+    font-size: 36px; // Adjust font size as needed
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }
 .post-wrapper {
