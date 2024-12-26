@@ -278,9 +278,6 @@ const createPost = async () => {
         timeout: 3000,
         icon: "check_circle",
       });
-      if (props.isPopup) {
-        emit("close")
-      }
     } else {
       await postStore.createPost(formData);
       $q.notify({
@@ -293,6 +290,8 @@ const createPost = async () => {
     }
     if (!props.isPopup) {
       router.back();
+    } else {
+      emit("close")
     }
   } catch (e) {
     console.log(e);

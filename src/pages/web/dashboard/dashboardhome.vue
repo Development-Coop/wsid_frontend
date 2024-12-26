@@ -65,7 +65,7 @@
     <div class="popup-container">
       <AskQuestion
         :is-popup="true"
-        @close="showAskQuePopup=false"
+        @close="closePopup"
       />
       <q-btn
         flat
@@ -113,6 +113,39 @@ const closeModal = () => {
     query: {}, // Clear the query object
   });
 }
+
+const closePopup = async() => {
+  showAskQuePopup.value=false;
+  await fetchNewPosts();
+};
+
+const fetchNewPosts = async () => {
+  isLoading.value = true;
+
+  try {
+    // Fetch new posts
+    const newPosts = await postStore.getPostList({
+      all: true,
+      page: 1,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+    posts.value = newPosts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    // Optional: Show a notification to the user
+    $q.notify({
+      message: "Failed to load posts. Please try again later.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+      icon: "error",
+    });
+  } finally {
+    isLoading.value = false; // Reset the loading flag
+  }
+};
 
 // Function to fetch posts
 const fetchPosts = async () => {
