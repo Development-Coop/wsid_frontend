@@ -232,6 +232,24 @@ const fetchPosts = async (fetch = false) => {
   }
 };
 
+const fetchNewPosts = async () => {
+  isLoading.value = true;
+  try {
+    const newPosts = await postStore.getPostList({
+      all: false,
+      page: 1,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+    posts.value = newPosts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 const editQuestion = (id) => {
   editPostId.value = id;
   showPopup.value = true;
@@ -240,7 +258,7 @@ const editQuestion = (id) => {
 const closePopup = async() => {
   showPopup.value = false;
   editPostId.value = "";
-  await fetchPosts(true);
+  await fetchNewPosts();
 }
 
 // Infinite scroll handler
