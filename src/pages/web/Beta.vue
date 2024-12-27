@@ -5,13 +5,16 @@
         <HeaderBeta />
         <div class="banner-content">
           <span class="banner-subtitle">What Should I Do?</span>
-          <h1 v-motion-slide-left :delay="500" class="banner-title">
-            Redefining how you ask &mdash; coming your way soon!
-          </h1>
+          <div v-motion-slide-left :delay="500" class="banner-emphasized">
+            <p>Ask questions.</p>
+            <p>Create polls.</p>
+            <p>Get answers.</p>
+            <br>
+            <p class="banner-title">Join the WSID Revolution!</p>
+          </div>
+
           <p class="banner-description">
-            Don&rsquo;t miss out! Be the first to experience the future of
-            decision-making. Join our waitlist for updates and exclusive early
-            access!
+            WSID is changing the way people make decisions. Ask the world your toughest questions, vote on polls, and discover what the crowd thinks - all in one easy-to-use platform. Plus, you'll help shape the future of WSID by voting on new features and updates! Don't miss out on this exciting journey.
           </p>
           <div class="banner-buttons">
             <q-input
@@ -27,7 +30,7 @@
                 <q-btn
                   no-caps
                   block
-                  label="Join Waitlist"
+                  label="Join!"
                   color="primary"
                   unelevated
                   @click="subscribeToNewsletter"
@@ -124,12 +127,24 @@
       <div class="grow-together__header">
         <h1>GROW TOGETHER</h1>
         <p>
-          At WSID, you have unlimited lifelines. We view our real-time polling
-          feature as more than a widget and look to be a primary resource for
-          finding numerous and diverse perspectives on-demand.
+          Join a community where your questions get real answers. From life's small decisions to big choices, let the world weigh in and help you decide. Discover a simple, collaborative way to find clarity, connect, and make better decisions today
         </p>
       </div>
       <CommentsSlider />
+    </section>
+    <section class="footer">
+      <a href="https://www.instagram.com/wsidcom" target="_blank" aria-label="Instagram">
+        <img src="../../assets/icons/instagram.svg" alt="Instagram" class="icon" />
+      </a>
+      <a href="https://www.facebook.com/WSIDcom/" target="_blank" aria-label="Facebook">
+        <img src="../../assets/icons/facebook.svg" alt="Facebook" class="icon" />
+      </a>
+      <a href="https://www.twitter.com/wsidcom" target="_blank" aria-label="Twitter">
+        <img src="../../assets/icons/x.svg" alt="Twitter" class="icon" />
+      </a>
+      <a href="https://www.linkedin.com/company/wsid/" target="_blank" aria-label="LinkedIn">
+        <img src="../../assets/icons/linkedin.svg" alt="LinkedIn" class="icon" />
+      </a>
     </section>
   </section>
 </template>
@@ -149,103 +164,103 @@ const commentsList = ref([
     imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
     comment:
-      "I have long hair and need trim. What’s the perfect haircut for my face shape?",
+      "Should I quit my job to start a food truck?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
-    comment: "Is this goal worth the cost?",
+    comment: "Helping one cat might not change the whole world, but it could change the world for one person.",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
-    comment: "Just came into some extra cash. How should I spend $10,000?",
+    comment: "What should I do this weekend?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
-    comment: "2484 Votes (65%)",
+    comment: "Which school should I send my kids too?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
-    comment: "What is the best tea to lose belly fat really quickly?",
+    comment: "Invest in Bitcoin!",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
     comment:
       "Should I go back to school for computer science as a 38 year old?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
     comment: "Where do should I travel next?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
     comment:
       "What’s a good action movie to show someone that hates action flicks?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
     comment: "What day of the week is best to break up with someone?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
     comment: "175 Votes (55%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
     comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
     comment: "That makes perfect sense to me.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
     comment:
       "I’ve been thinking about changing things up. What should I name my kid?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
     comment: "What should improve today the house or the car?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
     comment: "I strongly agree",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
     comment: "Should I break the law to save a loved one?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
     comment: "Which Martial Art is right for me?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
     comment: "2484 Votes (65%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
     comment: "Which is worse, failing or never trying?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
     comment: "388 Votes (12%)",
   },
@@ -271,29 +286,29 @@ const commentsList = ref([
     comment: "What profession is not a complete joke?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
       .href,
     comment: "Agree, no need to watch the 1st one and skip the 3rd",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
       .href,
     comment: "1802 Votes (15%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
       .href,
     comment: "Why do I keep dreaming of balloons?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
     comment: "What is weighing me down that I don’t need in my life?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
       .href,
-    comment: "Nope",
+    comment: "Choose the path that brings you the most happiness and peace of mind.",
   },
 ]);
 
@@ -389,6 +404,10 @@ const validateEmail = () => {
         font-weight: 700;
         color: $primary;
       }
+      .banner-emphasized {
+        font-size: 24px;
+        font-weight: 700;
+      }
       .banner-title {
         font-weight: 700;
         font-size: 55px;
@@ -481,6 +500,7 @@ const validateEmail = () => {
     padding: 0 48px;
     width: 100%;
     margin-bottom: 80px;
+    margin-top: 80px;
     @media screen and (max-width: 992px) {
       padding: 0 24px;
       margin-bottom: 24px;
@@ -491,7 +511,7 @@ const validateEmail = () => {
       height: 660px;
       display: grid;
       place-items: center;
-      margin-top: -105px;
+      // margin-top: -105px;
       z-index: -1;
       border-radius: 88px;
       @media screen and (max-width: 992px) {
@@ -647,7 +667,15 @@ const validateEmail = () => {
   }
 
   .footer {
-    background-color: #111111;
+    background: #161616;
+    display: flex;
+    height: 75px;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    bottom: 16px;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <section>
     <div class="card-list">
       <div
-        v-for="(comment, index) in commentsList.concat(commentsList)"
+        v-for="(comment, index) in commentsList1.concat(commentsList1)"
         :key="index"
         :class="[`comments-list-${index}`, 'primary-list', 'slide-left']"
       >
@@ -18,7 +18,7 @@
 
     <div class="card-list">
       <div
-        v-for="(comment, index) in commentsList.concat(commentsList)"
+        v-for="(comment, index) in commentsList2.concat(commentsList1)"
         :key="index"
         :class="[`comments-list-${index}`, 'secondary-list', 'slide-right']"
       >
@@ -34,7 +34,7 @@
 
     <div class="card-list">
       <div
-        v-for="(comment, index) in commentsList.concat(commentsList)"
+        v-for="(comment, index) in commentsList3.concat(commentsList3)"
         :key="index"
         :class="[`comments-list-${index}`, 'primary-list', 'slide-left']"
       >
@@ -50,7 +50,7 @@
 
     <div class="card-list">
       <div
-        v-for="(comment, index) in commentsList.concat(commentsList)"
+        v-for="(comment, index) in commentsList4.concat(commentsList4)"
         :key="index"
         :class="[`comments-list-${index}`, 'secondary-list', 'slide-right']"
       >
@@ -71,158 +71,111 @@ import { onMounted } from "vue";
 import CommentCard from "./CommentCard.vue";
 import { ref } from "vue";
 
-const commentsList = ref([
+const commentsList1 = ref([
   {
-    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url)
-      .href,
-    comment:
-      "I have long hair and need trim. What’s the perfect haircut for my face shape?",
+    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url).href,
+    comment: "I have long hair and need trim. What’s the perfect haircut for my face shape?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url).href,
     comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url).href,
     comment: "Just came into some extra cash. How should I spend $10,000?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url).href,
     comment: "2484 Votes (65%)",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-5.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url).href,
     comment: "What is the best tea to lose belly fat really quickly?",
   },
+]);
+
+const commentsList2 = ref([
   {
-    imgSrc: new URL("../assets/icons/sample-profile-6.svg", import.meta.url)
-      .href,
-    comment:
-      "Should I go back to school for computer science as a 38 year old?",
+    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url).href,
+    comment: "Should I go back to school for computer science as a 38 year old?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-7.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url).href,
     comment: "Where do should I travel next?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-8.svg", import.meta.url)
-      .href,
-    comment:
-      "What’s a good action movie to show someone that hates action flicks?",
+    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url).href,
+    comment: "What’s a good action movie to show someone that hates action flicks?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-9.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url).href,
     comment: "What day of the week is best to break up with someone?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-10.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url).href,
     comment: "175 Votes (55%)",
   },
+]);
+
+const commentsList3 = ref([
   {
-    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url).href,
     comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url).href,
     comment: "That makes perfect sense to me.",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url)
-      .href,
-    comment:
-      "I’ve been thinking about changing things up. What should I name my kid?",
+    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url).href,
+    comment: "I’ve been thinking about changing things up. What should I name my kid?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url).href,
     comment: "What should improve today the house or the car?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-5.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url).href,
     comment: "I strongly agree",
   },
+]);
+
+const commentsList4 = ref([
   {
-    imgSrc: new URL("../assets/icons/sample-profile-6.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url).href,
     comment: "Should I break the law to save a loved one?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-7.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url).href,
     comment: "Which Martial Art is right for me?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-8.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url).href,
     comment: "2484 Votes (65%)",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-9.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url).href,
     comment: "Which is worse, failing or never trying?",
   },
   {
-    imgSrc: new URL("../assets/icons/sample-profile-10.svg", import.meta.url)
-      .href,
+    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url).href,
     comment: "388 Votes (12%)",
   },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-1.svg", import.meta.url)
-      .href,
-    comment: "Other than that make sure it matches your style and personality.",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-2.svg", import.meta.url)
-      .href,
-    comment:
-      "Piano may sound daunting, but it’s actually easier than you think! play",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-3.svg", import.meta.url)
-      .href,
-    comment: "Where to move if you can’t afford NYC?",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-4.svg", import.meta.url)
-      .href,
-    comment: "What profession is not a complete joke?",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-5.svg", import.meta.url)
-      .href,
-    comment: "Agree, no need to watch the 1st one and skip the 3rd",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-6.svg", import.meta.url)
-      .href,
-    comment: "1802 Votes (15%)",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-7.svg", import.meta.url)
-      .href,
-    comment: "Why do I keep dreaming of balloons?",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-8.svg", import.meta.url)
-      .href,
-    comment: "What is weighing me down that I don’t need in my life?",
-  },
-  {
-    imgSrc: new URL("../assets/icons/sample-profile-9.svg", import.meta.url)
-      .href,
-    comment: "Nope",
-  },
 ]);
+
+// Shuffle function
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+}
+
+// Shuffle each list
+shuffleArray(commentsList1.value);
+shuffleArray(commentsList2.value);
+shuffleArray(commentsList3.value);
+shuffleArray(commentsList4.value);
 
 const emojis = ref([
   new URL("../assets/emoji/ok-hand.webp", import.meta.url).href,
@@ -247,6 +200,7 @@ const shuffleEmojis = (emojiList) => {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
+  
   return shuffled;
 };
 
