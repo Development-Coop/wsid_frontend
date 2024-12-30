@@ -6,7 +6,11 @@
       spinner-color="primary"
       spinner-size="22px"
       @click="goToProfile"
-    />
+    >
+      <template #error>
+        <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+      </template>
+    </q-img>
     <div style="flex-grow: 1">
       <div class="flex items-center no-wrap cursor-pointer" @click.self="openPost">
         <div style="flex-grow: 1;" class="cursor-pointer" @click="goToProfile">
@@ -118,6 +122,7 @@ import { useQuasar, Loading } from "quasar";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const postStore = usePostStore();
 const $q = useQuasar();

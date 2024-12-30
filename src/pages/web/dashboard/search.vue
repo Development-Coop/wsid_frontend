@@ -40,12 +40,17 @@
             <div v-if="users.length > 0">
               <div v-for="user in users" :key="user.id" class="user-wrapper">
                 <div class="user-info">
-                  <q-avatar
-                    size="48px"
-                    class="q-mr-md cursor-pointer"
-                    @click="goToProfile(user.id)"
-                  >
-                    <img :src="user.profilePicUrl" alt="User Avatar" />
+                  <q-avatar size="48px" class="q-mr-md" @click="goToProfile(user.id)">
+                    <q-img
+                      class="post-img"
+                      :src="user.profilePicUrl || fallbackImage"
+                      spinner-color="primary"
+                      spinner-size="22px"
+                    >
+                      <template #error>
+                        <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                      </template>
+                    </q-img>
                   </q-avatar>
                   <div class="user-details cursor-pointer" @click="goToProfile(user.id)">
                     <p>{{ user.name }}</p>
@@ -109,6 +114,7 @@ import { usePostStore } from "src/stores/postStore";
 import Posts from "../components/posts.vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const $q = useQuasar();
 const postStore = usePostStore();
@@ -300,5 +306,14 @@ const toggleFollow = async (id) => {
   justify-content: center;
   text-align: center;
   min-height: 400px;
+}
+
+.post-img {
+  flex-shrink: 0;
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #aeaeb2;
 }
 </style>
