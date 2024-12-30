@@ -8,7 +8,11 @@
         spinner-color="primary"
         spinner-size="22px"
         @click="goToProfile"
-      />
+      >
+        <template #error>
+          <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+        </template>
+      </q-img>
       <div style="flex-grow: 1;" class="q-ml-sm cursor-pointer" @click="goToProfile">
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
@@ -147,6 +151,7 @@ import { useQuasar, Loading, copyToClipboard } from "quasar";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 // components
 import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";

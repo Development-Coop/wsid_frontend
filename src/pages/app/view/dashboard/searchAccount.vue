@@ -5,7 +5,17 @@
       <div v-for="user in users" :key="user.id" class="user-wrapper">
         <div class="user-info">
           <q-avatar size="48px" class="q-mr-md" @click="goToProfile(user.id)">
-            <img :src="user.profilePicUrl" alt="User Avatar" />
+            <q-img
+              class="post-img"
+              :src="user.profilePicUrl"
+              spinner-color="primary"
+              spinner-size="22px"
+            >
+              <template #error>
+                <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+              </template>
+            </q-img>
+            <!-- <img :src="user.profilePicUrl" alt="User Avatar" /> -->
           </q-avatar>
           <div class="user-details" @click="goToProfile(user.id)">
             <p>{{ user.name }}</p>
@@ -177,5 +187,14 @@ const toggleFollow = async (id) => {
   height: 100%;
   text-align: center;
   color: #6c757d; /* Neutral grey color */
+}
+
+.post-img {
+  flex-shrink: 0;
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #aeaeb2;
 }
 </style>

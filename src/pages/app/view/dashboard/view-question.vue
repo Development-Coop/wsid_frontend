@@ -20,7 +20,11 @@
           :src="postDetails?.user?.profilePicUrl"
           spinner-color="primary"
           spinner-size="22px"
-        />
+        >
+          <template #error>
+            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+          </template>
+        </q-img>
         <div style="flex-grow: 1">
           <p style="margin-bottom: 4px;">
             <span class="text-weight-medium">{{
@@ -143,7 +147,11 @@
                 :src="comment?.createdBy?.profilePicUrl"
                 spinner-color="primary"
                 spinner-size="22px"
-              />
+              >
+                <template #error>
+                  <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                </template>
+              </q-img>
               <div style="flex-grow: 1">
                 <p>
                   <span class="text-weight-medium">{{ comment?.createdBy?.name }}</span>
@@ -206,7 +214,11 @@
                     :src="reply.createdBy.profilePicUrl"
                     spinner-color="primary"
                     spinner-size="22px"
-                  />
+                  >
+                    <template #error>
+                      <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                    </template>
+                  </q-img>
                   <div style="flex-grow: 1">
                     <p>
                       <span class="text-weight-medium">{{ reply?.createdBy?.name }}</span>
@@ -305,6 +317,7 @@ import { usePostStore } from "src/stores/postStore";
 import happyIcon from 'src/assets/icons/happy.svg';
 // import dislikeImage from 'src/assets/images/dislike.png';
 import sadIcon from 'src/assets/icons/sad.svg';
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const postStore = usePostStore();
 const router = useRouter();
