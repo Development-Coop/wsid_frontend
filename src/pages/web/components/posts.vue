@@ -127,6 +127,7 @@
         :post-id="postId"
         :is-popup="true"
         @close="showViewQuePopup = false"
+        @fetch-new-post="$emit('fetch-new-post')"
       />
       <q-btn
         flat
@@ -202,7 +203,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["deleted", "edit"]);
+const emit = defineEmits(["deleted", "edit", "fetch-new-post"]);
 
 const isDialogOpen = ref(false);
 const currentImage = ref("");

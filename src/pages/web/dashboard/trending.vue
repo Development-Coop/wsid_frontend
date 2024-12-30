@@ -19,6 +19,7 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
+        @fetch-new-post="fetchNewPosts()"
       />
       <q-spinner v-if="isLoading" color="primary" class="spinner" />
     </div>
@@ -37,6 +38,34 @@ const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
 const $q = useQuasar();
+
+const fetchNewPosts = async () => {
+  isLoading.value = true;
+
+  try {
+    // Fetch new posts
+    const newPosts = await postStore.getTrendingList({
+      all: true,
+      page: 1,
+      limit: 10,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+    posts.value = newPosts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    // Optional: Show a notification to the user
+    $q.notify({
+      message: "Failed to load posts. Please try again later.",
+      color: "negative",
+      position: "top",
+      timeout: 3000,
+      icon: "error",
+    });
+  } finally {
+    isLoading.value = false; // Reset the loading flag
+  }
+};
 
 // Function to fetch posts
 const fetchPosts = async () => {
