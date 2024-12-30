@@ -382,11 +382,15 @@ const onDelete = async () => {
 }
 
 .popup-container {
-  width: 90vw;
-  max-width: 600px;
+  min-width: 600px;
   padding: 16px;
   background: #fff;
   position: relative;
+}
+@media (min-width: 600px) {
+  .q-dialog__inner--minimized > div {
+      max-width: 700px;
+  }
 }
 .close-button {
   position: absolute;
