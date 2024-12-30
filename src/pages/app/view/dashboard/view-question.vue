@@ -541,13 +541,13 @@ const addComment = async () => {
 
 const showVotesResult = async (option) => {
   try {
+    selectedVote.value = option; // Set the selected option
     Loading.show();
     const data = {
       "postId": postDetails.value.id,
       "optionId": option
     }
     await postStore.createVote(data);
-    selectedVote.value = option; // Set the selected option
     const postId = route?.query?.postId || props?.postId;
     if (postId) {
       Loading.show();
@@ -594,6 +594,14 @@ const showVotesResult = async (option) => {
   justify-content: space-between;
   font-weight: 500;
   cursor: pointer;
+  background: linear-gradient(to right, #f49d37 0%, #f49d37 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  transition: background-position 0.4s ease;
+
+  &:hover {
+    background-position: 0 0; /* Smoothly transition the gradient from left to right */
+  }
 
   &.selected-option {
     background-color: #f49d37;
