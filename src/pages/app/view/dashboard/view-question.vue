@@ -164,7 +164,7 @@
                       :class="{ 'liked-outline': comment?.hasLiked }"
                     >
                       <img
-                        :src="comment?.hasLiked ? likeImage : happyIcon"
+                        :src="happyIcon"
                         alt="like-icon"
                         style="height: 20px;"
                       />
@@ -184,7 +184,7 @@
                       :class="{ 'liked-outline': comment?.hasDisliked }"
                     >
                       <img
-                        :src="comment?.hasDisliked ? dislikeImage : sadIcon"
+                        :src="sadIcon"
                         alt="dislike-icon"
                         style="height: 20px;"
                       />
@@ -226,7 +226,7 @@
                           :class="{ 'liked-outline': reply?.hasLiked }"
                         >
                           <img
-                            :src="reply?.hasLiked ? likeImage : happyIcon"
+                            :src="happyIcon"
                             alt="like-icon"
                             style="height: 20px;"
                           />
@@ -246,7 +246,7 @@
                           :class="{ 'liked-outline': reply?.hasDisliked }"
                         >
                           <img
-                            :src="reply?.hasDisliked ? dislikeImage : sadIcon"
+                            :src="sadIcon"
                             alt="dislike-icon"
                             style="height: 20px;"
                           />
@@ -301,9 +301,9 @@ import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 
 // Image
-import likeImage from 'src/assets/images/like.png';
+// import likeImage from 'src/assets/images/like.png';
 import happyIcon from 'src/assets/icons/happy.svg';
-import dislikeImage from 'src/assets/images/dislike.png';
+// import dislikeImage from 'src/assets/images/dislike.png';
 import sadIcon from 'src/assets/icons/sad.svg';
 
 const postStore = usePostStore();
@@ -331,6 +331,8 @@ const props = defineProps({
     default: false,
   }
 });
+
+const emit = defineEmits(["fetch-new-post"]);
 
 const postDetails = ref({
   id: "",
@@ -523,6 +525,7 @@ const addComment = async () => {
     await fetchComments(postDetails.value.id);
     text.value = "";
     commentParentId.value = null;
+    emit("fetch-new-post");
   } catch (e) {
     $q.notify({
       color: "negative",
@@ -545,6 +548,13 @@ const showVotesResult = async (option) => {
     }
     await postStore.createVote(data);
     selectedVote.value = option; // Set the selected option
+    const postId = route?.query?.postId || props?.postId;
+    if (postId) {
+      Loading.show();
+      await fetchPostDetails(postId);
+      Loading.hide();
+    }
+    emit("fetch-new-post");
   } catch (e) {
     $q.notify({
       color: "negative",

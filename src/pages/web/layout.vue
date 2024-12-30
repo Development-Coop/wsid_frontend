@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          <div class="text-h5 text-weight-bold">WSID</div>
+          <div class="text-h5 text-weight-bold cursor-pointer" @click="router.push({name: 'web-dashboard-home'})">WSID</div>
         </q-toolbar-title>
         <q-btn
           dense
@@ -30,6 +30,7 @@
       show-if-above
       side="left"
       bordered
+      class="side-bar-section"
     >
       <div class="q-pa-lg">
         <p class="text-body1 text-weight-bold">Welcome to What Should I Do?</p>
@@ -122,7 +123,7 @@
         </q-btn>
       </q-toolbar>
 
-      <div
+      <!-- <div
         class="q-px-lg q-py-sm favourites q-gutter-md q-mt-md"
         style="border-top: 1px solid #f1f2f5"
       >
@@ -140,9 +141,9 @@
             <p class="text-weight-medium text-body1">Alex Doe</p>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="q-pa-lg q-mt-md" style="border-top: 1px solid #f1f2f5">
+      <div class="q-pa-lg q-mt-md footer-section" style="border-top: 1px solid #f1f2f5">
         <p class="text-grey-7 footer-links">
           <a
             class="footer-link"
@@ -264,10 +265,17 @@ const toggleLeftDrawer = () => {
   display: grid;
   gap: 26px;
 }
+.footer-section {
+  align-self: flex-end;
+}
 .footer-links {
   font-size: 14px;
   justify-content: center;
   text-align: center;
+}
+:deep(.q-drawer__content) {
+  display: grid;
+  grid-template-rows: max-content;
 }
 
 .footer-link {

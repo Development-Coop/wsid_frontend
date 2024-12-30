@@ -42,12 +42,12 @@
                 <div class="user-info">
                   <q-avatar
                     size="48px"
-                    class="q-mr-md"
+                    class="q-mr-md cursor-pointer"
                     @click="goToProfile(user.id)"
                   >
                     <img :src="user.profilePicUrl" alt="User Avatar" />
                   </q-avatar>
-                  <div class="user-details" @click="goToProfile(user.id)">
+                  <div class="user-details cursor-pointer" @click="goToProfile(user.id)">
                     <p>{{ user.name }}</p>
                   </div>
                 </div>
@@ -102,11 +102,14 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted } from "vue";
+import { ref, onUnmounted, computed } from "vue";
 // import { useRoute } from "vue-router";
 import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import Posts from "../components/posts.vue";
+import { useProfileStore } from "src/stores/profileStore";
+import { useRouter } from "vue-router";
+
 const $q = useQuasar();
 const postStore = usePostStore();
 
@@ -114,6 +117,8 @@ const searchBy = ref("accounts");
 const searchText = ref("");
 const users = ref([]);
 const posts = ref([]);
+const profileStore = useProfileStore();
+const router = useRouter();
 
 // Create debounced version of fetch accounts
 let searchTimeout = null;
@@ -178,12 +183,16 @@ onUnmounted(() => {
   }
 });
 
-const goToProfile = () => {
-  //   if (props.userId === loggedInUser.value.id) {
-  //     router.push({ name: "view-profile" });
-  //   } else {
-  //     router.push({ name: "view", query: { uid: id } });
-  //   }
+const loggedInUser = computed(() => {
+  return JSON.parse(JSON.stringify(profileStore?.userDetails));
+});
+
+const goToProfile = (id) => {
+    if (id === loggedInUser.value.id) {
+      router.push({ name: "web-dashboard-profile" });
+    } else {
+      router.push({ name: "web-dashboard-view-profile", query: { uid: id } });
+    }
 };
 
 const toggleFollow = async (id) => {

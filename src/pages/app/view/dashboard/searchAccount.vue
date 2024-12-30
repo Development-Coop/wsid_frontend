@@ -96,7 +96,7 @@ onMounted(async () => {
 });
 
 const goToProfile = (id) => {
-  if (props.userId === loggedInUser.value.id) {
+  if (id === loggedInUser.value.id) {
     router.push({ name: "view-profile" });
   } else {
     router.push({ name: "view", query: { uid: id } });

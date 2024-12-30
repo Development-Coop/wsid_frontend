@@ -3,9 +3,10 @@
     <div class="ask-question-container q-mb-lg">
       <q-img
         :src="user?.profilePic"
-        class="user-avatar"
+        class="user-avatar cursor-pointer"
         spinner-color="primary"
         spinner-size="20px"
+        @click="router.push({name: 'web-dashboard-profile'})"
       />
       <div class="question-box">
         <q-btn
@@ -37,6 +38,7 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
+          @fetch-new-post="fetchNewPosts()"
         />
         <q-spinner v-if="isLoading" color="primary" />
       </div>
