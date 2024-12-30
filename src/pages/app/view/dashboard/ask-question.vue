@@ -172,20 +172,72 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
+const compressImage = (file, maxWidth, maxHeight) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+    };
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let width = img.width;
+      let height = img.height;
+
+      // Maintain aspect ratio
+      if (width > maxWidth || height > maxHeight) {
+        if (width > height) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        } else {
+          width = (width * maxHeight) / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Convert the canvas content to a data URL
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Image compression failed"));
+        }
+      }, file.type || "image/jpeg", 0.9); // Adjust quality as needed
+    };
+
+    img.onerror = () => reject(new Error("Image loading failed"));
+
+    reader.readAsDataURL(file);
+  });
+};
+
 const uploadDescriptionImages = () => {
   const input = document.createElement("input");
   input.type = "file";
   input.multiple = true;
   input.accept = "image/*";
-  input.onchange = (event) => {
+  input.onchange = async (event) => {
     const files = Array.from(event.target.files);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        descriptionImages.value.push(reader.result);
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of files) {
+      try {
+        const compressedBlob = await compressImage(file, 1280, 720);
+        const reader = new FileReader();
+        reader.onload = () => {
+          descriptionImages.value.push(reader.result);
+        };
+        reader.readAsDataURL(compressedBlob);
+      } catch (error) {
+        console.error("Image compression failed", error);
+      }
+    }
   };
   input.click();
 };
@@ -194,18 +246,23 @@ const removeImage = (index) => {
   descriptionImages.value.splice(index, 1); // Remove image from the array
 };
 
-const uploadOptionImage = (index) => {
+const uploadOptionImage = async (index) => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
-  input.onchange = (event) => {
-    const file = event.target.files[0]; // Get the first file
+  input.onchange = async (event) => {
+    const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        options.value[index].image = reader.result;
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedBlob = await compressImage(file, 1280, 720);
+        const reader = new FileReader();
+        reader.onload = () => {
+          options.value[index].image = reader.result;
+        };
+        reader.readAsDataURL(compressedBlob);
+      } catch (error) {
+        console.error("Image compression failed", error);
+      }
     }
   };
   input.click();
