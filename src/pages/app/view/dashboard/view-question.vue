@@ -342,6 +342,10 @@ const props = defineProps({
   isPopup: {
     type: Boolean,
     default: false,
+  },
+  tabValue : {
+    type: String,
+    default: "",
   }
 });
 
@@ -375,6 +379,8 @@ onMounted(async () => {
     await fetchComments(postId);
     Loading.hide();
   }
+  const tabValue = route?.query?.tab || props?.tabValue || "Votes";
+  if (tabValue) tab.value = tabValue;
 });
 
 onUnmounted(() => {

@@ -1,7 +1,7 @@
 <template>
-  <div class="post cursor-pointer" @click.self="openPost">
+  <div class="post cursor-pointer" @click.self="openPost('')">
     <!-- Header with user image, details, and action menu -->
-    <div class="flex items-center no-wrap" @click.self="openPost">
+    <div class="flex items-center no-wrap" @click.self="openPost('')">
       <q-img
         class="post-img cursor-pointer"
         :src="userImage"
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost">
+    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
@@ -80,7 +80,7 @@
           @click="openImage(image)"
         />
         <!-- Overlay for additional images -->
-        <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost">
+        <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost('')">
           +{{ postImages.length - 4 }}
         </div>
       </div>
@@ -90,10 +90,10 @@
     <div
       class="flex no-wrap items-center q-pt-md q-mt-lg"
       style="gap: 10px; border-top: 2px solid #f1f2f5"
-      @click="openPost"
+      @click.self="openPost('')"
     >
-      <span style="cursor: pointer;">{{ votes }} <span class="text-grey-7">Votes</span></span> •
-      <span style="cursor: pointer;">{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <span style="cursor: pointer;" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span> •
+      <span style="cursor: pointer;" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
       <q-btn
         no-caps
         size="md"
@@ -103,6 +103,7 @@
         label="Answer"
         class="q-ml-auto"
         style="cursor: pointer;"
+        @click="openPost('')"
       />
     </div>
   </div>
@@ -130,6 +131,7 @@
         v-if="showViewQuePopup"
         :post-id="postId"
         :is-popup="true"
+        :tab-value="tabValue"
         @close="showViewQuePopup = false"
         @fetch-new-post="$emit('fetch-new-post')"
       />
@@ -213,9 +215,12 @@ const emit = defineEmits(["deleted", "edit", "fetch-new-post"]);
 const isDialogOpen = ref(false);
 const currentImage = ref("");
 const showViewQuePopup = ref(false);
+const tabValue = ref("");
 
-const openPost = () => {
+const openPost = (tab = "Votes") => {
   showViewQuePopup.value = true;
+  tabValue.value = tab;
+  console.log(tab, "tab da")
 };
 
 const goToProfile = () => {
