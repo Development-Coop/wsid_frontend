@@ -90,6 +90,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
+.q-page {
+  display: grid;
+}
 .post-wrapper {
   display: grid;
   &:not(:last-child) {

@@ -12,7 +12,7 @@
       </template>
     </q-img>
     <div style="flex-grow: 1">
-      <div class="flex items-center no-wrap cursor-pointer" @click.self="openPost">
+      <div class="flex items-center no-wrap cursor-pointer" @click.self="openPost('')">
         <div style="flex-grow: 1;" class="cursor-pointer" @click="goToProfile">
           <p>
             <span v-if="username" class="text-weight-medium">{{ username }}</span>
@@ -49,7 +49,7 @@
           </q-list> -->
         </q-btn-dropdown>
       </div>
-      <p class="text-grey-9 q-mb-md q-mt-sm cursor-pointer" @click.self="openPost">
+      <p class="text-grey-9 q-mb-md q-mt-sm cursor-pointer" @click.self="openPost('')">
         <span v-if="postContent">{{ postContent }}</span>
         <!-- Dynamic post content -->
       </p>
@@ -70,7 +70,7 @@
             @click="openImage(image)"
           />
           <!-- Overlay for additional images -->
-          <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost">
+          <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost('')">
             +{{ postImages.length - 4 }}
           </div>
         </div>
@@ -79,10 +79,10 @@
       <div
         class="flex no-wrap items-center"
         style="gap: 10px; margin-top: 16px;"
-        @click="openPost"
+        @click.self="openPost('')"
       >
-        <span class="cursor-pointer">{{ votes }} <span class="text-grey-7">Votes</span></span> •
-        <span class="cursor-pointer">{{ comments }} <span class="text-grey-7">Comments</span></span>
+        <span class="cursor-pointer" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span> •
+        <span class="cursor-pointer" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
         <q-btn
           no-caps
           size="md"
@@ -242,8 +242,8 @@ const calculateTimeAgo = computed(() => {
 //   });
 // };
 
-const openPost = () => {
-  router.push({name: "view-question", query: {postId: props.postId}})
+const openPost = (tab = "Votes") => {
+  router.push({name: "view-question", query: {postId: props.postId, tab}})
 };
 
 const onDelete = async () => {

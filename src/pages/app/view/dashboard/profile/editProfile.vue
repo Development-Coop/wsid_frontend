@@ -3,20 +3,24 @@
     <div class="q-pa-lg">
       <div v-if="!isPopup" :class="['flex','justify-between', {'q-pb-lg': !isPopup} ]">
         <q-btn
-          style="min-width: 100px"
+          style="width: 80px"
           no-caps
+          block
           label="Back"
           color="grey-12"
           text-color="black"
           unelevated
+          size="md"
           to="/app/profile"
         />
         <q-btn
-          style="min-width: 100px"
+          style="width: 80px"
           no-caps
           label="Save"
           color="primary"
           unelevated
+          block
+          size="md"
           @click="updateDetails"
         />
       </div>
