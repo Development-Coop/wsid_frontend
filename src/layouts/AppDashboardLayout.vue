@@ -103,7 +103,7 @@ onMounted(() => {
 <style scoped>
 .q-page-container {
   max-width: 767px;
-  /* margin: 0 auto; */
+  margin: 0 auto;
 }
 .q-footer {
   border-top: 1px solid #e0e0e0;

@@ -91,6 +91,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .q-page {
   display: grid;
+  height: 100%;
 }
 .post-wrapper {
   display: grid;

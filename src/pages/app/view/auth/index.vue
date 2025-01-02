@@ -70,7 +70,7 @@ import appleSignIn from "src/utils/appleSignIn";
 const $q = useQuasar();
 const router = useRouter();
 
-const handleSignIn = async (signInMethod, redirectTo = { name: "trending" }) => {
+const handleSignIn = async (signInMethod, redirectTo = { name: "following" }) => {
   try {
     Loading.show(); // Show loading indicator
     await signInMethod();
