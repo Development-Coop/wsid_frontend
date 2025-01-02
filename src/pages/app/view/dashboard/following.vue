@@ -70,7 +70,7 @@ const onScroll = async () => {
   const scrollTop = window.scrollY; // Current scroll position from top
   const viewportHeight = window.innerHeight; // Height of the visible area
   const documentHeight = document.documentElement.scrollHeight; // Total height of the document
-  if (scrollTop + viewportHeight >= documentHeight - 50) {
+  if (scrollTop + viewportHeight >= documentHeight - 80) {
     // Near the bottom of the page
     await fetchPosts();
   }
@@ -90,8 +90,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .q-page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   height: 100%;
   overflow-y: auto; // Ensures vertical scrolling is enabled
   -webkit-overflow-scrolling: touch; // Adds smooth scrolling for mobile browsers

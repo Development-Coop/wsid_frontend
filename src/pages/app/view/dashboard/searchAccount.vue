@@ -143,6 +143,9 @@ const toggleFollow = async (id) => {
 <style lang="scss" scoped>
 .q-page {
   display: grid;
+  height: 100%;
+  overflow-y: auto; // Ensures vertical scrolling is enabled
+  -webkit-overflow-scrolling: touch;
 }
 .user-wrapper {
   display: flex;

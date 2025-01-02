@@ -221,7 +221,7 @@ const onScroll = async () => {
   const scrollTop = window.scrollY; // Current scroll position from top
   const viewportHeight = window.innerHeight; // Height of the visible area
   const documentHeight = document.documentElement.scrollHeight; // Total height of the document
-  if (scrollTop + viewportHeight >= documentHeight - 50) {
+  if (scrollTop + viewportHeight >= documentHeight - 80) {
     // Near the bottom of the page
     await fetchPosts();
   }
@@ -253,6 +253,9 @@ onMounted(async () => {
 .q-page {
   display: grid;
   grid-template-rows: auto 1fr;
+  height: 100%;
+  overflow-y: auto; // Ensures vertical scrolling is enabled
+  -webkit-overflow-scrolling: touch;
   .q-tab-panels {
     height: 100%;
     min-height: 400px;
