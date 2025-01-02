@@ -62,6 +62,9 @@ const logout = () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  overflow-y: auto; // Ensures vertical scrolling is enabled
+  -webkit-overflow-scrolling: touch;
   section {
     & > div {
       background-color: #fff;

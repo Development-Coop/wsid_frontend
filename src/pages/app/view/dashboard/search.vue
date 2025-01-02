@@ -81,7 +81,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.q-page {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 :deep(.q-tabs) {
   border-radius: 8px;
   .q-tab {
