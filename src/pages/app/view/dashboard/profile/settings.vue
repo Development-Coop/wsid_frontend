@@ -18,7 +18,7 @@
     <section class="q-px-lg pq-pb-lg">
       <div class="text-h6 q-pa-lg">
         <div class="flex flex-col gap-10">
-          <a v-for="item in items" :key="item.id" href="#">{{ item.name }} <q-icon name="chevron_right" size="24px" /></a>
+          <a v-for="item in items" :key="item.id" href="#" style="pointer-events: none;">{{ item.name }} <q-icon name="chevron_right" size="24px" /></a>
         </div>
       </div>
     </section>
