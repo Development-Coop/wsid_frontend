@@ -7,7 +7,7 @@
           <q-avatar size="48px" class="q-mr-md" @click="goToProfile(user.id)">
             <q-img
               class="post-img"
-              :src="user.profilePicUrl"
+              :src="user.profilePicUrl || fallbackImage"
               spinner-color="primary"
               spinner-size="22px"
             >
@@ -48,6 +48,7 @@ import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const props = defineProps({
   searchText: {

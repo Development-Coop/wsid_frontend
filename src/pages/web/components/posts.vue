@@ -220,7 +220,6 @@ const tabValue = ref("");
 const openPost = (tab = "Votes") => {
   showViewQuePopup.value = true;
   tabValue.value = tab;
-  console.log(tab, "tab da")
 };
 
 const goToProfile = () => {

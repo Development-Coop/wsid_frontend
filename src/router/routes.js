@@ -229,7 +229,7 @@ const routes = [
             component: () => import("src/pages/app/view/dashboard/layout.vue"),
             children: [
               {
-                path: "", // Default child route for "layout"
+                path: "trending", // Default child route for "layout"
                 name: "trending",
                 component: () =>
                   import("src/pages/app/view/dashboard/trending.vue"),
@@ -243,7 +243,7 @@ const routes = [
                 meta: { requiresAuth: true },
               },
               {
-                path: "following",
+                path: "",
                 name: "following",
                 component: () =>
                   import("src/pages/app/view/dashboard/following.vue"),

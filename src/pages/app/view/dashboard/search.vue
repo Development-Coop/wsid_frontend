@@ -3,7 +3,6 @@
     <!-- Sticky Header with Search -->
     <div
       class="q-pa-md"
-      style="position: sticky; top: 0; z-index: 100; background-color: #fff"
     >
       <div class="search-bar">
         <q-input

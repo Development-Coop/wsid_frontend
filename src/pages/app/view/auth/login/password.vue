@@ -97,7 +97,7 @@ const handleSubmit = async () => {
   try {
     await authStore.login();
     // Handle successful login here, e.g., redirect to dashboard
-    router.push({ name: "trending" });
+    router.push({ name: "following" });
   } catch (error) {
     showError.value = true;
   } finally {
