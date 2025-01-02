@@ -65,20 +65,15 @@ const fetchPosts = async () => {
   }
 };
 
-let scrollTimeout;
-
+// Infinite scroll handler
 const onScroll = async () => {
-  if (scrollTimeout) return; // Skip if a timeout is active
-  scrollTimeout = setTimeout(async () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const viewportHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + viewportHeight >= documentHeight - 50) {
-      await fetchPosts();
-    }
-    scrollTimeout = null; // Reset timeout
-  }, 100); // Adjust debounce delay as needed
+  const scrollTop = window.scrollY; // Current scroll position from top
+  const viewportHeight = window.innerHeight; // Height of the visible area
+  const documentHeight = document.documentElement.scrollHeight; // Total height of the document
+  if (scrollTop + viewportHeight >= documentHeight - 50) {
+    // Near the bottom of the page
+    await fetchPosts();
+  }
 };
 
 // Add event listeners
