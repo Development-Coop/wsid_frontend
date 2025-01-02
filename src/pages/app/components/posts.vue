@@ -92,6 +92,7 @@
           label="Answer"
           class="q-ml-auto"
           style="cursor: pointer;"
+          @click="openPost('')"
         />
       </div>
     </div>

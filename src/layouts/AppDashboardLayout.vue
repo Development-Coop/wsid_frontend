@@ -70,9 +70,11 @@ defineOptions({
 import { onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useQuasar, Loading } from "quasar";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
 const profileStore = useProfileStore();
+const router = useRouter();
 
 const handleSubmit = async () => {
   Loading.show();
@@ -101,7 +103,7 @@ onMounted(() => {
 <style scoped>
 .q-page-container {
   max-width: 767px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 .q-footer {
   border-top: 1px solid #e0e0e0;
