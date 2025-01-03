@@ -85,7 +85,7 @@
                 :post-images="post.images"
                 :votes="post.votesCount"
                 :comments="post.commentsCount"
-                :is-own-posts="true"
+                :is-own-posts="false"
                 @edit="editQuestion"
               />
             </div>
