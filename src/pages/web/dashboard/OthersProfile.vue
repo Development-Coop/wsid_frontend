@@ -2,7 +2,11 @@
   <div>
     <div class="q-pa-lg profile">
       <div class="flex no-wrap items-center profile-wrapper">
-        <q-img class="profile-img" :src="userDetails?.profilePic" />
+        <q-img class="profile-img" :src="userDetails?.profilePic">
+          <template #error>
+            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+          </template>
+        </q-img>
         <div class="profile-details">
           <p class="text-h6 text-weight-medium">{{ userDetails?.name }}</p>
           <p class="text-grey-7">{{ userDetails?.bio }}</p>
@@ -94,6 +98,8 @@ import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import { useRoute, useRouter } from "vue-router";
+
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();

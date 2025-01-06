@@ -19,7 +19,11 @@
           class="profile-img"
           :src="user.profilePic"
           alt="Profile Picture"
-        />
+        >
+          <template #error>
+            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+          </template>
+        </q-img>
         <div
           v-else
           class="profile-placeholder"
@@ -189,6 +193,8 @@ import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
 import EditProfile from "src/pages/app/view/dashboard/profile/editProfile.vue";
+
+import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();
