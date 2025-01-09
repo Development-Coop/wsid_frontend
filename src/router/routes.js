@@ -82,8 +82,8 @@ const routes = [
         meta: { requiresAuth: true },
         children: [
           {
-            path: "", // Default child route for "layout"
-            name: "search",
+            path: "",
+            name: "web-search-account",
             component: () =>
               import("src/pages/app/view/dashboard/searchAccount.vue"),
             meta: { requiresAuth: true },
@@ -254,17 +254,17 @@ const routes = [
         ],
       },
       {
-        path: "search", // Ensure the path starts with a leading slash
-        name: "search",
+        path: "search",
+        name: "app-search",
         component: () => import("src/layouts/AppDashboardLayout.vue"),
         children: [
           {
-            path: "", // Default child route for "dashboard"
+            path: "",
             component: () => import("src/pages/app/view/dashboard/search.vue"),
             children: [
               {
-                path: "", // Default child route for "layout"
-                name: "search",
+                path: "",
+                name: "app-search-account",
                 component: () =>
                   import("src/pages/app/view/dashboard/searchAccount.vue"),
                 meta: { requiresAuth: true },

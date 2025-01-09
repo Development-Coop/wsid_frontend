@@ -12,15 +12,31 @@
         />
 
         <q-toolbar-title>
-          <div class="text-h5 text-weight-bold cursor-pointer" @click="router.push({name: 'web-dashboard-home'})">WSID</div>
+          <div
+            class="text-h5 text-weight-bold cursor-pointer"
+            @click="router.push({ name: 'web-dashboard-home' })"
+          >
+            WSID
+          </div>
         </q-toolbar-title>
         <q-btn
+          style="
+            background-color: black;
+            color: #fff;
+            padding: 4px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+          "
           dense
           flat
+          unelevated
+          no-caps
           round
-          icon="search"
-          to="/web/dashboard/search"
-        />
+          @click="router.push({ name: 'web-dashboard-home', query: { openAskQuestion: true } })"
+        >
+          <q-icon size="20px" class="q-mr-xs" name="add" color="white"></q-icon>
+          Ask Questions
+        </q-btn>
         <q-btn
           v-if="$q.screen.lt.sm"
           dense
@@ -79,7 +95,10 @@
           :class="$route.path.includes('/search') && 'is-active'"
         >
           <div class="flex items-center w-full q-px-lg">
-            <q-icon v-if="$route.path.includes('/dashboard/search')" size="24px">
+            <q-icon
+              v-if="$route.path.includes('/dashboard/search')"
+              size="24px"
+            >
               <img src="~src/assets/icons/nav-search-active.svg" alt="" />
             </q-icon>
             <q-icon v-else size="24px">
@@ -150,7 +169,10 @@
         </div>
       </div> -->
 
-      <div class="q-pa-lg q-mt-md footer-section" style="border-top: 1px solid #f1f2f5">
+      <div
+        class="q-pa-lg q-mt-md footer-section"
+        style="border-top: 1px solid #f1f2f5"
+      >
         <p class="text-grey-7 footer-links">
           <a
             class="footer-link"
@@ -177,17 +199,32 @@
     <q-drawer
       v-if="$route.path.includes('/dashboard/home')"
       v-model="rightDrawerOpen"
+      class="hello"
       show-if-above
       side="right"
-      width="320"
+      width="400"
       bordered
     >
-      <div class="q-pt-md q-px-md flex" style="position: sticky;top: 0;background: white;z-index: 2;justify-content: space-between;">
-        <div class="flex" style="gap: 8px;">
+      <div
+        class="q-pt-md q-px-md flex"
+        style="
+          position: sticky;
+          top: 0;
+          background: white;
+          z-index: 2;
+          justify-content: space-between;
+        "
+      >
+        <div class="flex" style="gap: 8px">
           <img src="~src/assets/icons/nav-trending-up-active.svg" alt="" />
           <div class="text-body1 text-weight-bold">TOP IN TRENDING</div>
         </div>
-        <p class="see-all" @click="router.push({path:'/web/dashboard/trending'})">See All</p>
+        <p
+          class="see-all"
+          @click="router.push({ path: '/web/dashboard/trending' })"
+        >
+          See All
+        </p>
       </div>
       <trending :is-popup="true" />
     </q-drawer>
@@ -310,8 +347,9 @@ const toggleRightDrawer = () => {
 :deep(.q-drawer--right) {
   right: 10px;
   top: 75px !important;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
 }
+
 :deep(.q-drawer__content) {
   border-radius: 8px;
 }

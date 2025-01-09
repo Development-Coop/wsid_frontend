@@ -1,5 +1,5 @@
 <template>
-  <div ref="postsContainer" :class="[{ 'posts-container': isPopup }, { 'q-pa-lg': !isPopup }]">
+  <div ref="postsContainer" style="max-width: 600px; margin: 0 auto;" :class="[{ 'posts-container': isPopup }, { 'q-pa-lg': !isPopup }]">
     <div v-if="!isPopup" class="q-mb-sm text-body1 text-weight-bold text-grey-7">
       Recent questions from people you follow
     </div>

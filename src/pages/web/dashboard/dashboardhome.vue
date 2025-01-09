@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-lg">
+  <div class="q-pa-lg" style="max-width: 600px;margin: 0 auto;">
     <div class="ask-question-container q-mb-lg">
       <q-img
         :src="user?.profilePic"
@@ -203,9 +203,22 @@ const onScroll = async () => {
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
   window.addEventListener("scroll", onScroll); // Attach to window scroll
+  
+  // Check for postId or openAskQuestion in query params
   const postId = route?.query?.postId;
+  const openAskQuestion = route?.query?.openAskQuestion;
+  
   if (postId) {
     showViewQuePopup.value = true;
+  }
+  
+  if (openAskQuestion) {
+    showAskQuePopup.value = true;
+    // Clear the query parameter after opening
+    router.replace({
+      path: router.currentRoute.value.path,
+      query: {},
+    });
   }
 });
 
@@ -242,12 +255,15 @@ html, body {
 .question-box {
   flex-grow: 1;
   background-color: #fff5f2;
-  padding: 4px 20px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  button {
+    width: 100%;
+    padding: 4px 20px;
+  }
 }
 .user-avatar {
   height: 44px;
@@ -271,7 +287,7 @@ html, body {
   padding: 10px 20px;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  gap: 24px;
+  gap: 18px;
   text-transform: none;
 }
 
