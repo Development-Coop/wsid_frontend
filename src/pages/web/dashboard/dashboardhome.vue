@@ -201,16 +201,9 @@ const onScroll = async () => {
 };
 
 onMounted(async () => {
-  await fetchPosts(); // Load initial posts
-  window.addEventListener("scroll", onScroll); // Attach to window scroll
-  
-  // Check for postId or openAskQuestion in query params
-  const postId = route?.query?.postId;
+  // Check for query params immediately
   const openAskQuestion = route?.query?.openAskQuestion;
-  
-  if (postId) {
-    showViewQuePopup.value = true;
-  }
+  const postId = route?.query?.postId;
   
   if (openAskQuestion) {
     showAskQuePopup.value = true;
@@ -220,6 +213,14 @@ onMounted(async () => {
       query: {},
     });
   }
+  
+  if (postId) {
+    showViewQuePopup.value = true;
+  }
+
+  // Handle data fetching separately
+  await fetchPosts();
+  window.addEventListener("scroll", onScroll);
 });
 
 
