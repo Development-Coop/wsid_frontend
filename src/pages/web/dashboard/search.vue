@@ -294,9 +294,10 @@ const toggleFollow = async (id) => {
 
 .post-wrapper {
   display: grid;
-  &:not(:last-child) {
+  margin-bottom: 20px;
+  /* &:not(:last-child) {
     border-bottom: 1px solid #aeaeb2;
-  }
+  } */
 }
 
 .no-posts {

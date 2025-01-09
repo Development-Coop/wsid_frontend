@@ -10,10 +10,19 @@
         @click="goToProfile"
       >
         <template #error>
-          <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+          <img
+            :src="fallbackImage"
+            alt="Fallback Image"
+            class="post-img"
+            style="border: none; width: 100%; height: 100%; padding: 4px"
+          />
         </template>
       </q-img>
-      <div style="flex-grow: 1;" class="q-ml-sm cursor-pointer" @click="goToProfile">
+      <div
+        style="flex-grow: 1"
+        class="q-ml-sm cursor-pointer"
+        @click="goToProfile"
+      >
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
@@ -50,7 +59,7 @@
     </div>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
+    <p :class="['text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]" @click.self="openPost('')">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
@@ -65,7 +74,7 @@
     />
 
     <!-- Multiple Post Images Grid -->
-    <div v-if="postImages.length > 0" class="post-images-grid q-mb-sm">
+    <div v-if="postImages.length > 0" class="post-images-grid q-mb-md">
       <div
         v-for="(image, index) in postImages.slice(0, 4)"
         :key="index"
@@ -80,7 +89,11 @@
           @click="openImage(image)"
         />
         <!-- Overlay for additional images -->
-        <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost('')">
+        <div
+          v-if="index === 3 && postImages.length > 4"
+          class="overlay-more cursor-pointer"
+          @click="openPost('')"
+        >
           +{{ postImages.length - 4 }}
         </div>
       </div>
@@ -88,13 +101,14 @@
 
     <!-- Footer with votes, comments, and action button -->
     <div
-      class="flex no-wrap items-center q-pt-md q-mt-lg"
-      style="gap: 10px; border-top: 2px solid #f1f2f5"
+      class="flex no-wrap items-center"
+      style="gap: 10px;"
       @click.self="openPost('')"
     >
-      <span style="cursor: pointer;" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span> •
-      <span style="cursor: pointer;" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
-      <q-btn
+      <span style="cursor: pointer" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span>
+      •
+      <span style="cursor: pointer" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <!-- <q-btn
         no-caps
         size="md"
         unelevated
@@ -102,9 +116,9 @@
         text-color="black"
         label="Answer"
         class="q-ml-auto"
-        style="cursor: pointer;"
+        style="cursor: pointer"
         @click="openPost('')"
-      />
+      /> -->
     </div>
   </div>
   <q-dialog v-model="isDialogOpen" @hide="isDialogOpen = false">
@@ -153,10 +167,10 @@ import { useQuasar, Loading, copyToClipboard } from "quasar";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 // components
-import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
+import ViewQuestion from "./viewQue.vue";
 
 const postStore = usePostStore();
 const $q = useQuasar();
@@ -206,8 +220,8 @@ const props = defineProps({
   },
   userId: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 
 const emit = defineEmits(["deleted", "edit", "fetch-new-post"]);
@@ -224,11 +238,14 @@ const openPost = (tab = "Votes") => {
 
 const goToProfile = () => {
   if (props.userId === user.value.id) {
-    router.push({name: "web-dashboard-profile"});
+    router.push({ name: "web-dashboard-profile" });
   } else {
-    router.push({name: "web-dashboard-view-profile", query: { uid: props.userId }});
+    router.push({
+      name: "web-dashboard-view-profile",
+      query: { uid: props.userId },
+    });
   }
-}
+};
 
 const openImage = (image) => {
   currentImage.value = image;
@@ -318,9 +335,9 @@ const onDelete = async () => {
 .post {
   background-color: #fff;
   gap: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  // border-radius: 10px;
+  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 
   .post-img {
     flex-shrink: 0;
@@ -342,7 +359,7 @@ const onDelete = async () => {
     position: relative;
     width: 100%;
     height: 100%; /* Adjust as needed */
-    max-height: 300px;
+    max-height: 200px;
     overflow: hidden;
     border-radius: 4px;
   }
@@ -398,7 +415,7 @@ const onDelete = async () => {
 }
 @media (min-width: 600px) {
   .q-dialog__inner--minimized > div {
-      max-width: 700px;
+    max-width: 700px;
   }
 }
 .close-button {
@@ -407,5 +424,9 @@ const onDelete = async () => {
   right: 10px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
+}
+
+.menu-btn {
+    transform: rotate(90deg);
 }
 </style>

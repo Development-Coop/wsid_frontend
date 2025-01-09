@@ -21,6 +21,14 @@
           icon="search"
           to="/web/dashboard/search"
         />
+        <q-btn
+          v-if="$q.screen.lt.sm"
+          dense
+          flat
+          round
+          icon="menu"
+          @click="toggleRightDrawer"
+        />
       </q-toolbar>
     </q-header>
 
@@ -61,24 +69,23 @@
             <span class="q-ml-md">Home</span>
           </div>
         </q-btn>
-
         <q-btn
           class="w-full"
           unelevated
           no-caps
           flat
           round
-          to="/web/dashboard/trending"
-          :class="$route.path.includes('/trending') && 'is-active'"
+          to="/web/dashboard/search"
+          :class="$route.path.includes('/search') && 'is-active'"
         >
           <div class="flex items-center w-full q-px-lg">
-            <q-icon v-if="$route.path === '/trending'" size="24px">
-              <img src="~src/assets/icons/nav-trending-up-active.svg" alt="" />
+            <q-icon v-if="$route.path.includes('/dashboard/search')" size="24px">
+              <img src="~src/assets/icons/nav-search-active.svg" alt="" />
             </q-icon>
             <q-icon v-else size="24px">
-              <img src="~src/assets/icons/nav-trending-up.svg" alt="" />
+              <img src="~src/assets/icons/nav-search.svg" alt="" />
             </q-icon>
-            <span class="q-ml-md">Trending</span>
+            <span class="q-ml-md">Search</span>
           </div>
         </q-btn>
 
@@ -167,15 +174,23 @@
       </div>
     </q-drawer>
 
-    <!-- <q-drawer
+    <q-drawer
+      v-if="$route.path.includes('/dashboard/home')"
       v-model="rightDrawerOpen"
       show-if-above
       side="right"
       width="320"
       bordered
     >
-      <div class="q-pa-lg text-body1 text-weight-bold">Top Trending</div>
-    </q-drawer> -->
+      <div class="q-pt-md q-px-md flex" style="position: sticky;top: 0;background: white;z-index: 2;justify-content: space-between;">
+        <div class="flex" style="gap: 8px;">
+          <img src="~src/assets/icons/nav-trending-up-active.svg" alt="" />
+          <div class="text-body1 text-weight-bold">TOP IN TRENDING</div>
+        </div>
+        <p class="see-all" @click="router.push({path:'/web/dashboard/trending'})">See All</p>
+      </div>
+      <trending :is-popup="true" />
+    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -188,9 +203,10 @@ import { ref, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useQuasar, Loading } from "quasar";
 import { useRouter } from "vue-router";
+import trending from "./dashboard/trending.vue";
 
 const leftDrawerOpen = ref(false);
-// const rightDrawerOpen = ref(false);
+const rightDrawerOpen = ref(false);
 const $q = useQuasar();
 const profileStore = useProfileStore();
 const router = useRouter();
@@ -223,9 +239,9 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
-// const toggleRightDrawer = () => {
-//   rightDrawerOpen.value = !rightDrawerOpen.value;
-// };
+const toggleRightDrawer = () => {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
+};
 </script>
 
 <style scoped>
@@ -289,5 +305,18 @@ const toggleLeftDrawer = () => {
 
 .footer-copyright {
   font-weight: bold;
+}
+
+:deep(.q-drawer--right) {
+  right: 10px;
+  top: 75px !important;
+  border-radius: 8px;
+}
+:deep(.q-drawer__content) {
+  border-radius: 8px;
+}
+.see-all {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>
