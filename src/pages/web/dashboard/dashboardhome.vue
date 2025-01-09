@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
@@ -227,6 +227,26 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
 });
+
+// Add this watch effect
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (newQuery.openAskQuestion) {
+      showAskQuePopup.value = true;
+      // Clear the query parameter after opening
+      router.replace({
+        path: router.currentRoute.value.path,
+        query: {},
+      });
+    }
+    
+    if (newQuery.postId) {
+      showViewQuePopup.value = true;
+    }
+  },
+  { immediate: true } // This will run the watcher immediately on component creation
+);
 </script>
 
 <style lang="scss" scoped>
