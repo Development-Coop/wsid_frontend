@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page style="max-width: 600px; margin: 0 auto">
     <!-- Sticky Header with Search -->
     <div class="q-pa-md">
       <div class="search-bar">

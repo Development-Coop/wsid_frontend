@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page style="max-width: 600px; margin: 0 auto">
     <section class="q-pa-lg pq-pb-lg">
       <div class="text-h6 q-pa-lg">
         <div class="flex flex-col gap-10">

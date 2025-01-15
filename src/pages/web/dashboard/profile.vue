@@ -1,163 +1,171 @@
 <template>
-  <div>
-    <div class="q-pa-lg profile">
-      <div class="flex justify-end">
-        <q-btn flat no-caps class="q-pa-none cursor-pointer" @click="showEditProfilePopup=true">
-          <q-icon size="24px" class="q-mr-md">
-            <img src="~src/assets/icons/edit.svg" alt="edit" />
-          </q-icon>
-        </q-btn>
-        <q-btn flat no-caps class="q-pa-none" to="/web/settings">
-          <q-icon size="24px">
-            <img src="~src/assets/icons/settings.svg" alt="settings" />
-          </q-icon>
-        </q-btn>
-      </div>
-      <div class="flex no-wrap items-center profile-wrapper">
-        <q-img
-          v-if="user?.profilePic"
-          class="profile-img"
-          :src="user.profilePic"
-          alt="Profile Picture"
-        >
-          <template #error>
-            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
-          </template>
-        </q-img>
-        <div
-          v-else
-          class="profile-placeholder"
-        >
-          {{ user?.name?.charAt(0).toUpperCase() || "?" }}
-        </div>
-        <div>
-          <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
-          <p class="text-grey-7">
-            {{ user?.bio }}
-          </p>
-        </div>
-      </div>
-      <div class="flex justify-around q-my-lg">
-        <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.followersCount }}
-          </p>
-          <p>Followers</p>
-        </div>
-        <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.followingCount }}
-          </p>
-          <p>Following</p>
-        </div>
-        <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
-            {{ user?.likesCount }}
-          </p>
-          <p>Likes</p>
-        </div>
-      </div>
-    </div>
-    <q-card flat>
-      <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab name="Posts" label="Posts" />
-        <q-tab name="Activity" label="Activity" />
-      </q-tabs>
-
-      <q-separator />
-
-      <q-tab-panels v-model="tab" animated>
-        <q-tab-panel class="q-pa-lg" name="Posts">
-          <div
-            v-if="!posts.length && !isLoading"
-            class="text-center flex flex-col justify-center items-center h-full"
+  <div style="max-width: 600px; margin: 0 auto">
+    <div>
+      <div class="q-pa-lg profile">
+        <div class="flex justify-end">
+          <q-btn
+            flat
+            no-caps
+            class="q-pa-none cursor-pointer"
+            @click="showEditProfilePopup = true"
           >
-            <div class="text-h6 text-weight-bold">Ask Question</div>
-            <p class="q-mb-md text-grey-7">You don't have any posts yet</p>
-            <q-btn
-              v-motion-pop
-              :delay="100"
-              no-caps
-              size="md"
-              label="Ask Question"
-              color="primary"
-              unelevated
-              @click="showPopup=true"
-            />
-          </div>
-          <div v-else :class="['post-wrapper']">
-            <q-spinner v-if="isLoading" color="primary" class="spinner" />
-            <div v-else class="ask-question-container">
-              <q-img
-                :src="user?.profilePic"
-                class="user-avatar"
-                spinner-color="primary"
-                spinner-size="20px"
+            <q-icon size="24px" class="q-mr-md">
+              <img src="~src/assets/icons/edit.svg" alt="edit" />
+            </q-icon>
+          </q-btn>
+          <q-btn flat no-caps class="q-pa-none" to="/web/settings">
+            <q-icon size="24px">
+              <img src="~src/assets/icons/settings.svg" alt="settings" />
+            </q-icon>
+          </q-btn>
+        </div>
+        <div class="flex no-wrap items-center profile-wrapper">
+          <q-img
+            v-if="user?.profilePic"
+            class="profile-img"
+            :src="user.profilePic"
+            alt="Profile Picture"
+          >
+            <template #error>
+              <img
+                :src="fallbackImage"
+                alt="Fallback Image"
+                class="post-img"
+                style="border: none; width: 100%; height: 100%; padding: 4px"
               />
-              <div class="question-box">
-                <q-btn
-                  flat
-                  icon="add"
-                  color="rgba(255, 87, 50, 0.08)"
-                  label="Ask a Question"
-                  class="ask-question-btn"
-                  unelevated
-                  @click="showPopup=true"
-                />
-              </div>
-            </div>
-            <Posts
-              v-for="post in posts"
-              :key="post.id"
-              class="q-pa-md"
-              :post-id="post.id"
-              :user-image="post.user.profilePicUrl"
-              :user-id="post.user.id"
-              :username="post.user.name"
-              :time-ago="post.createdAt"
-              :post-content="post.description"
-              :post-images="post.images"
-              :votes="post.votesCount"
-              :comments="post.commentsCount"
-              :is-own-posts="true"
-              @edit="editQuestion"
-            />
+            </template>
+          </q-img>
+          <div v-else class="profile-placeholder">
+            {{ user?.name?.charAt(0).toUpperCase() || "?" }}
           </div>
-        </q-tab-panel>
-
-        <q-tab-panel class="q-pa-lg activity-section text-center" name="Activity">
-          <div class="activity-container">
-            <q-icon
-              name="timeline"
-              size="48px"
-              color="primary"
-              class="q-mb-md"
-            />
-            <div class="text-h6 text-primary">No Activity Yet</div>
-            <p class="text-grey-7 q-mt-sm">
-              Stay tuned! Your activity history will be displayed here soon.
+          <div>
+            <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
+            <p class="text-grey-7">
+              {{ user?.bio }}
             </p>
           </div>
-        </q-tab-panel>
-      </q-tab-panels>
-    </q-card>
+        </div>
+        <div class="flex justify-around q-my-lg">
+          <div class="text-center">
+            <p class="text-h6 text-weight-medium text-primary">
+              {{ user?.followersCount }}
+            </p>
+            <p>Followers</p>
+          </div>
+          <div class="text-center">
+            <p class="text-h6 text-weight-medium text-primary">
+              {{ user?.followingCount }}
+            </p>
+            <p>Following</p>
+          </div>
+          <div class="text-center">
+            <p class="text-h6 text-weight-medium text-primary">
+              {{ user?.likesCount }}
+            </p>
+            <p>Likes</p>
+          </div>
+        </div>
+      </div>
+      <q-card flat>
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <q-tab name="Posts" label="Posts" />
+          <q-tab name="Activity" label="Activity" />
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="tab" animated>
+          <q-tab-panel class="q-pa-lg" name="Posts">
+            <div
+              v-if="!posts.length && !isLoading"
+              class="text-center flex flex-col justify-center items-center h-full"
+            >
+              <div class="text-h6 text-weight-bold">Ask Question</div>
+              <p class="q-mb-md text-grey-7">You don't have any posts yet</p>
+              <q-btn
+                v-motion-pop
+                :delay="100"
+                no-caps
+                size="md"
+                label="Ask Question"
+                color="primary"
+                unelevated
+                @click="showPopup = true"
+              />
+            </div>
+            <div v-else :class="['post-wrapper']">
+              <q-spinner v-if="isLoading" color="primary" class="spinner" />
+              <div v-else class="ask-question-container">
+                <q-img
+                  :src="user?.profilePic"
+                  class="user-avatar"
+                  spinner-color="primary"
+                  spinner-size="20px"
+                />
+                <div class="question-box">
+                  <q-btn
+                    flat
+                    icon="add"
+                    color="rgba(255, 87, 50, 0.08)"
+                    label="Ask a Question"
+                    class="ask-question-btn"
+                    unelevated
+                    @click="showPopup = true"
+                  />
+                </div>
+              </div>
+              <Posts
+                v-for="post in posts"
+                :key="post.id"
+                class="q-pa-md"
+                :post-id="post.id"
+                :user-image="post.user.profilePicUrl"
+                :user-id="post.user.id"
+                :username="post.user.name"
+                :time-ago="post.createdAt"
+                :post-content="post.description"
+                :post-images="post.images"
+                :votes="post.votesCount"
+                :comments="post.commentsCount"
+                :is-own-posts="true"
+                @edit="editQuestion"
+              />
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel
+            class="q-pa-lg activity-section text-center"
+            name="Activity"
+          >
+            <div class="activity-container">
+              <q-icon
+                name="timeline"
+                size="48px"
+                color="primary"
+                class="q-mb-md"
+              />
+              <div class="text-h6 text-primary">No Activity Yet</div>
+              <p class="text-grey-7 q-mt-sm">
+                Stay tuned! Your activity history will be displayed here soon.
+              </p>
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card>
+    </div>
   </div>
 
   <q-dialog v-model="showPopup" persistent>
     <div class="popup-container">
-      <AskQuestion
-        :is-popup="true"
-        :post-id="editPostId"
-        @close="closePopup"
-      />
+      <AskQuestion :is-popup="true" :post-id="editPostId" @close="closePopup" />
       <q-btn
         flat
         round
@@ -170,17 +178,14 @@
   </q-dialog>
   <q-dialog v-model="showEditProfilePopup" persistent>
     <div class="popup-container">
-      <EditProfile
-        :is-popup="true"
-        @close="showEditProfilePopup=false"
-      />
+      <EditProfile :is-popup="true" @close="showEditProfilePopup = false" />
       <q-btn
         flat
         round
         dense
         icon="close"
         class="close-button"
-        @click="showEditProfilePopup=false"
+        @click="showEditProfilePopup = false"
       />
     </div>
   </q-dialog>
@@ -194,7 +199,7 @@ import { usePostStore } from "src/stores/postStore";
 import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
 import EditProfile from "src/pages/app/view/dashboard/profile/editProfile.vue";
 
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();
@@ -261,11 +266,11 @@ const editQuestion = (id) => {
   showPopup.value = true;
 };
 
-const closePopup = async() => {
+const closePopup = async () => {
   showPopup.value = false;
   editPostId.value = "";
   await fetchNewPosts();
-}
+};
 
 // Infinite scroll handler
 const onScroll = async () => {
@@ -323,7 +328,7 @@ onUnmounted(() => {
     height: 100px;
     border-radius: 50%;
     background-color: $primary; // SCSS variable for primary color
-    color: #FFFFFF; // SCSS variable for text color
+    color: #ffffff; // SCSS variable for text color
     font-size: 36px; // Adjust font size as needed
     font-weight: bold;
     text-transform: uppercase;
