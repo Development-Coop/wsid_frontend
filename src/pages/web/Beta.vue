@@ -130,7 +130,8 @@
           Join a community where your questions get real answers. From life's small decisions to big choices, let the world weigh in and help you decide. Discover a simple, collaborative way to find clarity, connect, and make better decisions today
         </p>
       </div>
-      <CommentsSlider />
+      <!-- <CommentsSlider /> -->
+      <img class="grow-together__img" src="../../assets/images/staticAnimation.png">
     </section>
     <section class="footer">
       <a href="https://www.instagram.com/wsidcom" target="_blank" aria-label="Instagram">
@@ -152,7 +153,7 @@
 <script setup>
 import HeaderBeta from "../../components/HeaderBeta.vue";
 import CommentCard from "../../components/CommentCard.vue";
-import CommentsSlider from "../../components/CommentsSlider.vue";
+//import CommentsSlider from "../../components/CommentsSlider.vue";
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useCommonStore } from "../../stores/commonstore";
@@ -161,152 +162,152 @@ const commonStore = useCommonStore();
 const $q = useQuasar();
 const commentsList = ref([
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment:
       "Should I quit my job to start a food truck?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "Helping one cat might not change the whole world, but it could change the world for one person.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "What should I do this weekend?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/5.svg", import.meta.url)
       .href,
     comment: "Which school should I send my kids too?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Invest in Bitcoin!",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
       "Should I go back to school for computer science as a 38 year old?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Where do should I travel next?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment:
       "What’s a good action movie to show someone that hates action flicks?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "What day of the week is best to break up with someone?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "175 Votes (55%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "That makes perfect sense to me.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment:
       "I’ve been thinking about changing things up. What should I name my kid?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "What should improve today the house or the car?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "I strongly agree",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "Should I break the law to save a loved one?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Which Martial Art is right for me?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "2484 Votes (65%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Which is worse, failing or never trying?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "388 Votes (12%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Other than that make sure it matches your style and personality.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
       "Piano may sound daunting, but it’s actually easier than you think! play",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Where to move if you can’t afford NYC?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "What profession is not a complete joke?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Agree, no need to watch the 1st one and skip the 3rd",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "1802 Votes (15%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Why do I keep dreaming of balloons?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "What is weighing me down that I don’t need in my life?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "Choose the path that brings you the most happiness and peace of mind.",
   },
@@ -665,7 +666,12 @@ const validateEmail = () => {
       }
     }
   }
-
+  .grow-together__img {
+    display: block;
+    margin: 50px auto;
+    max-width: calc(100% - 40px);
+    width: auto;
+  }
   .footer {
     background: #161616;
     display: flex;
