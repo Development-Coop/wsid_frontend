@@ -56,11 +56,8 @@
         <div class="primary-img">
           <span class="shadow"></span>
           <img
-            src="../../assets/images/banner-img.png"
+            src="../../assets/images/betaCoverPhoto.avif"
             alt="banner-img"
-            srcset="
-              ../../assets/images/2x/banner-img.png,../../assets/images/3x/banner-img.png,../../assets/images/4x/banner-img.png
-            "
           />
         </div>
       </section>
@@ -131,7 +128,7 @@
         </p>
       </div>
       <!-- <CommentsSlider /> -->
-      <img class="grow-together__img" src="../../assets/images/staticAnimation.png">
+      <img class="grow-together__img" src="../../assets/images/staticAnimation.avif">
     </section>
     <section class="footer">
       <a href="https://www.instagram.com/wsidcom" target="_blank" aria-label="Instagram">
@@ -668,10 +665,14 @@ const validateEmail = () => {
   }
   .grow-together__img {
     display: block;
-    margin: 50px auto;
-    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    max-width: calc(100% - 200px);
     width: auto;
+    @media screen and (max-width: 992px) {
+      max-width: calc(100% - 40px);
+    }
   }
+
   .footer {
     background: #161616;
     display: flex;
