@@ -42,7 +42,7 @@
           dense
           flat
           round
-          icon="menu"
+          icon="trending_up"
           @click="toggleRightDrawer"
         />
       </q-toolbar>
