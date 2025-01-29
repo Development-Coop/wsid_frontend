@@ -9,12 +9,16 @@
             <p>Ask questions.</p>
             <p>Create polls.</p>
             <p>Get answers.</p>
-            <br>
+            <br />
             <p class="banner-title">Join the WSID Revolution!</p>
           </div>
 
           <p class="banner-description">
-            WSID is changing the way people make decisions. Ask the world your toughest questions, vote on polls, and discover what the crowd thinks - all in one easy-to-use platform. Plus, you'll help shape the future of WSID by voting on new features and updates! Don't miss out on this exciting journey.
+            WSID is changing the way people make decisions. Ask the world your
+            toughest questions, vote on polls, and discover what the crowd
+            thinks - all in one easy-to-use platform. Plus, you'll help shape
+            the future of WSID by voting on new features and updates! Don't miss
+            out on this exciting journey.
           </p>
           <div class="banner-buttons">
             <q-input
@@ -55,10 +59,7 @@
         </div>
         <div class="primary-img">
           <span class="shadow"></span>
-          <img
-            src="../../assets/images/betaCoverPhoto.avif"
-            alt="banner-img"
-          />
+          <img src="../../assets/images/betaCoverPhoto.avif" alt="banner-img" />
         </div>
       </section>
     </section>
@@ -68,51 +69,27 @@
         <div class="app-info__mobile-links">
           <div>
             <div>
-              <p>We’re launching soon.</p>
-              <p>Join the waitlist now</p>
+              <p>We’re launching soon!</p>
+              <p>Join the waitlist now!</p>
             </div>
           </div>
         </div>
         <div class="app-info__actions">
           <div class="app-info__actions-container">
             <div class="app-info__actions-names">
-              <img
-                src="../../assets/images/ask-que.png"
-                alt="action-img"
-                srcset="
-                  ../../assets/images/2x/ask-que.png,../../assets/images/3x/ask-que.png,../../assets/images/4x/ask-que.png
-                "
-              />
+              <img src="../../assets/images/Q_edited.avif" alt="action-img" />
               <p>Ask Questions</p>
             </div>
             <div class="app-info__actions-names">
-              <img
-                src="../../assets/images/create-options.png"
-                alt="action-img"
-                srcset="
-                  ../../assets/images/2x/create-options.png,../../assets/images/3x/create-options.png,../../assets/images/4x/create-options.png
-                "
-              />
+              <img src="../../assets/images/A_edited.avif" alt="action-img" />
               <p>Create Options</p>
             </div>
             <div class="app-info__actions-names">
-              <img
-                src="../../assets/images/receive-results.png"
-                alt="action-img"
-                srcset="
-                  ../../assets/images/2x/receive-results.png,../../assets/images/3x/receive-results.png,../../assets/images/4x/receive-results.png
-                "
-              />
+              <img src="../../assets/images/R_edited.avif" alt="action-img" />
               <p>Receive Results</p>
             </div>
             <div class="app-info__actions-names">
-              <img
-                src="../../assets/images/get-feedback.png"
-                alt="action-img"
-                srcset="
-                  ../../assets/images/2x/get-feedback.png,../../assets/images/3x/get-feedback.png,../../assets/images/4x/get-feedback.png
-                "
-              />
+              <img src="../../assets/images/C_edited.avif" alt="action-img" />
               <p>Get Feedback</p>
             </div>
           </div>
@@ -122,27 +99,68 @@
 
     <section class="grow-together">
       <div class="grow-together__header">
-        <h1>GROW TOGETHER</h1>
+        <h1>Ask the world</h1>
         <p>
-          Join a community where your questions get real answers. From life's small decisions to big choices, let the world weigh in and help you decide. Discover a simple, collaborative way to find clarity, connect, and make better decisions today
+          Join a community where your questions get real answers. From life's
+          small decisions to big choices, let the world weigh in and help you
+          decide. Discover a simple, collaborative way to find clarity, connect,
+          and make better decisions today
         </p>
       </div>
       <!-- <CommentsSlider /> -->
-      <img class="grow-together__img" src="../../assets/images/staticAnimation.avif">
+      <img
+        class="grow-together__img"
+        src="../../assets/images/staticAnimation.avif"
+      />
     </section>
     <section class="footer">
-      <a href="https://www.instagram.com/wsidcom" target="_blank" aria-label="Instagram">
-        <img src="../../assets/icons/instagram.svg" alt="Instagram" class="icon" />
-      </a>
-      <a href="https://www.facebook.com/WSIDcom/" target="_blank" aria-label="Facebook">
-        <img src="../../assets/icons/facebook.svg" alt="Facebook" class="icon" />
-      </a>
-      <a href="https://www.twitter.com/wsidcom" target="_blank" aria-label="Twitter">
-        <img src="../../assets/icons/x.svg" alt="Twitter" class="icon" />
-      </a>
-      <a href="https://www.linkedin.com/company/wsid/" target="_blank" aria-label="LinkedIn">
-        <img src="../../assets/icons/linkedin.svg" alt="LinkedIn" class="icon" />
-      </a>
+      <div class="social-icons">
+        <a
+          href="https://www.instagram.com/wsidcom"
+          target="_blank"
+          aria-label="Instagram"
+        >
+          <img
+            src="../../assets/icons/instagram.svg"
+            alt="Instagram"
+            class="icon"
+          />
+        </a>
+        <a
+          href="https://www.facebook.com/WSIDcom/"
+          target="_blank"
+          aria-label="Facebook"
+        >
+          <img
+            src="../../assets/icons/facebook.svg"
+            alt="Facebook"
+            class="icon"
+          />
+        </a>
+        <a
+          href="https://www.twitter.com/wsidcom"
+          target="_blank"
+          aria-label="Twitter"
+        >
+          <img src="../../assets/icons/x.svg" alt="Twitter" class="icon" />
+        </a>
+        <a
+          href="https://www.linkedin.com/company/wsid/"
+          target="_blank"
+          aria-label="LinkedIn"
+        >
+          <img
+            src="../../assets/icons/linkedin.svg"
+            alt="LinkedIn"
+            class="icon"
+          />
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="/#/privacy-policy">Privacy Policy</a>
+        <a href="/#/terms-of-service">Terms of Service</a>
+        <a href="/#/about-us">About Us</a>
+      </div>
     </section>
   </section>
 </template>
@@ -161,13 +179,13 @@ const commentsList = ref([
   {
     imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
-    comment:
-      "Should I quit my job to start a food truck?",
+    comment: "Should I quit my job to start a food truck?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
-    comment: "Helping one cat might not change the whole world, but it could change the world for one person.",
+    comment:
+      "Helping one cat might not change the whole world, but it could change the world for one person.",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
@@ -180,134 +198,135 @@ const commentsList = ref([
     comment: "Which school should I send my kids too?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment: "Invest in Bitcoin!",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment:
-      "Should I go back to school for computer science as a 38 year old?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "Where do should I travel next?",
-  },
-  {
     imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment:
-      "What’s a good action movie to show someone that hates action flicks?",
+      "Choose the path that brings you the most happiness and peace of mind.",
   },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment: "What day of the week is best to break up with someone?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment: "175 Votes (55%)",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "Is this goal worth the cost?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "That makes perfect sense to me.",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment:
-      "I’ve been thinking about changing things up. What should I name my kid?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment: "What should improve today the house or the car?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "I strongly agree",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "Should I break the law to save a loved one?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment: "Which Martial Art is right for me?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment: "2484 Votes (65%)",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "Which is worse, failing or never trying?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "388 Votes (12%)",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment: "Other than that make sure it matches your style and personality.",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment:
-      "Piano may sound daunting, but it’s actually easier than you think! play",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "Where to move if you can’t afford NYC?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "What profession is not a complete joke?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
-      .href,
-    comment: "Agree, no need to watch the 1st one and skip the 3rd",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
-      .href,
-    comment: "1802 Votes (15%)",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
-      .href,
-    comment: "Why do I keep dreaming of balloons?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "What is weighing me down that I don’t need in my life?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
-      .href,
-    comment: "Choose the path that brings you the most happiness and peace of mind.",
-  },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment: "Invest in Bitcoin!",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment:
+  //     "Should I go back to school for computer science as a 38 year old?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "Where do should I travel next?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment:
+  //     "What’s a good action movie to show someone that hates action flicks?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment: "What day of the week is best to break up with someone?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment: "175 Votes (55%)",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "Is this goal worth the cost?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment: "That makes perfect sense to me.",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment:
+  //     "I’ve been thinking about changing things up. What should I name my kid?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment: "What should improve today the house or the car?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "I strongly agree",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment: "Should I break the law to save a loved one?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment: "Which Martial Art is right for me?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment: "2484 Votes (65%)",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "Which is worse, failing or never trying?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment: "388 Votes (12%)",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment: "Other than that make sure it matches your style and personality.",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment:
+  //     "Piano may sound daunting, but it’s actually easier than you think! play",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "Where to move if you can’t afford NYC?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment: "What profession is not a complete joke?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+  //     .href,
+  //   comment: "Agree, no need to watch the 1st one and skip the 3rd",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
+  //     .href,
+  //   comment: "1802 Votes (15%)",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
+  //     .href,
+  //   comment: "Why do I keep dreaming of balloons?",
+  // },
+  // {
+  //   imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
+  //     .href,
+  //   comment: "What is weighing me down that I don’t need in my life?",
+  // },
 ]);
 
 const isMobile = computed(() => $q.screen.width < 992);
@@ -455,17 +474,20 @@ const validateEmail = () => {
         }
         &-0 {
           top: 7%;
-          right: -40px;
+          right: 15%;
         }
         &-1 {
           top: 20%;
-          left: -12%;
+          left: -55%;
         }
         &-2 {
-          bottom: 27%;
-          right: -15%;
+          left: -35%;
         }
         &-3 {
+          bottom: 27%;
+          right: -16px;
+        }
+        &-4 {
           bottom: 12%;
           left: -16px;
         }
@@ -495,17 +517,17 @@ const validateEmail = () => {
     }
   }
   .app-info {
-    padding: 0 48px;
+    padding: 0 42px;
     width: 100%;
-    margin-bottom: 80px;
-    margin-top: 80px;
+    // margin-bottom: 10px;
+    margin-top: 10px;
     @media screen and (max-width: 992px) {
       padding: 0 24px;
       margin-bottom: 24px;
     }
     &__container {
       background-color: #fff3f1;
-      padding: 60px 40px 120px 40px;
+      padding: 20px 40px 120px 40px;
       height: 660px;
       display: grid;
       place-items: center;
@@ -562,6 +584,7 @@ const validateEmail = () => {
         }
         img {
           width: 100%;
+          padding: 5px 10px;
         }
 
         img:nth-child(1) {
@@ -676,13 +699,39 @@ const validateEmail = () => {
   .footer {
     background: #161616;
     display: flex;
-    height: 75px;
+    flex-direction: column; /* Stack social icons and links */
+    height: auto; /* Adjust height for added links */
     justify-content: center;
     align-items: center;
-    gap: 24px;
-    bottom: 16px;
+    gap: 16px;
+    padding: 16px 0;
     width: 100%;
     text-align: center;
+
+    .social-icons {
+      display: flex;
+      gap: 24px;
+    }
+
+    .icon {
+      width: 24px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+
+      a {
+        color: #d6d4cc;
+        text-decoration: none;
+        transition: color 0.3s;
+
+        &:hover {
+          color: #fff3f1;
+        }
+      }
+    }
   }
 }
 </style>
