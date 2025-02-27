@@ -30,6 +30,7 @@
             type="text"
             outlined
             placeholder="Set your username"
+            maxlength="20"
             :error="!authStore.isValidUsername"
             error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."
             @focus="moveIconToRight"

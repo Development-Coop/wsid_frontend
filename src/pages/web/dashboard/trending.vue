@@ -1,8 +1,5 @@
 <template>
   <div ref="postsContainer" style="max-width: 600px; margin: 0 auto;" :class="[{ 'posts-container': isPopup }, { 'q-pa-lg': !isPopup }]">
-    <div v-if="!isPopup" class="q-mb-sm text-body1 text-weight-bold text-grey-7">
-      Recent questions from people you follow
-    </div>
     <div
       v-for="post in posts" 
       :key="post.id"
@@ -16,6 +13,7 @@
         :user-id="post.user.id"
         :username="post.user.name"
         :time-ago="post.createdAt"
+        :post-title="post.title"
         :post-content="post.description"
         :post-images="post.images"
         :votes="post.votesCount"
@@ -30,7 +28,8 @@
         :user-id="post.user.id"
         :username="post.user.name"
         :time-ago="post.createdAt"
-        :post-content="post.description"
+        :post-title="post.title"
+        :post-content="'post.description'"
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"

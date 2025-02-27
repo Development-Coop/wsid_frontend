@@ -3,9 +3,9 @@
     <div>
       <!-- Heading and instruction text -->
       <div class="text-left main-wrapper">
-        <h4 class="text-h5 text-weight-medium">Describe yourself</h4>
+        <h4 class="text-h5 text-weight-medium">Describe yourself.</h4>
         <p>
-          What makes you special? Don’t think too hard, just have fun with it
+          What makes you special? Don't think too hard. Just have fun with it.
         </p>
       </div>
 
@@ -32,7 +32,6 @@
           label="Next"
           color="primary"
           unelevated
-          :disable="!authStore.isBioValid"
           :loading="isLoading"
           @click="navigateToNextStep"
         />

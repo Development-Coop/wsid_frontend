@@ -66,7 +66,6 @@
             label="Next"
             color="primary"
             unelevated
-            :disable="!authStore.userDetails.profilePicture"
             @click="navigateToAddBio"
           />
         </div>

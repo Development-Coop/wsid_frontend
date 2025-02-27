@@ -27,11 +27,10 @@
       <div :class="['text-h6','text-weight-bold','text-uppercase', {'text-center': !isPopup}]">
         Ask Question
       </div>
-      <p v-if="isPopup">What do you want to ask the community?</p>
 
       <div :class="{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup}">
         <div class="q-gutter-y-md column">
-          <q-input v-model="title" outlined label="Title/Question" />
+          <q-input v-model="title" outlined label="Question" />
           <q-input
             v-model="description"
             type="textarea"

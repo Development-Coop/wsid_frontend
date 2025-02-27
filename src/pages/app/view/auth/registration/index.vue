@@ -25,6 +25,7 @@
             v-model="authStore.userDetails.name"
             outlined
             placeholder="Name"
+            maxlength="20"
             :error="!!errors.name"
           />
           <q-input
@@ -54,11 +55,11 @@
               transition-show="scale"
               transition-hide="scale"
             >
-              <!-- Date picker with max date set to today -->
               <q-date
                 v-model="authStore.userDetails.dob"
                 mask="DD-MM-YYYY"
                 :max="today"
+                @update:model-value="onDateSelect"
               />
             </q-popup-proxy>
           </q-input>
@@ -136,20 +137,39 @@ const validateForm = () => {
     isValid = false;
   }
 
-  // Validate date of birth (dob)
+  // Validate date of birth (dob) with age check
   if (!authStore.userDetails.dob) {
     errors.value.dob = "Date of birth is required.";
     isValid = false;
   } else {
-    const today = new Date().toISOString().split("T")[0];
+    const minAgeDate = new Date();
+    minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
     const dob = parseDate(authStore.userDetails.dob);
-    if (dob > new Date(today)) {
-      errors.value.dob = "Date of birth cannot be in the future.";
+    
+    if (dob > minAgeDate) {
+      errors.value.dob = "You must be at least 16 years old to sign up";
       isValid = false;
     }
   }
 
   return isValid;
+};
+
+// Add new function to handle date selection
+const onDateSelect = (date) => {
+  const selectedDate = parseDate(date);
+  const minAgeDate = new Date();
+  minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
+  
+  if (selectedDate > minAgeDate) {
+    $q.notify({
+      color: "negative",
+      message: "You must be at least 16 years old to sign up",
+      position: "top",
+      icon: "error",
+    });
+    authStore.userDetails.dob = null; // Clear the invalid date
+  }
 };
 
 // Updated function to handle form submission

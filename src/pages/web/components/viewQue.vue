@@ -339,6 +339,7 @@
             <q-input
               ref="replyInput"
               v-model="text"
+              maxlength="1000"
               outlined
               @keyup.enter="addComment"
             >

@@ -16,6 +16,7 @@
           placeholder="Set your username"
           :error="!authStore.isValidUsername"
           error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."
+          maxlength="20"
           @focus="moveIconToRight"
           @update:model-value="validateUsername"
         >

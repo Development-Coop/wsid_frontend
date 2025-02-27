@@ -44,7 +44,7 @@
     <canvas ref="confettiCanvas" class="confetti-canvas"></canvas>
 
     <div class="button-container">
-      <!-- Submit Button (initially disabled) -->
+      <!-- Submit Button (now always enabled) -->
       <div>
         <q-btn
           v-motion-pop
@@ -53,7 +53,6 @@
           label="Next"
           color="primary"
           unelevated
-          :disable="!authStore.userDetails.profilePicture"
           @click="navigateToAddBio"
         />
       </div>

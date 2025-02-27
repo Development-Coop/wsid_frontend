@@ -147,7 +147,7 @@ const router = useRouter();
     }
     p.terms {
       font-weight: 400;
-      font-size: 10px;
+      font-size: 16px;
       text-align: center;
       span {
         color: $primary;

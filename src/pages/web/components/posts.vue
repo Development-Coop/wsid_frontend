@@ -49,6 +49,12 @@
       </q-btn-dropdown>
     </div>
 
+    <!-- Post Title -->
+    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
+      <span v-if="postTitle" class="text-weight-bold">{{ postTitle }}</span>
+      <!-- Dynamic post title -->
+    </p>
+
     <!-- Post Content -->
     <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
       <span v-if="postContent">{{ postContent }}</span>
@@ -183,6 +189,10 @@ const props = defineProps({
   postContent: {
     type: String,
     default: "", // Default value for postContent
+  },
+  postTitle: {
+    type: String,
+    default: "", // Default value for postTitle
   },
   postImage: {
     type: String,

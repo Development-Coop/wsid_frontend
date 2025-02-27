@@ -1,9 +1,9 @@
 <template>
   <q-layout view="hHh LpR fFf">
     <q-header elevated class="bg-primary text-white">
-      <q-toolbar>
+      <q-toolbar style="justify-content: space-between">
         <q-btn
-          v-if="$q.screen.lt.sm"
+          v-if="$q.screen.lt.md"
           dense
           flat
           round
@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title style="flex: unset;">
           <div
             class="text-h5 text-weight-bold cursor-pointer"
             @click="router.push({ name: 'web-dashboard-home' })"
@@ -26,19 +26,35 @@
             padding: 4px 20px;
             font-size: 16px;
             border-radius: 8px;
+            max-width: 300px;
+            width: 100%;
           "
           dense
           flat
           unelevated
           no-caps
           round
-          @click="router.push({ name: 'web-dashboard-home', query: { openAskQuestion: true } })"
+          @click="
+            router.push({
+              name: 'web-dashboard-home',
+              query: { openAskQuestion: true },
+            })
+          "
         >
           <q-icon size="20px" class="q-mr-xs" name="add" color="white"></q-icon>
           Ask Questions
         </q-btn>
+
+        <q-img
+          :src="user?.profilePic"
+          class="user-avatar cursor-pointer q-ml-md"
+          spinner-color="primary"
+          spinner-size="20px"
+          @click="router.push({ name: 'web-dashboard-profile' })"
+        />
+
         <q-btn
-          v-if="$q.screen.lt.sm"
+          v-if="$q.screen.lt.md"
           dense
           flat
           round
@@ -54,18 +70,9 @@
       show-if-above
       side="left"
       bordered
-      class="side-bar-section"
+      class="side-bar-section q-px-md"
     >
-      <div class="q-pa-lg">
-        <p class="text-body1 text-weight-bold">Welcome to What Should I Do?</p>
-        <p class="text-grey-7">
-          Whether you have a burning question, need advice, or just want to
-          spark interesting conversations, post your questions, and get
-          real-time answers from diverse perspectives.
-        </p>
-      </div>
-
-      <q-toolbar class="q-px-none">
+      <q-toolbar class="q-px-none q-mt-md">
         <q-btn
           class="w-full"
           unelevated
@@ -75,7 +82,7 @@
           to="/web/dashboard/home"
           :class="$route.path.includes('/dashboard/home') && 'is-active'"
         >
-          <div class="flex items-center w-full q-px-lg">
+          <div class="flex items-center w-full q-px-md">
             <q-icon v-if="$route.path.includes('/dashboard/home')" size="27px">
               <img src="~src/assets/icons/nav-home-active.svg" alt="" />
             </q-icon>
@@ -94,7 +101,7 @@
           to="/web/dashboard/search"
           :class="$route.path.includes('/search') && 'is-active'"
         >
-          <div class="flex items-center w-full q-px-lg">
+          <div class="flex items-center w-full q-px-md">
             <q-icon
               v-if="$route.path.includes('/dashboard/search')"
               size="24px"
@@ -117,7 +124,7 @@
           to="/web/dashboard/profile"
           :class="$route.path.includes('/profile') && 'is-active'"
         >
-          <div class="flex items-center w-full q-px-lg">
+          <div class="flex items-center w-full q-px-md">
             <q-icon v-if="$route.path === '/web/dashboard/profile'" size="24px">
               <img src="~src/assets/icons/nav-user-active.svg" alt="" />
             </q-icon>
@@ -137,7 +144,7 @@
           to="/web/settings"
           :class="$route.path.includes('/settings') && 'is-active'"
         >
-          <div class="flex items-center w-full q-px-lg">
+          <div class="flex items-center w-full q-px-md">
             <q-icon v-if="$route.path === '/web/settings'" size="24px">
               <img src="~src/assets/icons/settings-active.svg" alt="" />
             </q-icon>
@@ -236,7 +243,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useQuasar, Loading } from "quasar";
 import { useRouter } from "vue-router";
@@ -248,6 +255,10 @@ const $q = useQuasar();
 const profileStore = useProfileStore();
 const router = useRouter();
 const currentYear = ref(new Date().getFullYear());
+
+const user = computed(() => {
+  return JSON.parse(JSON.stringify(profileStore?.userDetails));
+});
 
 const handleSubmit = async () => {
   Loading.show();
@@ -295,7 +306,6 @@ const toggleRightDrawer = () => {
         min-height: 50px;
         border: 1px solid transparent;
         &.is-active {
-          border: 1px solid var(--q-primary);
           color: var(--q-primary);
           background-color: #f1f2f5;
         }
@@ -356,5 +366,13 @@ const toggleRightDrawer = () => {
 .see-all {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.user-avatar {
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  border: 2px solid #eaeaea;
+  object-fit: cover;
 }
 </style>

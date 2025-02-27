@@ -118,6 +118,7 @@
                 :user-id="post.user.id"
                 :username="post.user.name"
                 :time-ago="post.timeAgo"
+                :post-title="post.title"
                 :post-content="post.description"
                 :post-images="post.images"
                 :votes="post.votesCount"

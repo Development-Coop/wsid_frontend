@@ -86,13 +86,13 @@
 
       <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
         <q-tab-panel class="q-pa-lg" name="Votes">
-          <div v-if="!selectedVote" class="q-gutter-md q-mb-xl">
+          <div v-if="!selectedVote" class="q-gutter-md">
             <q-card
               v-for="option in postDetails.options"
               :key="option.id"
               class="vote-options"
               :class="{ 
-                'selected-option': selectedVote === option.id,
+                'selected-option': tempSelectedVote === option.id,
                 'disabled-option': !!selectedVote
               }"
               flat
@@ -111,8 +111,22 @@
                   border-radius: 4px;
                   cursor: pointer;
                 "
+                @click.stop="openImage(option.image)"
               />
             </q-card>
+
+            <!-- Add Submit Button -->
+            <div class="submit-vote-btn q-mt-md">
+              <q-btn
+                color="primary"
+                label="Submit Vote"
+                class="full-width"
+                no-caps
+                unelevated
+                :disable="!tempSelectedVote"
+                @click="submitVote"
+              />
+            </div>
           </div>
           <div v-else :class="['q-gutter-md', {'option-container-grid': isPopup && postDetails?.options?.length > 2}]">
             <q-card
@@ -283,7 +297,7 @@
             </div>
           </div>
           <div :class="['q-pa-md','w-full','bg-white', { 'input-container': !isPopup, 'input-container-popup': isPopup }]">
-            <q-input ref="replyInput" v-model="text" outlined @keyup.enter="addComment">
+            <q-input ref="replyInput" v-model="text" maxlength="1000" outlined @keyup.enter="addComment">
               <template #after>
                 <q-btn
                   round
@@ -301,7 +315,18 @@
     </q-card>
 
     <q-dialog v-model="dialog" @hide="closeDialog">
-      <q-img :src="imageSrc" spinner-color="primary" spinner-size="22px" />
+      <q-card class="image-preview-container">
+        <q-btn
+          round
+          flat
+          dense
+          icon="close"
+          class="close-button"
+          color="white"
+          @click="closeDialog"
+        />
+        <q-img :src="imageSrc" spinner-color="primary" spinner-size="22px" />
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -333,6 +358,9 @@ const totalComments = ref(0);
 const comments = ref([]);
 const commentParentId = ref(null);
 const replyInput = ref(null);
+
+// Add new ref for temporary selection
+const tempSelectedVote = ref(null);
 
 const props = defineProps({
   postId: {
@@ -558,20 +586,34 @@ const addComment = async () => {
   }
 }
 
-const showVotesResult = async (option) => {
+// Modify showVotesResult to handle temporary selection
+const showVotesResult = (option) => {
+  tempSelectedVote.value = option; // Just store the selection temporarily
+};
+
+// Add new function to handle final submission
+const submitVote = async () => {
   try {
-    selectedVote.value = option; // Set the selected option
+    if (!tempSelectedVote.value) {
+      $q.notify({
+        color: "negative",
+        message: "Please select an option",
+        position: "top",
+        icon: "error",
+      });
+      return;
+    }
+
+    selectedVote.value = tempSelectedVote.value;
     Loading.show();
     const data = {
       "postId": postDetails.value.id,
-      "optionId": option
+      "optionId": tempSelectedVote.value
     }
     await postStore.createVote(data);
     const postId = route?.query?.postId || props?.postId;
     if (postId) {
-      Loading.show();
       await fetchPostDetails(postId);
-      Loading.hide();
     }
     emit("fetch-new-post");
   } catch (e) {
@@ -621,7 +663,7 @@ const showVotesResult = async (option) => {
   background: linear-gradient(to right, #f49d37 0%, #f49d37 50%, transparent 50%);
   background-size: 200% 100%;
   background-position: 100% 0;
-  transition: background-position 0.4s ease;
+  transition: background-position 0.3s ease;
 
   &:hover {
     background-position: 0 0; /* Smoothly transition the gradient from left to right */
@@ -699,6 +741,32 @@ const showVotesResult = async (option) => {
   .liked-text {
     color: #f15b29; // Highlight text color
     font-weight: 800; // Make text bold
+  }
+}
+
+.submit-vote-btn {
+  margin-top: 24px;
+  position: sticky;
+  bottom: 16px;
+  z-index: 1;
+}
+
+.image-preview-container {
+  position: relative;
+  background: transparent;
+  padding: 0;
+
+  .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  :deep(.q-img) {
+    min-width: 500px;
+    max-width: 90vw;
   }
 }
 </style>

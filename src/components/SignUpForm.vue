@@ -7,6 +7,7 @@
         v-model="authStore.userDetails.name"
         outlined
         label="Name"
+        maxlength="20"
         dense
         :rules="[(val) => !!val || 'Name is required']"
       />
@@ -98,6 +99,7 @@
             v-model="authStore.userDetails.dob"
             mask="DD-MM-YYYY"
             :max="today"
+            @update:model-value="onDateSelect"
           />
         </q-popup-proxy>
       </q-input>
@@ -267,27 +269,29 @@ const parseDate = (dateString) => {
 
 // Computed property to enable/disable the button based on form validation
 const isFormValid = computed(() => {
-  // Check if name and email are filled in and valid
   const isNameValid = authStore.userDetails.name.trim() !== "";
   const isEmailValid = authStore.userDetails.phone_or_email.trim() !== "";
 
-  // Check if all password rules are valid
-  // const isPasswordValid = passwordRules.value.every((rule) => rule.valid);
-  // const isStrength = passwordStrengthText.value !== "Weak";
-
-  let isValid = false;
-  // Validate date of birth (dob)
-  if (!authStore.userDetails.dob) {
-    isValid = false;
-  } else {
-    const today = new Date().toISOString().split("T")[0];
-    const dob = parseDate(authStore.userDetails.dob);
-    isValid = !(dob > new Date(today));
-  }
-
-  // The form is valid if all fields are valid
-  return isNameValid && isEmailValid && isValid;
+  // Remove date validation from here since we'll handle it in onDateSelect
+  return isNameValid && isEmailValid && !!authStore.userDetails.dob;
 });
+
+// Add new function to handle date selection
+const onDateSelect = (date) => {
+  const selectedDate = parseDate(date);
+  const minAgeDate = new Date();
+  minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
+  
+  if (selectedDate > minAgeDate) {
+    $q.notify({
+      color: "negative",
+      message: "You must be at least 16 years old to sign up",
+      position: "top",
+      icon: "error",
+    });
+    authStore.userDetails.dob = null; // Clear the invalid date
+  }
+};
 
 // Updated function to handle form submission
 const handleSubmit = async () => {

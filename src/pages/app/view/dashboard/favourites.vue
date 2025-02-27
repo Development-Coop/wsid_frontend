@@ -6,6 +6,7 @@
         :user-image="post.userImage"
         :username="post.username"
         :time-ago="post.timeAgo"
+        :post-title="post.postTitle"
         :post-content="post.postContent"
         :post-image="post.postImage"
         :votes="post.votes"

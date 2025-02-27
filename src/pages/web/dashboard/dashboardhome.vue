@@ -1,28 +1,5 @@
 <template>
   <div class="q-pa-lg" style="max-width: 600px;margin: 0 auto;">
-    <div class="ask-question-container q-mb-lg">
-      <q-img
-        :src="user?.profilePic"
-        class="user-avatar cursor-pointer"
-        spinner-color="primary"
-        spinner-size="20px"
-        @click="router.push({name: 'web-dashboard-profile'})"
-      />
-      <div class="question-box">
-        <q-btn
-          flat
-          icon="add"
-          color="rgba(255, 87, 50, 0.08)"
-          label="Ask a Question"
-          class="ask-question-btn"
-          unelevated
-          @click="showAskQuePopup=true"
-        />
-      </div>
-    </div>
-    <div class="q-mb-sm text-body1 text-weight-bold text-grey-7">
-      Recent questions from people you follow
-    </div>
     <div class="post-container">
       <div class="post-wrapper">
         <Posts
@@ -34,6 +11,7 @@
           :user-id="post.user.id"
           :username="post.user.name"
           :time-ago="post.createdAt"
+          :post-title="post.title"
           :post-content="post.description"
           :post-images="post.images"
           :votes="post.votesCount"
@@ -82,10 +60,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
-import { useProfileStore } from "src/stores/profileStore";
 import { useRoute, useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 // components
@@ -97,16 +74,11 @@ const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
-const profileStore = useProfileStore();
 const showViewQuePopup = ref(false);
 const route = useRoute();
 const router = useRouter();
 const showAskQuePopup = ref(false);
 const $q = useQuasar();
-
-const user = computed(() => {
-  return JSON.parse(JSON.stringify(profileStore?.userDetails));
-});
 
 const closeModal = () => {
   showViewQuePopup.value = false;
