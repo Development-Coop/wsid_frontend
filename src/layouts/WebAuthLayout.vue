@@ -32,13 +32,16 @@
       <section class="auth__right">
         <q-page-container class="auth-container">
           <div class="main-content">
-            <div class="auth__logo">
-              <img
-                src="../assets/logo.svg"
-                class="logo-img cursor-pointer"
-                alt="logo"
-              />
-              <p class="no-margin cursor-pointer">WSID</p>
+            <div class="registration-actions">
+              <!-- <q-icon name="arrow_back" class="cursor-pointer" size="20px" /> -->
+              <div class="auth__logo">
+                <img
+                  src="../assets/logo.svg"
+                  class="logo-img cursor-pointer"
+                  alt="logo"
+                />
+                <p class="no-margin cursor-pointer">WSID</p>
+              </div>
             </div>
             <router-view />
           </div>
@@ -136,6 +139,14 @@ const router = useRouter();
       place-items: center;
       .main-content {
         display: grid;
+        .registration-actions{
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          justify-content: center;
+          align-items: center;
+          padding: 0px 16px 24px 16px;
+          gap: 10px;
+        }
       }
     }
 
@@ -166,7 +177,6 @@ const router = useRouter();
     font-size: 18px;
     font-weight: 800;
     gap: 4px;
-    padding-bottom: 24px;
   }
 }
 </style>

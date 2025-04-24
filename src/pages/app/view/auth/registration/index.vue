@@ -143,11 +143,11 @@ const validateForm = () => {
     isValid = false;
   } else {
     const minAgeDate = new Date();
-    minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
+    minAgeDate.setFullYear(minAgeDate.getFullYear() - 13);
     const dob = parseDate(authStore.userDetails.dob);
     
     if (dob > minAgeDate) {
-      errors.value.dob = "You must be at least 16 years old to sign up";
+      errors.value.dob = "You must be at least 13 years old to sign up";
       isValid = false;
     }
   }
@@ -159,12 +159,12 @@ const validateForm = () => {
 const onDateSelect = (date) => {
   const selectedDate = parseDate(date);
   const minAgeDate = new Date();
-  minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
+  minAgeDate.setFullYear(minAgeDate.getFullYear() - 13);
   
   if (selectedDate > minAgeDate) {
     $q.notify({
       color: "negative",
-      message: "You must be at least 16 years old to sign up",
+      message: "You must be at least 13 years old to sign up",
       position: "top",
       icon: "error",
     });
