@@ -68,6 +68,14 @@
 
       <!-- Button container with center alignment -->
       <div class="flex justify-center">
+        <div class="terms q-mt-md">
+          <q-checkbox v-model="termsAccepted" />
+          <p>
+            By signing up to create an account I accept WSID's <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
+              &
+              <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
+          </p>
+        </div>
         <q-btn
           v-motion-pop
           class="q-px-xl"
@@ -77,6 +85,7 @@
           color="primary"
           label="Next"
           :loading="isLoading"
+          :disable="!termsAccepted"
           @click="handleSubmit"
         />
       </div>
@@ -94,6 +103,7 @@ import { useQuasar } from "quasar";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const termsAccepted = ref(false);
 
 const errors = ref({
   name: "",
@@ -150,6 +160,17 @@ const validateForm = () => {
       errors.value.dob = "You must be at least 13 years old to sign up";
       isValid = false;
     }
+  }
+
+  // Validate terms acceptance
+  if (!termsAccepted.value) {
+    $q.notify({
+      message: "Please accept the terms and conditions to continue",
+      color: "negative",
+      position: "top",
+      icon: "error"
+    });
+    isValid = false;
   }
 
   return isValid;
@@ -225,6 +246,27 @@ const handleSubmit = async () => {
     }
     .q-field--with-bottom {
       padding-bottom: 0;
+    }
+  }
+}
+.terms {
+  font-weight: 400;
+  font-size: 16px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  p {
+    margin: 0;
+    span {
+      color: var(--q-primary);
+      a {
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }

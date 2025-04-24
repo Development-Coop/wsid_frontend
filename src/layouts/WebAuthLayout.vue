@@ -45,11 +45,6 @@
             </div>
             <router-view />
           </div>
-          <p class="terms">
-            By signing up to create an account I accept WSID’s <br /><span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
-              &
-              <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
-          </p>
         </q-page-container>
       </section>
     </section>
@@ -57,8 +52,6 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
 </script>
 
 <style scoped lang="scss">
@@ -155,20 +148,6 @@ const router = useRouter();
       display: flex;
       align-items: center; /* Center the content vertically */
       justify-content: center; /* Center the content horizontally */
-    }
-    p.terms {
-      font-weight: 400;
-      font-size: 16px;
-      text-align: center;
-      span {
-        color: $primary;
-        a {
-          cursor: pointer;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
     }
   }
   &__logo {
