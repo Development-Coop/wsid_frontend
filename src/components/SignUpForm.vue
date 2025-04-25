@@ -150,6 +150,16 @@
         </q-btn> -->
       </div>
     </div>
+    <div class="terms q-mt-md">
+      <q-checkbox v-model="termsAccepted" />
+      <p>
+        By signing up to create an account I accept WSID’s <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
+          <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
+            &
+            <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
+        </span>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -175,6 +185,7 @@ const authStore = useAuthStore();
 const isLoading = ref(false);
 const $q = useQuasar();
 const router = useRouter();
+const termsAccepted = ref(false);
 
 // Define password validation rules
 // const passwordRules = ref([
@@ -273,19 +284,19 @@ const isFormValid = computed(() => {
   const isEmailValid = authStore.userDetails.phone_or_email.trim() !== "";
 
   // Remove date validation from here since we'll handle it in onDateSelect
-  return isNameValid && isEmailValid && !!authStore.userDetails.dob;
+  return isNameValid && isEmailValid && !!authStore.userDetails.dob && termsAccepted.value;
 });
 
 // Add new function to handle date selection
 const onDateSelect = (date) => {
   const selectedDate = parseDate(date);
   const minAgeDate = new Date();
-  minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
+  minAgeDate.setFullYear(minAgeDate.getFullYear() - 13);
   
   if (selectedDate > minAgeDate) {
     $q.notify({
       color: "negative",
-      message: "You must be at least 16 years old to sign up",
+      message: "You must be at least 13 years old to sign up",
       position: "top",
       icon: "error",
     });
@@ -432,6 +443,23 @@ const handleSubmit = async () => {
   }
   .q-field__label {
     top: 11px;
+  }
+}
+.terms {
+  font-weight: 400;
+  font-size: 16px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 4px;
+  span {
+    color: $primary;
+    a {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 </style>

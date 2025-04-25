@@ -32,21 +32,19 @@
       <section class="auth__right">
         <q-page-container class="auth-container">
           <div class="main-content">
-            <div class="auth__logo">
-              <img
-                src="../assets/logo.svg"
-                class="logo-img cursor-pointer"
-                alt="logo"
-              />
-              <p class="no-margin cursor-pointer">WSID</p>
+            <div class="registration-actions">
+              <!-- <q-icon name="arrow_back" class="cursor-pointer" size="20px" /> -->
+              <div class="auth__logo">
+                <img
+                  src="../assets/logo.svg"
+                  class="logo-img cursor-pointer"
+                  alt="logo"
+                />
+                <p class="no-margin cursor-pointer">WSID</p>
+              </div>
             </div>
             <router-view />
           </div>
-          <p class="terms">
-            By signing up to create an account I accept WSID’s <br /><span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
-              &
-              <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
-          </p>
         </q-page-container>
       </section>
     </section>
@@ -54,8 +52,6 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
 </script>
 
 <style scoped lang="scss">
@@ -136,6 +132,14 @@ const router = useRouter();
       place-items: center;
       .main-content {
         display: grid;
+        .registration-actions{
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          justify-content: center;
+          align-items: center;
+          padding: 0px 16px 24px 16px;
+          gap: 10px;
+        }
       }
     }
 
@@ -145,20 +149,6 @@ const router = useRouter();
       align-items: center; /* Center the content vertically */
       justify-content: center; /* Center the content horizontally */
     }
-    p.terms {
-      font-weight: 400;
-      font-size: 16px;
-      text-align: center;
-      span {
-        color: $primary;
-        a {
-          cursor: pointer;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
   }
   &__logo {
     display: flex;
@@ -166,7 +156,6 @@ const router = useRouter();
     font-size: 18px;
     font-weight: 800;
     gap: 4px;
-    padding-bottom: 24px;
   }
 }
 </style>
