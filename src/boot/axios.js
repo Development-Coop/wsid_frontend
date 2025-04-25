@@ -18,6 +18,8 @@ function onRefreshed(token) {
 // Create a custom axios instance
 const api = axios.create({
   baseURL: "https://wsi-be.netlify.app/api",
+  // for testing in localhost
+  // baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -63,6 +65,10 @@ export default boot(({ app, router }) => {
           const response = await axios.post("https://wsi-be.netlify.app/api/auth/refresh-token", {
             refreshToken,
           });
+          // for testing in localhost
+          // const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
+          //   refreshToken,
+          // });
 
           const { accessToken } = response.data;
 

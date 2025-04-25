@@ -47,6 +47,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const registerStep1 = async (userData) => {
     try {
+      // console.log("working");
       const response = await api.post("/auth/register-step1", {
         name: userData.name,
         email: userData.phone_or_email, // Assuming it's an email
@@ -93,7 +94,7 @@ export const useAuthStore = defineStore("auth", () => {
     const noConsecutiveDotsPattern = /\.{2,}/;
 
     if (
-      input.length > 15 ||
+      input.length > 20 ||
       !validPattern.test(input) ||
       noConsecutiveDotsPattern.test(input)
     ) {
@@ -145,6 +146,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const registerStep3 = async () => {
     try {
+      // console.log("work");
+      // return;
       restoreUserFromSession();
       const formData = new FormData();
       formData.append("email", userDetails.value.phone_or_email);
@@ -165,7 +168,8 @@ export const useAuthStore = defineStore("auth", () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
+      // console.log(response);
+      // return;
       console.log("Registration step 3 successful:", response.data);
       sessionStorage.clear();
       localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
