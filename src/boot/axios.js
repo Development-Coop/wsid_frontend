@@ -25,6 +25,7 @@ const api = axios.create({
   },
 });
 
+
 export default boot(({ app, router }) => {
   // Request Interceptor: Add Authorization Header
   api.interceptors.request.use(
@@ -62,7 +63,7 @@ export default boot(({ app, router }) => {
         try {
           // Attempt to refresh the token
           const refreshToken = localStorage.getItem("refresh-token");
-          const response = await axios.post("https://wsi-be.netlify.app/api/auth/refresh-token", {
+          const response = await axios.post("https://wsid-service.netlify.app/api/auth/refresh-token", {
             refreshToken,
           });
           // for testing in localhost
