@@ -61,7 +61,7 @@ export default boot(({ app, router }) => {
         try {
           // Attempt to refresh the token
           const refreshToken = localStorage.getItem("refresh-token");
-          const response = await axios.post("https://wsid-service.netlify.app/api/auth/refresh-token", {
+          const response = await axios.post(process.env.VUE_APP_API_URL + "/auth/refresh-token", {
             refreshToken,
           });
           // for testing in localhost
