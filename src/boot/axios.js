@@ -17,12 +17,11 @@ function onRefreshed(token) {
 
 // Create a custom axios instance
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL: "https://wsid-service.netlify.app/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
 
 export default boot(({ app, router }) => {
   // Request Interceptor: Add Authorization Header
@@ -44,7 +43,10 @@ export default boot(({ app, router }) => {
       const originalRequest = error.config;
 
       // If 401 Unauthorized, attempt to refresh the token
-      if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+      if (
+        (error.response?.status === 401 || error.response?.status === 403) &&
+        !originalRequest._retry
+      ) {
         originalRequest._retry = true; // Prevent infinite retries
 
         // If a refresh token request is already in progress, queue the requests
@@ -61,9 +63,12 @@ export default boot(({ app, router }) => {
         try {
           // Attempt to refresh the token
           const refreshToken = localStorage.getItem("refresh-token");
-          const response = await axios.post(process.env.VUE_APP_API_URL + "/auth/refresh-token", {
-            refreshToken,
-          });
+          const response = await axios.post(
+            "https://wsid-service.netlify.app/api/auth/refresh-token",
+            {
+              refreshToken,
+            }
+          );
           // for testing in localhost
           // const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
           //   refreshToken,
@@ -82,14 +87,23 @@ export default boot(({ app, router }) => {
           return api(originalRequest);
         } catch (refreshError) {
           // Handle refresh token failure
-          if (refreshError.response?.status === 401 || refreshError.response?.status === 403) {
+          if (
+            refreshError.response?.status === 401 ||
+            refreshError.response?.status === 403
+          ) {
             localStorage.clear();
             const isMobile = window.innerWidth <= 768;
             const redirectTo = router.currentRoute.value.fullPath;
             if (isMobile) {
-              router.push({ name: "login", query: { expired: "true", redirectTo } }); // Redirect to mobile login route
+              router.push({
+                name: "login",
+                query: { expired: "true", redirectTo },
+              }); // Redirect to mobile login route
             } else {
-              router.push({ name: "web-login", query: { expired: "true", redirectTo } }); // Redirect to desktop login route
+              router.push({
+                name: "web-login",
+                query: { expired: "true", redirectTo },
+              }); // Redirect to desktop login route
             }
           }
           return Promise.reject(refreshError);
