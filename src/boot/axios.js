@@ -17,9 +17,7 @@ function onRefreshed(token) {
 
 // Create a custom axios instance
 const api = axios.create({
-  baseURL: "https://wsi-be.netlify.app/api",
-  // for testing in localhost
-  // baseURL: "http://localhost:3000/api",
+  baseURL: process.env.VUE_APP_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
