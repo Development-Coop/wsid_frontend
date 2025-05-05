@@ -43,7 +43,7 @@
           <p class="text-grey-9 q-mb-sm" style="font-weight: 600">
             <span>{{ postDetails?.title }}</span>
           </p>
-          <p>{{ postDetails?.description }}</p>
+          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;">{{ postDetails?.description }}</p>
 
           <div
             v-if="postDetails?.images?.length > 0"

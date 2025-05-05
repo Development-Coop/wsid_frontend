@@ -134,7 +134,7 @@
         display: grid;
         .registration-actions{
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: 1fr;
           justify-content: center;
           align-items: center;
           padding: 0px 16px 24px 16px;

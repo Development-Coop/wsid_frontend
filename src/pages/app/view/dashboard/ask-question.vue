@@ -30,12 +30,25 @@
 
       <div :class="{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup}">
         <div class="q-gutter-y-md column">
-          <q-input v-model="title" outlined label="Question" />
+          <q-input 
+            v-model="title" 
+            outlined 
+            label="Question"
+            maxlength="70"
+            counter
+            :rules="[
+              val => val.length >= 3 || 'Question must be at least 3 characters',
+              val => val.length <= 70 || 'Question cannot exceed 70 characters'
+            ]"
+          />
           <q-input
             v-model="description"
             type="textarea"
             outlined
-            label="Description"
+            label="Description (Optional)"
+            maxlength="1000"
+            counter
+            class="description-textarea"
           >
             <template #append>
               <q-btn
@@ -85,7 +98,13 @@
           <q-input
             v-model="option.text"
             outlined
-            :label="'Option ' + (index + 1)"
+            :label="String.fromCharCode(65 + index) + '.'"
+            maxlength="100"
+            counter
+            :rules="[
+              val => val.length >= 2 || 'Choice must be at least 2 characters',
+              val => val.length <= 100 || 'Choice cannot exceed 100 characters'
+            ]"
           >
             <template #append>
               <q-img
@@ -110,6 +129,15 @@
                 icon="o_image"
                 @click="uploadOptionImage(index)"
               />
+              <q-btn
+                v-if="options.length > 2"
+                round
+                dense
+                flat
+                icon="delete"
+                color="negative"
+                @click="removeChoice(index)"
+              />
             </template>
           </q-input>
         </div>
@@ -122,9 +150,10 @@
         color="grey-12"
         text-color="black"
         class="w-full q-mt-md"
+        :disable="options.length >= 4"
         @click="addOption"
       >
-        + Add Option
+        + Add Choice
       </q-btn>
       <div class="q-mt-lg flex self-end justify-center">
         <q-btn
@@ -225,7 +254,21 @@ const uploadDescriptionImages = () => {
   input.accept = "image/*";
   input.onchange = async (event) => {
     const files = Array.from(event.target.files);
-    for (const file of files) {
+    const remainingSlots = 4 - descriptionImages.value.length;
+    
+    if (remainingSlots <= 0) {
+      $q.notify({
+        color: "negative",
+        message: "Maximum 4 images allowed in description",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      return;
+    }
+
+    const filesToProcess = files.slice(0, remainingSlots);
+    for (const file of filesToProcess) {
       try {
         const compressedBlob = await compressImage(file, 1280, 720);
         const reader = new FileReader();
@@ -236,6 +279,16 @@ const uploadDescriptionImages = () => {
       } catch (error) {
         console.error("Image compression failed", error);
       }
+    }
+
+    if (files.length > remainingSlots) {
+      $q.notify({
+        color: "warning",
+        message: `Only ${remainingSlots} image(s) were added. Maximum 4 images allowed.`,
+        position: "top",
+        icon: "warning",
+        autoClose: true,
+      });
     }
   };
   input.click();
@@ -272,12 +325,100 @@ const removeOptionImage = (index) => {
 };
 
 const addOption = () => {
-  options.value.push({ text: "", image: null }); // Add a new empty option
+  if (options.value.length < 4) {
+    options.value.push({ text: "", image: null }); // Add a new empty option
+  }
+};
+
+const removeChoice = (index) => {
+  if (options.value.length > 2) {
+    options.value.splice(index, 1);
+  }
 };
 
 const createPost = async () => {
   Loading.show();
   try {
+    // Validate title
+    if (!title.value.trim()) {
+      $q.notify({
+        color: "negative",
+        message: "Question should not be empty",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
+    if (title.value.trim().length < 3) {
+      $q.notify({
+        color: "negative",
+        message: "Question must be at least 3 characters",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
+    if (title.value.trim().length > 70) {
+      $q.notify({
+        color: "negative",
+        message: "Question cannot exceed 70 characters",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
+    // Validate number of options
+    if (options.value.length < 2) {
+      $q.notify({
+        color: "negative",
+        message: "Please add at least 2 choices",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
+    if (options.value.length > 4) {
+      $q.notify({
+        color: "negative",
+        message: "Maximum 4 choices allowed",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
+    // Validate that all options have text and meet length requirements
+    const invalidOptions = options.value.filter(option => {
+      const text = option.text.trim();
+      return !text || text.length < 2 || text.length > 100;
+    });
+
+    if (invalidOptions.length > 0) {
+      $q.notify({
+        color: "negative",
+        message: "Each choice must be between 2 and 100 characters",
+        position: "top",
+        icon: "error",
+        autoClose: true,
+      });
+      Loading.hide();
+      return;
+    }
+
     // Prepare form data
     const formData = new FormData();
 
@@ -302,6 +443,7 @@ const createPost = async () => {
         // Return the option object structure for the backend
         return {
           text: option.text,
+          order: index + 1, // Add order field to maintain sequence
           ...(option.image ? { fileName: fileFieldname } : {}),
           ...(option?.id ? { id: option.id } : {}),
         };
@@ -412,7 +554,6 @@ onMounted(async () => {
   gap: 16px;
   &-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     grid-gap: 16px;
   }
 }
@@ -420,5 +561,10 @@ onMounted(async () => {
   display: grid;
   grid-template-rows: auto !important;
   min-height: fit-content !important;
+}
+.description-textarea {
+  :deep(.q-field__native) {
+    white-space: pre-wrap !important;
+  }
 }
 </style>

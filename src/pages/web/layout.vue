@@ -374,5 +374,6 @@ const toggleRightDrawer = () => {
   border-radius: 50%;
   border: 2px solid #eaeaea;
   object-fit: cover;
+  flex-shrink: 0;
 }
 </style>

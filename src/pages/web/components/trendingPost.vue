@@ -351,8 +351,11 @@ const onDelete = async () => {
   .post-images-grid {
     display: grid;
     gap: 4px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     margin-top: 8px;
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .image-wrapper {
@@ -396,7 +399,6 @@ const onDelete = async () => {
 .image-item {
   width: 100px; /* Adjust as needed */
   height: 100px; /* Adjust as needed */
-  margin: 8px;
   border-radius: 8px;
   object-fit: cover;
 }

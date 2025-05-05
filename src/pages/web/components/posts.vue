@@ -56,7 +56,7 @@
     </p>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
+    <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;" @click.self="openPost('')">
       <span v-if="postContent">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
@@ -344,8 +344,11 @@ const onDelete = async () => {
   .post-images-grid {
     display: grid;
     gap: 4px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     margin-top: 8px;
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .image-wrapper {
@@ -389,7 +392,6 @@ const onDelete = async () => {
 .image-item {
   width: 100px; /* Adjust as needed */
   height: 100px; /* Adjust as needed */
-  margin: 8px;
   border-radius: 8px;
   object-fit: cover;
 }

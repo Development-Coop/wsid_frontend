@@ -264,6 +264,7 @@ html, body {
   border-radius: 50%;
   border: 2px solid #eaeaea;
   object-fit: cover;
+  flex-shrink: 0;
 }
 .ask-question-btn {
   font-weight: 500;
