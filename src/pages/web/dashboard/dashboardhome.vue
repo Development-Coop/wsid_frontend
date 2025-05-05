@@ -2,6 +2,22 @@
   <div class="q-pa-lg" style="max-width: 600px;margin: 0 auto;">
     <div class="post-container">
       <div class="post-wrapper">
+        <template v-if="isLoading && posts.length === 0">
+          <div v-for="n in 5" :key="n" class="skeleton-post q-pa-md">
+            <div class="flex no-wrap">
+              <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+              <div class="full-width">
+                <q-skeleton type="text" width="40%" class="q-mb-sm" />
+                <q-skeleton type="text" width="60%" class="q-mb-sm" />
+                <q-skeleton type="text" width="80%" class="q-mb-md" />
+                <div class="flex q-gutter-md">
+                  <q-skeleton type="text" width="20%" />
+                  <q-skeleton type="text" width="20%" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
         <Posts
           v-for="post in posts"
           :key="post.id"
@@ -18,7 +34,7 @@
           :comments="post.commentsCount"
           @fetch-new-post="fetchNewPosts()"
         />
-        <q-spinner v-if="isLoading" color="primary" />
+        <q-spinner v-if="isLoading && posts.length > 0" color="primary" />
       </div>
     </div>
   </div>
@@ -240,6 +256,11 @@ html, body {
 .post-wrapper {
   display: grid;
   gap: 26px;
+}
+.skeleton-post {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .q-spinner {
   display: block;

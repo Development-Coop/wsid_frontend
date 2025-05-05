@@ -13,319 +13,342 @@
         @click="router.back()"
       />
     </div>
-    <div class="q-pa-md">
-      <div class="flex no-wrap post">
-        <q-img
-          class="post-img"
-          :src="postDetails?.user?.profilePicUrl"
-          spinner-color="primary"
-          spinner-size="22px"
-        >
-          <template #error>
-            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
-          </template>
-        </q-img>
-        <div style="flex-grow: 1">
-          <p style="margin-bottom: 4px;">
-            <span class="text-weight-medium">{{
-              postDetails?.user?.name
-            }}</span>
-            <!-- Dynamic username -->
-            <span v-show="postDetails?.user?.name" class="text-grey-7"> • {{ calculateTimeAgo(postDetails.createdAt) }}</span>
-            <!-- Dynamic time -->
-          </p>
-          <p class="text-grey-9 q-mb-sm" style="font-weight: 600;">
-            <span>{{ postDetails?.title }}</span>
-          </p>
-          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;">{{ postDetails?.description }}</p>
-
-          <div
-            v-if="postDetails?.images?.length > 0"
-            class="flex q-gutter-md q-mt-md"
-            style="border-top: 1px solid #dddddd"
-          >
-            <div
-              v-for="(image, index) in postDetails?.images"
-              :key="index"
-              class="image-wrapper"
-            >
-              <q-img
-                loading="lazy"
-                :src="image"
-                spinner-color="primary"
-                spinner-size="20px"
-                fit="cover"
-                style="
-                width: 58px;
-                height: 58px;
-                border-radius: 4px;
-                cursor: pointer;
-              "
-                @click="openImage(image)"
-              />
-            </div>
+    <template v-if="isLoading">
+      <div class="q-pa-md">
+        <div class="flex no-wrap post">
+          <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+          <div class="full-width">
+            <q-skeleton type="text" width="30%" class="q-mb-sm" />
+            <q-skeleton type="text" width="60%" class="q-mb-sm" />
+            <q-skeleton type="text" width="80%" class="q-mb-md" />
           </div>
         </div>
       </div>
-    </div>
-    <q-card flat style="border-top: 1px solid #dddddd">
-      <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab name="Votes" :label="`Votes (${totalVotes})`" />
-        <q-tab 
-          name="Comments" 
-          :label="`Comments (${totalComments})`"
-          :disable="!selectedVote"
-        />
-      </q-tabs>
+      <q-card flat style="border-top: 1px solid #dddddd">
+        <div class="q-pa-lg">
+          <div class="q-gutter-md">
+            <div v-for="n in 4" :key="n" class="skeleton-vote-option">
+              <q-skeleton type="text" width="100%" />
+            </div>
+          </div>
+        </div>
+      </q-card>
+    </template>
+    <template v-else>
+      <div class="q-pa-md">
+        <div class="flex no-wrap post">
+          <q-img
+            class="post-img"
+            :src="postDetails?.user?.profilePicUrl"
+            spinner-color="primary"
+            spinner-size="22px"
+          >
+            <template #error>
+              <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+            </template>
+          </q-img>
+          <div style="flex-grow: 1">
+            <p style="margin-bottom: 4px;">
+              <span class="text-weight-medium">{{
+                postDetails?.user?.name
+              }}</span>
+              <!-- Dynamic username -->
+              <span v-show="postDetails?.user?.name" class="text-grey-7"> • {{ calculateTimeAgo(postDetails.createdAt) }}</span>
+              <!-- Dynamic time -->
+            </p>
+            <p class="text-grey-9 q-mb-sm" style="font-weight: 600;">
+              <span>{{ postDetails?.title }}</span>
+            </p>
+            <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;">{{ postDetails?.description }}</p>
 
-      <q-separator />
-
-      <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
-        <q-tab-panel class="q-pa-lg" name="Votes">
-          <div v-if="!selectedVote" class="q-gutter-md">
-            <q-card
-              v-for="option in postDetails.options"
-              :key="option.id"
-              class="vote-options"
-              :class="{ 
-                'selected-option': tempSelectedVote === option.id,
-                'disabled-option': !!selectedVote
-              }"
-              :style="{
-                '--option-color': option.trackColor,
-                'background': tempSelectedVote === option.id ? option.trackColor : 'transparent'
-              }"
-              flat
-              @click="!!!selectedVote && showVotesResult(option.id)"
+            <div
+              v-if="postDetails?.images?.length > 0"
+              class="flex q-gutter-md q-mt-md"
+              style="border-top: 1px solid #dddddd"
             >
-              {{ option.text }}
-              <q-img
-                loading="lazy"
-                :src="option.image"
-                spinner-color="primary"
-                spinner-size="20px"
-                fit="cover"
-                style="
+              <div
+                v-for="(image, index) in postDetails?.images"
+                :key="index"
+                class="image-wrapper"
+              >
+                <q-img
+                  loading="lazy"
+                  :src="image"
+                  spinner-color="primary"
+                  spinner-size="20px"
+                  fit="cover"
+                  style="
                   width: 58px;
                   height: 58px;
                   border-radius: 4px;
                   cursor: pointer;
                 "
-                @click.stop="openImage(option.image)"
-              />
-            </q-card>
-
-            <!-- Add Submit Button -->
-            <div class="submit-vote-btn q-mt-md">
-              <q-btn
-                color="primary"
-                label="Submit Vote"
-                class="full-width"
-                no-caps
-                unelevated
-                :disable="!tempSelectedVote"
-                @click="submitVote"
-              />
-            </div>
-          </div>
-          <div v-else :class="['q-gutter-md', {'option-container-grid': isPopup && postDetails?.options?.length > 2}]">
-            <q-card
-              v-for="option in postDetails.options"
-              :key="option.id"
-              class="votes-result"
-              flat
-            >
-              <div class="flex items-center justify-between w-full">
-                <span class="q-mr-md">{{ option.text }}</span>
-                <span class="q-ml-auto q-mr-md">{{ option.percentage }}%</span>
-                <span>•</span>
-                <span class="q-ml-md">{{ option.votesCount }} Votes</span>
+                  @click="openImage(image)"
+                />
               </div>
-              <q-linear-progress
-                size="8px"
-                :value="option.percentage / 100"
-                :color="option.trackColor"
-                :track-color="option.trackColor"
-              />
-            </q-card>
-          </div>
-        </q-tab-panel>
-        <q-tab-panel class="q-pa-lg" name="Comments">
-          <div v-if="!selectedVote" class="text-center q-mt-md">
-            <p class="text-grey-7">Please vote to see and add comments</p>
-          </div>
-          <template v-else>
-            <div v-if="comments?.length === 0" :class="['text-center', { 'q-mt-md': !isPopup }]">
-              <p class="text-grey-7">Break the silence, leave a comment!</p>
             </div>
-            <div v-else class="comments-list">
-              <div v-for="comment in comments" :key="comment.id" class="flex no-wrap post">
+          </div>
+        </div>
+      </div>
+      <q-card flat style="border-top: 1px solid #dddddd">
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <q-tab name="Votes" :label="`Votes (${totalVotes})`" />
+          <q-tab 
+            name="Comments" 
+            :label="`Comments (${totalComments})`"
+            :disable="!selectedVote"
+          />
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
+          <q-tab-panel class="q-pa-lg" name="Votes">
+            <div v-if="!selectedVote" class="q-gutter-md">
+              <q-card
+                v-for="option in postDetails.options"
+                :key="option.id"
+                class="vote-options"
+                :class="{ 
+                  'selected-option': tempSelectedVote === option.id,
+                  'disabled-option': !!selectedVote
+                }"
+                :style="{
+                  '--option-color': option.trackColor,
+                  'background': tempSelectedVote === option.id ? option.trackColor : 'transparent'
+                }"
+                flat
+                @click="!!!selectedVote && showVotesResult(option.id)"
+              >
+                {{ option.text }}
                 <q-img
-                  class="post-img"
-                  :src="comment?.createdBy?.profilePicUrl"
+                  loading="lazy"
+                  :src="option.image"
                   spinner-color="primary"
-                  spinner-size="22px"
-                >
-                  <template #error>
-                    <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
-                  </template>
-                </q-img>
-                <div style="flex-grow: 1">
-                  <p>
-                    <span class="text-weight-medium">{{ comment?.createdBy?.name }}</span>
-                    <span class="text-grey-7"> • {{ calculateTimeAgo(comment?.createdAt) }}</span>
-                  </p>
-                  <!-- <p class="text-weight-medium text-weight-bold">{{ comment.text }}</p> -->
-                  <p class="text-grey-9 q-mt-xs">
-                    <span>{{ comment?.text }}</span>
-                  </p>
-                  <p class="flex items-center q-mt-sm q-mb-md">
-                    <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
-                    <span 
-                      class="like-container q-mr-md flex items-center cursor-pointer"
-                      @click="toggleLike(comment?.id)"
-                    >
-                      <div 
-                        class="like-icon-wrapper q-mr-sm" 
-                        :class="{ 'liked-outline': comment?.hasLiked }"
-                      >
-                        <img
-                          :src="happyIcon"
-                          alt="like-icon"
-                          style="height: 20px;"
-                        />
-                      </div>
-                      <span
-                        :class="{ 'liked-text': comment?.hasLiked }"
-                      >
-                        {{ comment?.likesCount }}
-                      </span>
-                    </span>
-                    <span 
-                      class="like-container q-mr-md flex items-center cursor-pointer"
-                      @click="toggleDislike(comment?.id)"
-                    >
-                      <div 
-                        class="like-icon-wrapper q-mr-sm" 
-                        :class="{ 'liked-outline': comment?.hasDisliked }"
-                      >
-                        <img
-                          :src="sadIcon"
-                          alt="dislike-icon"
-                          style="height: 20px;"
-                        />
-                      </div>
-                      <span
-                        :class="{ 'liked-text': comment?.hasDisliked }"
-                      >
-                        {{ comment?.dislikesCount }}
-                      </span>
-                    </span>
-                  </p>
-                  <div
-                    v-for="reply in (comment.showAllReplies ? comment.replies : comment.replies.slice(0, 1))"
-                    :key="reply.id"
-                    class="flex no-wrap post"
+                  spinner-size="20px"
+                  fit="cover"
+                  style="
+                    width: 58px;
+                    height: 58px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                  "
+                  @click.stop="openImage(option.image)"
+                />
+              </q-card>
+
+              <!-- Add Submit Button -->
+              <div class="submit-vote-btn q-mt-md">
+                <q-btn
+                  color="primary"
+                  label="Submit Vote"
+                  class="full-width"
+                  no-caps
+                  unelevated
+                  :disable="!tempSelectedVote"
+                  @click="submitVote"
+                />
+              </div>
+            </div>
+            <div v-else :class="['q-gutter-md', {'option-container-grid': isPopup && postDetails?.options?.length > 2}]">
+              <q-card
+                v-for="option in postDetails.options"
+                :key="option.id"
+                class="votes-result"
+                flat
+              >
+                <div class="flex items-center justify-between w-full">
+                  <span class="q-mr-md">{{ option.text }}</span>
+                  <span class="q-ml-auto q-mr-md">{{ option.percentage }}%</span>
+                  <span>•</span>
+                  <span class="q-ml-md">{{ option.votesCount }} Votes</span>
+                </div>
+                <q-linear-progress
+                  size="8px"
+                  :value="option.percentage / 100"
+                  :color="option.trackColor"
+                  :track-color="option.trackColor"
+                />
+              </q-card>
+            </div>
+          </q-tab-panel>
+          <q-tab-panel class="q-pa-lg" name="Comments">
+            <div v-if="!selectedVote" class="text-center q-mt-md">
+              <p class="text-grey-7">Please vote to see and add comments</p>
+            </div>
+            <template v-else>
+              <div v-if="comments?.length === 0" :class="['text-center', { 'q-mt-md': !isPopup }]">
+                <p class="text-grey-7">Break the silence, leave a comment!</p>
+              </div>
+              <div v-else class="comments-list">
+                <div v-for="comment in comments" :key="comment.id" class="flex no-wrap post">
+                  <q-img
+                    class="post-img"
+                    :src="comment?.createdBy?.profilePicUrl"
+                    spinner-color="primary"
+                    spinner-size="22px"
                   >
-                    <q-img
-                      class="post-img"
-                      :src="reply.createdBy.profilePicUrl"
-                      spinner-color="primary"
-                      spinner-size="22px"
+                    <template #error>
+                      <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                    </template>
+                  </q-img>
+                  <div style="flex-grow: 1">
+                    <p>
+                      <span class="text-weight-medium">{{ comment?.createdBy?.name }}</span>
+                      <span class="text-grey-7"> • {{ calculateTimeAgo(comment?.createdAt) }}</span>
+                    </p>
+                    <!-- <p class="text-weight-medium text-weight-bold">{{ comment.text }}</p> -->
+                    <p class="text-grey-9 q-mt-xs">
+                      <span>{{ comment?.text }}</span>
+                    </p>
+                    <p class="flex items-center q-mt-sm q-mb-md">
+                      <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                      <span 
+                        class="like-container q-mr-md flex items-center cursor-pointer"
+                        @click="toggleLike(comment?.id)"
+                      >
+                        <div 
+                          class="like-icon-wrapper q-mr-sm" 
+                          :class="{ 'liked-outline': comment?.hasLiked }"
+                        >
+                          <img
+                            :src="happyIcon"
+                            alt="like-icon"
+                            style="height: 20px;"
+                          />
+                        </div>
+                        <span
+                          :class="{ 'liked-text': comment?.hasLiked }"
+                        >
+                          {{ comment?.likesCount }}
+                        </span>
+                      </span>
+                      <span 
+                        class="like-container q-mr-md flex items-center cursor-pointer"
+                        @click="toggleDislike(comment?.id)"
+                      >
+                        <div 
+                          class="like-icon-wrapper q-mr-sm" 
+                          :class="{ 'liked-outline': comment?.hasDisliked }"
+                        >
+                          <img
+                            :src="sadIcon"
+                            alt="dislike-icon"
+                            style="height: 20px;"
+                          />
+                        </div>
+                        <span
+                          :class="{ 'liked-text': comment?.hasDisliked }"
+                        >
+                          {{ comment?.dislikesCount }}
+                        </span>
+                      </span>
+                    </p>
+                    <div
+                      v-for="reply in (comment.showAllReplies ? comment.replies : comment.replies.slice(0, 1))"
+                      :key="reply.id"
+                      class="flex no-wrap post"
                     >
-                      <template #error>
-                        <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
-                      </template>
-                    </q-img>
-                    <div style="flex-grow: 1">
-                      <p>
-                        <span class="text-weight-medium">{{ reply?.createdBy?.name }}</span>
-                        <span class="text-grey-7"> • {{ calculateTimeAgo(reply?.createdAt) }}</span>
-                      </p>
-                      <p class="text-grey-9 q-mb-xs">
-                        <span>{{ reply?.text }}</span>
-                      </p>
-                      <p class="flex items-center q-mt-sm q-mb-md">
-                        <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
-                        <span 
-                          class="like-container q-mr-md flex items-center cursor-pointer"
-                          @click="toggleLike(reply.id)"
-                        >
-                          <div 
-                            class="like-icon-wrapper q-mr-sm" 
-                            :class="{ 'liked-outline': reply?.hasLiked }"
+                      <q-img
+                        class="post-img"
+                        :src="reply.createdBy.profilePicUrl"
+                        spinner-color="primary"
+                        spinner-size="22px"
+                      >
+                        <template #error>
+                          <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                        </template>
+                      </q-img>
+                      <div style="flex-grow: 1">
+                        <p>
+                          <span class="text-weight-medium">{{ reply?.createdBy?.name }}</span>
+                          <span class="text-grey-7"> • {{ calculateTimeAgo(reply?.createdAt) }}</span>
+                        </p>
+                        <p class="text-grey-9 q-mb-xs">
+                          <span>{{ reply?.text }}</span>
+                        </p>
+                        <p class="flex items-center q-mt-sm q-mb-md">
+                          <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                          <span 
+                            class="like-container q-mr-md flex items-center cursor-pointer"
+                            @click="toggleLike(reply.id)"
                           >
-                            <img
-                              :src="happyIcon"
-                              alt="like-icon"
-                              style="height: 20px;"
-                            />
-                          </div>
-                          <span
-                            :class="[{ 'liked-text': reply?.hasLiked }]"
-                          >
-                            {{ reply?.likesCount }}
+                            <div 
+                              class="like-icon-wrapper q-mr-sm" 
+                              :class="{ 'liked-outline': reply?.hasLiked }"
+                            >
+                              <img
+                                :src="happyIcon"
+                                alt="like-icon"
+                                style="height: 20px;"
+                              />
+                            </div>
+                            <span
+                              :class="[{ 'liked-text': reply?.hasLiked }]"
+                            >
+                              {{ reply?.likesCount }}
+                            </span>
                           </span>
-                        </span>
-                        <span 
-                          class="like-container q-mr-md flex items-center cursor-pointer"
-                          @click="toggleDislike(reply?.id)"
-                        >
-                          <div 
-                            class="like-icon-wrapper q-mr-sm" 
-                            :class="{ 'liked-outline': reply?.hasDisliked }"
+                          <span 
+                            class="like-container q-mr-md flex items-center cursor-pointer"
+                            @click="toggleDislike(reply?.id)"
                           >
-                            <img
-                              :src="sadIcon"
-                              alt="dislike-icon"
-                              style="height: 20px;"
-                            />
-                          </div>
-                          <span
-                            :class="{ 'liked-text': reply?.hasDisliked }"
-                          >
-                            {{ reply?.dislikesCount }}
+                            <div 
+                              class="like-icon-wrapper q-mr-sm" 
+                              :class="{ 'liked-outline': reply?.hasDisliked }"
+                            >
+                              <img
+                                :src="sadIcon"
+                                alt="dislike-icon"
+                                style="height: 20px;"
+                              />
+                            </div>
+                            <span
+                              :class="{ 'liked-text': reply?.hasDisliked }"
+                            >
+                              {{ reply?.dislikesCount }}
+                            </span>
                           </span>
-                        </span>
-                      </p>
+                        </p>
+                      </div>
                     </div>
+                    <button
+                      v-if="comment?.replies?.length > 1"
+                      class="text-md q-mb-md cursor-pointer show-more"
+                      @click="comment.showAllReplies = !comment?.showAllReplies"
+                    >
+                      {{ comment?.showAllReplies ? "Hide replies" : "View more replies" }}
+                    </button>
                   </div>
-                  <button
-                    v-if="comment?.replies?.length > 1"
-                    class="text-md q-mb-md cursor-pointer show-more"
-                    @click="comment.showAllReplies = !comment?.showAllReplies"
-                  >
-                    {{ comment?.showAllReplies ? "Hide replies" : "View more replies" }}
-                  </button>
                 </div>
               </div>
-            </div>
-            <div :class="['q-pa-md','w-full','bg-white', { 'input-container': !isPopup, 'input-container-popup': isPopup }]">
-              <q-input ref="replyInput" v-model="text" maxlength="1000" outlined @keyup.enter="addComment">
-                <template #after>
-                  <q-btn
-                    round
-                    dense
-                    color="primary"
-                    unelevated
-                    icon="north_east"
-                    @click="addComment"
-                  />
-                </template>
-              </q-input>
-            </div>
-          </template>
-        </q-tab-panel>
-      </q-tab-panels>
-    </q-card>
+              <div :class="['q-pa-md','w-full','bg-white', { 'input-container': !isPopup, 'input-container-popup': isPopup }]">
+                <q-input ref="replyInput" v-model="text" maxlength="1000" outlined @keyup.enter="addComment">
+                  <template #after>
+                    <q-btn
+                      round
+                      dense
+                      color="primary"
+                      unelevated
+                      icon="north_east"
+                      @click="addComment"
+                    />
+                  </template>
+                </q-input>
+              </div>
+            </template>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card>
+    </template>
 
     <q-dialog v-model="dialog" @hide="closeDialog">
       <q-card class="image-preview-container">
@@ -347,7 +370,7 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import { ref, onUnmounted, onMounted, nextTick } from "vue";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 
 // Image
@@ -408,6 +431,8 @@ const postDetails = ref({
   options: [],
 });
 
+const isLoading = ref(true);
+
 let interval;
 onMounted(async () => {
   interval = setInterval(() => {
@@ -415,10 +440,9 @@ onMounted(async () => {
   }, 1000); // Update every second
   const postId = route?.query?.postId || props?.postId;
   if (postId) {
-    Loading.show();
     await fetchPostDetails(postId);
     await fetchComments(postId);
-    Loading.hide();
+    isLoading.value = false; // Set loading to false after data is loaded
   }
   const tabValue = route?.query?.tab || props?.tabValue || "Votes";
   if (tabValue) tab.value = tabValue;
@@ -573,7 +597,6 @@ const closeDialog = () => {
 
 const addComment = async () => {
   try {
-    Loading.show();
     const data = {
       "postId": postDetails.value.id,
       "text": text.value,
@@ -594,8 +617,6 @@ const addComment = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 }
 
@@ -618,7 +639,6 @@ const submitVote = async () => {
     }
 
     selectedVote.value = tempSelectedVote.value;
-    Loading.show();
     const data = {
       "postId": postDetails.value.id,
       "optionId": tempSelectedVote.value
@@ -637,8 +657,6 @@ const submitVote = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 </script>
@@ -726,7 +744,7 @@ const submitVote = async () => {
 }
 .option-container-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: auto;
   grid-gap: 16px;
 }
 .input-container {

@@ -83,7 +83,7 @@
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel class="q-pa-lg" name="Posts">
+          <q-tab-panel class="q-py-lg q-px-none" name="Posts">
             <div
               v-if="!posts.length && !isLoading"
               class="text-center flex flex-col justify-center items-center h-full"
@@ -102,8 +102,24 @@
               />
             </div>
             <div v-else :class="['post-wrapper']">
-              <q-spinner v-if="isLoading" color="primary" class="spinner" />
-              <div v-else class="ask-question-container">
+              <template v-if="isLoading && posts.length === 0">
+                <div v-for="n in 5" :key="n" class="skeleton-post q-pa-md">
+                  <div class="flex no-wrap">
+                    <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+                    <div class="full-width">
+                      <q-skeleton type="text" width="40%" class="q-mb-sm" />
+                      <q-skeleton type="text" width="60%" class="q-mb-sm" />
+                      <q-skeleton type="text" width="80%" class="q-mb-md" />
+                      <div class="flex q-gutter-md">
+                        <q-skeleton type="text" width="20%" />
+                        <q-skeleton type="text" width="20%" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <q-spinner v-if="isLoading && posts.length > 0" color="primary" class="spinner" />
+              <!-- <div v-else class="ask-question-container">
                 <q-img
                   :src="user?.profilePic"
                   class="user-avatar"
@@ -121,7 +137,7 @@
                     @click="showPopup = true"
                   />
                 </div>
-              </div>
+              </div> -->
               <Posts
                 v-for="post in posts"
                 :key="post.id"
@@ -143,7 +159,7 @@
           </q-tab-panel>
 
           <q-tab-panel
-            class="q-pa-lg activity-section text-center"
+            class="q-py-lg q-px-none activity-section text-center"
             name="Activity"
           >
             <div class="activity-container">
@@ -408,5 +424,10 @@ onUnmounted(() => {
 }
 .spinner {
   justify-self: center;
+}
+.skeleton-post {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 </style>
