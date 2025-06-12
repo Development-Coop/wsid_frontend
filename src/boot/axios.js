@@ -17,23 +17,31 @@ function onRefreshed(token) {
 
 // Create a custom axios instance
 const api = axios.create({
-  baseURL: "https://wsid-service.netlify.app/api",
+  // baseURL: "https://wsid-service.netlify.app/api",
+  //Uncomment for Local Host
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+
+
 export default boot(({ app, router }) => {
   // Request Interceptor: Add Authorization Header
   api.interceptors.request.use(
     (config) => {
+      console.log('Making request to:', config.baseURL + config.url);
       const token = localStorage.getItem("access-token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+      console.error('Request interceptor error:', error);
+      return Promise.reject(error);
+    }
   );
 
   // Response Interceptor: Handle Errors
@@ -63,16 +71,16 @@ export default boot(({ app, router }) => {
         try {
           // Attempt to refresh the token
           const refreshToken = localStorage.getItem("refresh-token");
-          const response = await axios.post(
-            "https://wsid-service.netlify.app/api/auth/refresh-token",
-            {
-              refreshToken,
-            }
-          );
+          // const response = await axios.post(
+          //   "https://wsid-service.netlify.app/api/auth/refresh-token",
+          //   {
+          //     refreshToken,
+          //   }
+          // );
           // for testing in localhost
-          // const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
-          //   refreshToken,
-          // });
+          const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
+            refreshToken,
+          });
 
           const { accessToken } = response.data;
 

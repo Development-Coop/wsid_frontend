@@ -100,10 +100,10 @@
           align="justify"
           narrow-indicator
         >
-          <q-tab name="Votes" :label="`Votes (${totalVotes})`" />
+          <q-tab name="Votes" :label="`Votes (${localTotalVotes})`" />
           <q-tab 
             name="Comments" 
-            :label="`Comments (${totalComments})`"
+            :label="`Comments (${localTotalComments})`"
             :disable="!selectedVote"
           />
         </q-tabs>
@@ -151,16 +151,17 @@
                   color="primary"
                   label="Submit Vote"
                   class="full-width"
+                  :class="{ 'morphing': isAnimatingResults }"
                   no-caps
                   unelevated
-                  :disable="!tempSelectedVote"
+                  :disable="!tempSelectedVote || isAnimatingResults"
                   @click="submitVote"
                 />
               </div>
             </div>
             <div v-else :class="['q-gutter-md', {'option-container-grid': isPopup && postDetails?.options?.length > 2}]">
               <q-card
-                v-for="option in postDetails.options"
+                v-for="(option, index) in postDetails.options"
                 :key="option.id"
                 class="votes-result"
                 flat
@@ -176,6 +177,8 @@
                   :value="option.percentage / 100"
                   :color="option.trackColor"
                   :track-color="option.trackColor"
+                  :class="{ 'water-ripple-effect': isAnimatingResults }"
+                  :style="{ 'animation-delay': `${index * 150}ms` }"
                 />
               </q-card>
             </div>
@@ -398,6 +401,10 @@ const replyInput = ref(null);
 // Add new ref for temporary selection
 const tempSelectedVote = ref(null);
 
+// Local reactive variables to track counts separately for real-time updates
+const localTotalVotes = ref(0);
+const localTotalComments = ref(0);
+
 const props = defineProps({
   postId: {
     type: String,
@@ -413,7 +420,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["fetch-new-post"]);
+const emit = defineEmits(["fetch-new-post", "question-answered", "update-post"]);
 
 const postDetails = ref({
   id: "",
@@ -537,7 +544,10 @@ const toggleDislike = async (postId) => {
 const fetchComments = async (postId) => {
   try {
     comments.value = await postStore.getCommentsList(postId);
-    totalComments.value = countTotalComments(comments.value);
+    const newCommentCount = countTotalComments(comments.value);
+    totalComments.value = newCommentCount;
+    localTotalComments.value = newCommentCount;
+    
     comments.value = comments.value.map((comment) => ({
       ...comment,
       showAllReplies: false
@@ -573,7 +583,10 @@ const fetchPostDetails = async (postId) => {
       options: data.options || [],
     };
     selectedVote.value = postDetails.value.options.find((option) => option.hasVoted)?.id || "";
-    totalVotes.value = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
+    const newVoteCount = postDetails.value.options.reduce((sum, i) => sum + i.votesCount, 0);
+    totalVotes.value = newVoteCount;
+    localTotalVotes.value = newVoteCount;
+    
     postDetails.value.options = calculateOptionsWithColors(postDetails.value.options, totalVotes.value);
   } catch (error) {
     $q.notify({
@@ -608,7 +621,12 @@ const addComment = async () => {
     await fetchComments(postDetails.value.id);
     text.value = "";
     commentParentId.value = null;
-    emit("fetch-new-post");
+    
+    // Emit the updated comment count to parent components
+    const postId = route?.query?.postId || props?.postId;
+    emit('update-post', postId, { 
+      commentsCount: localTotalComments.value
+    });
   } catch (e) {
     $q.notify({
       color: "negative",
@@ -625,7 +643,9 @@ const showVotesResult = (option) => {
   tempSelectedVote.value = option; // Just store the selection temporarily
 };
 
-// Add new function to handle final submission
+const isAnimatingResults = ref(false);
+
+// Modified submitVote function with water ripple animation
 const submitVote = async () => {
   try {
     if (!tempSelectedVote.value) {
@@ -638,18 +658,49 @@ const submitVote = async () => {
       return;
     }
 
+    // Button morphing animation
+    const submitButton = document.querySelector('.submit-vote-btn .q-btn');
+    if (submitButton) {
+      submitButton.classList.add('morphing');
+    }
+
     selectedVote.value = tempSelectedVote.value;
     const data = {
       "postId": postDetails.value.id,
       "optionId": tempSelectedVote.value
     }
+    
     await postStore.createVote(data);
     const postId = route?.query?.postId || props?.postId;
     if (postId) {
       await fetchPostDetails(postId);
     }
-    emit("fetch-new-post");
+    
+    // Trigger water ripple animation after results load
+    setTimeout(() => {
+      animateResults();
+    }, 300);
+    
+    emit('update-post', postId, { 
+      hasVoted: true, 
+      votesCount: localTotalVotes.value
+    });
+    emit('question-answered');
+    
+    // Clean up button animation
+    setTimeout(() => {
+      if (submitButton) {
+        submitButton.classList.remove('morphing');
+      }
+    }, 1500);
+    
   } catch (e) {
+    // Clean up button animation on error
+    const submitButton = document.querySelector('.submit-vote-btn .q-btn');
+    if (submitButton) {
+      submitButton.classList.remove('morphing');
+    }
+    
     $q.notify({
       color: "negative",
       message: "Please try again.",
@@ -658,6 +709,41 @@ const submitVote = async () => {
       autoClose: true,
     });
   }
+};
+
+// Water ripple animation function
+const animateResults = () => {
+  isAnimatingResults.value = true;
+  
+  // Get all progress bars and animate them with staggered timing
+  const progressBars = document.querySelectorAll('.votes-result .q-linear-progress');
+  
+  progressBars.forEach((bar, index) => {
+    setTimeout(() => {
+      // Add water ripple effect
+      bar.classList.add('water-ripple-effect');
+      
+      // Reset and animate the Quasar progress bar
+      const progressTrack = bar.querySelector('.q-linear-progress__track');
+      if (progressTrack) {
+        progressTrack.style.transform = 'scaleX(0)';
+        progressTrack.style.transformOrigin = 'left';
+        
+        setTimeout(() => {
+          progressTrack.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+          progressTrack.style.transform = 'scaleX(1)';
+        }, 50);
+      }
+    }, index * 150); // Stagger each bar by 150ms
+  });
+  
+  // Clean up animation state
+  setTimeout(() => {
+    isAnimatingResults.value = false;
+    progressBars.forEach(bar => {
+      bar.classList.remove('water-ripple-effect');
+    });
+  }, 2500);
 };
 </script>
 
@@ -694,16 +780,19 @@ const submitVote = async () => {
   background: linear-gradient(to right, var(--option-color) 0%, var(--option-color) 50%, transparent 50%);
   background-size: 200% 100%;
   background-position: 100% 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: #000;
 
   &:hover {
     background-position: 0 0;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   &.selected-option {
     background-color: var(--option-color);
     color: #fff;
+    animation: selection-bounce 0.6s ease-out;
   }
 }
 .votes-result {
@@ -714,10 +803,54 @@ const submitVote = async () => {
   border-radius: 8px;
   padding: 10px;
   font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  
   .q-linear-progress {
     position: absolute;
     bottom: 0;
     left: 0px;
+    overflow: hidden;
+    
+    // Water ripple effect
+    &.water-ripple-effect {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255,255,255,0.7), 
+          transparent
+        );
+        animation: water-shimmer 1.5s ease-out;
+        z-index: 2;
+        pointer-events: none;
+      }
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+        animation: water-ripple 1.2s ease-out;
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 1;
+        pointer-events: none;
+      }
+    }
+    
+    // Ensure Quasar's track is visible
+    :deep(.q-linear-progress__track) {
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: left;
+    }
   }
 }
 
@@ -781,6 +914,21 @@ const submitVote = async () => {
   position: sticky;
   bottom: 16px;
   z-index: 1;
+  
+  .q-btn {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    &.morphing {
+      background: linear-gradient(45deg, #4ecdc4, #45b7d1) !important;
+      animation: button-morph 1.5s ease-in-out;
+      transform: scale(1.05);
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+  }
 }
 
 .image-preview-container {
@@ -800,5 +948,91 @@ const submitVote = async () => {
     min-width: 500px;
     max-width: 90vw;
   }
+}
+
+@keyframes water-shimmer {
+  0% { 
+    left: -100%; 
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% { 
+    left: 100%; 
+    opacity: 0;
+  }
+}
+
+@keyframes water-ripple {
+  0% { 
+    transform: translate(-50%, -50%) scale(0); 
+    opacity: 1; 
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1); 
+    opacity: 0; 
+  }
+}
+
+// Button morphing animation
+@keyframes button-morph {
+  0% { 
+    border-radius: 12px; 
+    transform: scale(1.05);
+  }
+  25% { 
+    border-radius: 50px; 
+    transform: scale(0.98);
+  }
+  50% { 
+    border-radius: 12px; 
+    transform: scale(1.08);
+  }
+  75% { 
+    border-radius: 50px; 
+    transform: scale(1.02);
+  }
+  100% { 
+    border-radius: 12px; 
+    transform: scale(1.05);
+  }
+}
+
+// Selection bounce animation
+@keyframes selection-bounce {
+  0% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05) translateY(-2px);
+  }
+  100% { 
+    transform: scale(1.02) translateY(-1px);
+  }
+}
+
+// Keep all your existing styles unchanged
+.vote-options.disabled-option {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+// Add smooth transitions to existing elements
+.q-linear-progress {
+  transition: all 0.3s ease;
+}
+
+// Ensure animations work well with Quasar's deep selectors
+:deep(.q-linear-progress__track) {
+  will-change: transform;
+}
+
+:deep(.q-btn__content) {
+  transition: all 0.3s ease;
 }
 </style>

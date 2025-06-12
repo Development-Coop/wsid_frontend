@@ -20,6 +20,7 @@
           </div>
         </q-toolbar-title>
         <q-btn
+          class="gt-xs"
           style="
             background-color: black;
             color: #fff;
@@ -44,7 +45,6 @@
           <q-icon size="20px" class="q-mr-xs" name="add" color="white"></q-icon>
           Ask Questions
         </q-btn>
-
         <q-img
           :src="user?.profilePic"
           class="user-avatar cursor-pointer q-ml-md"

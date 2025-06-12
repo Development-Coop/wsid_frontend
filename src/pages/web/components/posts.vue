@@ -98,15 +98,15 @@
       style="gap: 10px; border-top: 2px solid #f1f2f5"
       @click.self="openPost('')"
     >
-      <span style="cursor: pointer;" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span> •
-      <span style="cursor: pointer;" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <span style="cursor: pointer;" @click="openPost('')">{{ localVotes }} <span class="text-grey-7">Votes</span></span> •
+      <span style="cursor: pointer;" @click="openPost('Comments')">{{ localComments }} <span class="text-grey-7">Comments</span></span>
       <q-btn
         no-caps
         size="md"
         unelevated
         color="grey-12"
         text-color="black"
-        label="Answer"
+        :label="localHasVoted ? 'See Results' : 'Answer'"
         class="q-ml-auto"
         style="cursor: pointer;"
         @click="openPost('')"
@@ -139,7 +139,8 @@
         :is-popup="true"
         :tab-value="tabValue"
         @close="showViewQuePopup = false"
-        @fetch-new-post="$emit('fetch-new-post')"
+        @question-answered="handleQuestionAnswered"
+        @update-post="handleUpdatePost"
       />
       <q-btn
         flat
@@ -156,7 +157,7 @@
 <script setup>
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading, copyToClipboard } from "quasar";
-import { ref, computed, onUnmounted, onMounted } from "vue";
+import { ref, computed, onUnmounted, onMounted, watch } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
 import fallbackImage from 'src/assets/icons/profile-user.png';
@@ -217,10 +218,32 @@ const props = defineProps({
   userId: {
     type: String,
     default: ""
+  },
+  hasVoted: {
+    type: Boolean,
+    default: false
   }
 });
 
-const emit = defineEmits(["deleted", "edit", "fetch-new-post"]);
+const emit = defineEmits(["deleted", "edit", "update-post"]);
+
+// Local reactive variables to track state changes
+const localHasVoted = ref(props.hasVoted);
+const localVotes = ref(props.votes);
+const localComments = ref(props.comments);
+
+// Watch for prop changes (in case parent updates)
+watch(() => props.hasVoted, (newValue) => {
+  localHasVoted.value = newValue;
+});
+
+watch(() => props.votes, (newValue) => {
+  localVotes.value = newValue;
+});
+
+watch(() => props.comments, (newValue) => {
+  localComments.value = newValue;
+});
 
 const isDialogOpen = ref(false);
 const currentImage = ref("");
@@ -230,6 +253,28 @@ const tabValue = ref("");
 const openPost = (tab = "Votes") => {
   showViewQuePopup.value = true;
   tabValue.value = tab;
+};
+
+// Handle question answered from popup
+const handleQuestionAnswered = () => {
+  // Don't close the popup - let user see results and close manually
+};
+
+// Handle post updates from ViewQuestion component
+const handleUpdatePost = (postId, updatedData) => {
+  // Update local state first for immediate UI feedback
+  if (updatedData.hasVoted !== undefined) {
+    localHasVoted.value = updatedData.hasVoted;
+  }
+  if (updatedData.votesCount !== undefined) {
+    localVotes.value = updatedData.votesCount;
+  }
+  if (updatedData.commentsCount !== undefined) {
+    localComments.value = updatedData.commentsCount;
+  }
+  
+  // Then emit to parent to update the main posts array
+  emit('update-post', postId, updatedData);
 };
 
 const goToProfile = () => {

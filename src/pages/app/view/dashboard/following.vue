@@ -13,6 +13,7 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
+        :has-voted="post.hasVoted"
       />
     </div>
     <q-spinner v-if="isLoading" color="primary" class="spinner q-mt-md" />
@@ -48,6 +49,7 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       // Append new posts to the existing list
+      console.log("Loaded posts:", newPosts.map(p => ({ id: p.id, hasVoted: p.hasVoted })));
       posts.value.push(...newPosts); // Using .push() for better performance
       currentPage.value++; // Increment the page number
     } else {

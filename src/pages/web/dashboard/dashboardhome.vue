@@ -32,7 +32,8 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
-          @fetch-new-post="fetchNewPosts()"
+          :has-voted="post.hasVoted"
+          @update-post="updatePost"
         />
         <q-spinner v-if="isLoading && posts.length > 0" color="primary" />
       </div>
@@ -46,6 +47,8 @@
         :post-id="route?.query?.postId"
         :is-popup="true"
         @close="closeModal"
+        @question-answered="handleQuestionAnswered"
+        @update-post="updatePost"
       />
       <q-btn
         flat
@@ -104,36 +107,51 @@ const closeModal = () => {
   });
 }
 
-const closePopup = async() => {
+const closePopup = () => {
   showAskQuePopup.value=false;
-  await fetchNewPosts();
+  // No need to fetch new posts when just closing the ask question popup
 };
 
-const fetchNewPosts = async () => {
-  isLoading.value = true;
+// Function to handle question answered - don't close modal, let user see results
+const handleQuestionAnswered = () => {
+  // Don't close the modal here - let the user see the results and close manually
+};
 
-  try {
-    // Fetch new posts
-    const newPosts = await postStore.getPostList({
-      all: true,
-      page: 1,
-      limit: 10,
-      sortBy: "createdAt",
-      order: "desc",
-    });
-    posts.value = newPosts;
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    // Optional: Show a notification to the user
-    $q.notify({
-      message: "Failed to load posts. Please try again later.",
-      color: "negative",
-      position: "top",
-      timeout: 3000,
-      icon: "error",
-    });
-  } finally {
-    isLoading.value = false; // Reset the loading flag
+//UPDATE:- This function was reloading the page. That is not a good approach, we should only be updating one post
+// const fetchNewPosts = async () => {
+//   isLoading.value = true;
+
+//   try {
+//     // Fetch new posts
+//     const newPosts = await postStore.getPostList({
+//       all: true,
+//       page: 1,
+//       limit: 10,
+//       sortBy: "createdAt",
+//       order: "desc",
+//     });
+//     posts.value = newPosts;
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     // Optional: Show a notification to the user
+//     $q.notify({
+//       message: "Failed to load posts. Please try again later.",
+//       color: "negative",
+//       position: "top",
+//       timeout: 3000,
+//       icon: "error",
+//     });
+//   } finally {
+//     isLoading.value = false; // Reset the loading flag
+//   }
+// };
+
+//NOTE:- instead, this function will be used which will update only one individual post after it has been answered
+const updatePost = (postId, updatedData) => {
+  const postIndex = posts.value.findIndex(post => post.id === postId);
+  if (postIndex !== -1) {
+    // Update the specific post with new data (votes, comments, hasVoted status)
+    posts.value[postIndex] = { ...posts.value[postIndex], ...updatedData };
   }
 };
 
@@ -210,7 +228,6 @@ onMounted(async () => {
   await fetchPosts();
   window.addEventListener("scroll", onScroll);
 });
-
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
