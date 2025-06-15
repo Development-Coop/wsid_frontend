@@ -70,9 +70,24 @@ export const useProfileStore = defineStore("profile", () => {
     }
   };
 
+  const deleteAccount = async (password) => {
+    try {
+      const response = await api.delete("/user/delete-account", {
+        data: {
+          password: password
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Delete account error:", error);
+      throw error;
+    }
+  };
+
   return {
     userDetails,
     getProfileDetails,
     updateProfileDetails,
+    deleteAccount,
   };
 });
