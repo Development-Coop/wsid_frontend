@@ -17,9 +17,9 @@ function onRefreshed(token) {
 
 // Create a custom axios instance
 const api = axios.create({
-  // baseURL: "https://wsid-service.netlify.app/api",
+  baseURL: "https://wsid-service.netlify.app/api",
   //Uncomment for Local Host
-  baseURL: "http://localhost:3000/api",
+  // baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -71,16 +71,16 @@ export default boot(({ app, router }) => {
         try {
           // Attempt to refresh the token
           const refreshToken = localStorage.getItem("refresh-token");
-          // const response = await axios.post(
-          //   "https://wsid-service.netlify.app/api/auth/refresh-token",
-          //   {
-          //     refreshToken,
-          //   }
-          // );
+          const response = await axios.post(
+            "https://wsid-service.netlify.app/api/auth/refresh-token",
+            {
+              refreshToken,
+            }
+          );
           // for testing in localhost
-          const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
-            refreshToken,
-          });
+          // const response = await axios.post("http://localhost:3000/api/auth/refresh-token", {
+          //   refreshToken,
+          // });
 
           const { accessToken } = response.data;
 
