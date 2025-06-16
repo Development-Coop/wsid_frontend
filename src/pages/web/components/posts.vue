@@ -309,23 +309,47 @@ const now = ref(Date.now());
 const calculateTimeAgo = computed(() => {
   const secondsAgo = Math.floor((now.value - props.timeAgo) / 1000);
 
+  // If older than 24 hours, show the actual date and time
+  if (secondsAgo >= 86400) {
+    const date = new Date(props.timeAgo);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Format time as HH:MM AM/PM
+    const timeOptions = { 
+      hour: 'numeric', 
+      minute: '2-digit', 
+      hour12: true 
+    };
+    const timeString = date.toLocaleTimeString('en-US', timeOptions);
+    
+    // Check if it's today or yesterday
+    if (date.toDateString() === today.toDateString()) {
+      return `Today at ${timeString}`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Yesterday at ${timeString}`;
+    } else {
+      // For older dates, show full date
+      const dateOptions = { 
+        month: 'short', 
+        day: 'numeric',
+        year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+      };
+      const dateString = date.toLocaleDateString('en-US', dateOptions);
+      return `${dateString} at ${timeString}`;
+    }
+  }
+
+  // For posts less than 24 hours old, use relative time
   if (secondsAgo < 60) {
     return `${secondsAgo} seconds ago`;
   } else if (secondsAgo < 3600) {
     const minutes = Math.floor(secondsAgo / 60);
     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 86400) {
+  } else {
     const hours = Math.floor(secondsAgo / 3600);
     return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 604800) {
-    const days = Math.floor(secondsAgo / 86400);
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 2419200) {
-    const weeks = Math.floor(secondsAgo / 604800);
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
-  } else {
-    const months = Math.floor(secondsAgo / 2419200);
-    return `${months} month${months > 1 ? "s" : ""} ago`;
   }
 });
 

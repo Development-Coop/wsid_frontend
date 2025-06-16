@@ -167,10 +167,27 @@
                 flat
               >
                 <div class="flex items-center justify-between w-full">
-                  <span class="q-mr-md">{{ option.text }}</span>
-                  <span class="q-ml-auto q-mr-md">{{ option.percentage }}%</span>
-                  <span>•</span>
-                  <span class="q-ml-md">{{ option.votesCount }} Votes</span>
+                  <div class="flex items-center" style="flex: 1; min-width: 0;">
+                    <span class="q-mr-md text-truncate" style="flex: 1;">{{ option.text }}</span>
+                    <div class="result-stats" :class="{ 'q-mr-md': option.image }">
+                      <span class="percentage-text">{{ option.percentage }}%</span>
+                      <span class="votes-count">{{ option.votesCount }} Votes</span>
+                    </div>
+                  </div>
+                  <q-img
+                    v-if="option.image"
+                    loading="lazy"
+                    :src="option.image"
+                    spinner-color="primary"
+                    spinner-size="16px"
+                    fit="cover"
+                    class="result-image"
+                    @click.stop="openImage(option.image)"
+                  >
+                    <template #error>
+                      <!-- Don't show anything if image fails to load -->
+                    </template>
+                  </q-img>
                 </div>
                 <q-linear-progress
                   size="8px"
@@ -212,6 +229,10 @@
                     <p class="text-grey-9 q-mt-xs">
                       <span>{{ comment?.text }}</span>
                     </p>
+                    <!-- User's Vote Display -->
+                    <div v-if="comment?.userVote" class="user-vote-display q-mt-xs q-mb-sm">
+                      <span class="vote-indicator">Voted: {{ comment.userVote.optionText }}</span>
+                    </div>
                     <p class="flex items-center q-mt-sm q-mb-md">
                       <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
                       <span 
@@ -278,6 +299,10 @@
                         <p class="text-grey-9 q-mb-xs">
                           <span>{{ reply?.text }}</span>
                         </p>
+                        <!-- User's Vote Display for Replies -->
+                        <div v-if="reply?.userVote" class="user-vote-display q-mt-xs q-mb-sm">
+                          <span class="vote-indicator">Voted: {{ reply.userVote.optionText }}</span>
+                        </div>
                         <p class="flex items-center q-mt-sm q-mb-md">
                           <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
                           <span 
@@ -463,23 +488,47 @@ const now = ref(Date.now());
 const calculateTimeAgo = (dateTime) => {
   const secondsAgo = Math.floor((now.value - dateTime) / 1000);
 
+  // If older than 24 hours, show the actual date and time
+  if (secondsAgo >= 86400) {
+    const date = new Date(dateTime);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Format time as HH:MM AM/PM
+    const timeOptions = { 
+      hour: 'numeric', 
+      minute: '2-digit', 
+      hour12: true 
+    };
+    const timeString = date.toLocaleTimeString('en-US', timeOptions);
+    
+    // Check if it's today or yesterday
+    if (date.toDateString() === today.toDateString()) {
+      return `Today at ${timeString}`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Yesterday at ${timeString}`;
+    } else {
+      // For older dates, show full date
+      const dateOptions = { 
+        month: 'short', 
+        day: 'numeric',
+        year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+      };
+      const dateString = date.toLocaleDateString('en-US', dateOptions);
+      return `${dateString} at ${timeString}`;
+    }
+  }
+
+  // For posts less than 24 hours old, use relative time
   if (secondsAgo < 60) {
     return `${secondsAgo} seconds ago`;
   } else if (secondsAgo < 3600) {
     const minutes = Math.floor(secondsAgo / 60);
     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 86400) {
+  } else {
     const hours = Math.floor(secondsAgo / 3600);
     return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 604800) {
-    const days = Math.floor(secondsAgo / 86400);
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (secondsAgo < 2419200) {
-    const weeks = Math.floor(secondsAgo / 604800);
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
-  } else {
-    const months = Math.floor(secondsAgo / 2419200);
-    return `${months} month${months > 1 ? "s" : ""} ago`;
   }
 };
 
@@ -523,27 +572,147 @@ const countTotalComments = (comments) => {
   return count;
 };
 
-const toggleLike = async (postId) => {
+const toggleLike = async (commentId) => {
   try {
-    await postStore.addLike(postId);
-    await fetchComments(postDetails.value.id);
+    // Find the comment in the local state
+    const updateCommentLikes = (commentsList) => {
+      return commentsList.map(comment => {
+        if (comment.id === commentId) {
+          // Create updated comment
+          const updatedComment = { ...comment };
+          
+          if (comment.hasLiked) {
+            // Remove like
+            updatedComment.hasLiked = false;
+            updatedComment.likesCount = Math.max(0, comment.likesCount - 1);
+          } else {
+            // Add like
+            updatedComment.hasLiked = true;
+            updatedComment.likesCount = comment.likesCount + 1;
+            
+            // Remove dislike if present
+            if (comment.hasDisliked) {
+              updatedComment.hasDisliked = false;
+              updatedComment.dislikesCount = Math.max(0, comment.dislikesCount - 1);
+            }
+          }
+          
+          return updatedComment;
+        }
+        
+        // Check nested replies
+        if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: updateCommentLikes(comment.replies)
+          };
+        }
+        
+        return comment;
+      });
+    };
+
+    // Update local state immediately
+    comments.value = updateCommentLikes(comments.value);
+    
+    // Make API call in background
+    await postStore.addLike(commentId);
+    
+    // Refresh comments to ensure consistency (optional - you might skip this for better UX)
+    // await fetchComments(postDetails.value.id);
   } catch (error) {
-    console.error(error)
+    console.error('Error toggling like:', error);
+    // Revert changes on error by refetching
+    await fetchComments(postDetails.value.id);
+    
+    $q.notify({
+      color: "negative",
+      message: "Failed to update like. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
   }
 };
 
-const toggleDislike = async (postId) => {
+const toggleDislike = async (commentId) => {
   try {
-    await postStore.addDislike(postId);
-    await fetchComments(postDetails.value.id);
+    // Find the comment in the local state
+    const updateCommentDislikes = (commentsList) => {
+      return commentsList.map(comment => {
+        if (comment.id === commentId) {
+          // Create updated comment
+          const updatedComment = { ...comment };
+          
+          if (comment.hasDisliked) {
+            // Remove dislike
+            updatedComment.hasDisliked = false;
+            updatedComment.dislikesCount = Math.max(0, comment.dislikesCount - 1);
+          } else {
+            // Add dislike
+            updatedComment.hasDisliked = true;
+            updatedComment.dislikesCount = comment.dislikesCount + 1;
+            
+            // Remove like if present
+            if (comment.hasLiked) {
+              updatedComment.hasLiked = false;
+              updatedComment.likesCount = Math.max(0, comment.likesCount - 1);
+            }
+          }
+          
+          return updatedComment;
+        }
+        
+        // Check nested replies
+        if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: updateCommentDislikes(comment.replies)
+          };
+        }
+        
+        return comment;
+      });
+    };
+
+    // Update local state immediately
+    comments.value = updateCommentDislikes(comments.value);
+    
+    // Make API call in background
+    await postStore.addDislike(commentId);
+    
+    // Refresh comments to ensure consistency (optional - you might skip this for better UX)
+    // await fetchComments(postDetails.value.id);
   } catch (error) {
-    console.error(error)
+    console.error('Error toggling dislike:', error);
+    // Revert changes on error by refetching
+    await fetchComments(postDetails.value.id);
+    
+    $q.notify({
+      color: "negative",
+      message: "Failed to update dislike. Please try again.",
+      position: "top",
+      icon: "error",
+      autoClose: true,
+    });
   }
 };
 
 const fetchComments = async (postId) => {
   try {
     comments.value = await postStore.getCommentsList(postId);
+    console.log('Fetched comments:', comments.value);
+    
+    // Debug: Check if any comments have userVote
+    comments.value.forEach((comment, index) => {
+      console.log(`Comment ${index}:`, {
+        id: comment.id,
+        text: comment.text,
+        userVote: comment.userVote,
+        createdBy: comment.createdBy?.name
+      });
+    });
+    
     const newCommentCount = countTotalComments(comments.value);
     totalComments.value = newCommentCount;
     localTotalComments.value = newCommentCount;
@@ -553,6 +722,7 @@ const fetchComments = async (postId) => {
       showAllReplies: false
     }));
   } catch (error) {
+    console.error('Error fetching comments:', error);
     $q.notify({
       color: "negative",
       message: "Failed to fetch post details. Please try again.",
@@ -795,21 +965,57 @@ const animateResults = () => {
     animation: selection-bounce 0.6s ease-out;
   }
 }
+
 .votes-result {
-  height: 55px;
+  height: auto;
+  min-height: 70px;
   background-color: #f0f2f5;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  
+  .result-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    
+    .percentage-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+    
+    .votes-count {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.2;
+    }
+  }
+  
+  .result-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
   
   .q-linear-progress {
     position: absolute;
     bottom: 0;
     left: 0px;
+    margin-top: 8px;
     overflow: hidden;
     
     // Water ripple effect
@@ -888,6 +1094,18 @@ const animateResults = () => {
     position: sticky;
     bottom: 0;
     left: 0;
+  }
+}
+
+.user-vote-display {
+  .vote-indicator {
+    font-size: 12px;
+    color: #ff6600;
+    font-weight: 500;
+    background-color: rgba(255, 102, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
   }
 }
 

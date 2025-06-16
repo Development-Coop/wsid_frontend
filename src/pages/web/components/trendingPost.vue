@@ -58,11 +58,20 @@
       </q-btn-dropdown>
     </div>
 
+    <!-- Post Title (New) -->
+    <div v-if="postTitle" class="post-title q-mt-md" @click.self="openPost('')">
+      <h3 class="text-subtitle1 text-weight-medium text-grey-9 q-ma-none">{{ postTitle }}</h3>
+    </div>
+
+    <!-- Post Description (New) -->
+    <div v-if="postDescription" class="post-description q-mt-sm" @click.self="openPost('')">
+      <p class="text-body2 text-grey-7 q-ma-none">{{ postDescription }}</p>
+    </div>
+
     <!-- Post Content -->
-    <p :class="['text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]" @click.self="openPost('')">
-      <span v-if="postContent">{{ postContent }}</span>
-      <!-- Dynamic post content -->
-    </p>
+    <div v-if="postContent" :class="['post-content', 'text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]" @click.self="openPost('')">
+      <p class="q-ma-none">{{ postContent }}</p>
+    </div>
 
     <!-- Single Post Image -->
     <q-img
@@ -70,11 +79,11 @@
       :src="postImage"
       spinner-color="white"
       fit="contain"
-      class="q-mb-sm"
+      class="q-mb-sm q-mt-md"
     />
 
     <!-- Multiple Post Images Grid -->
-    <div v-if="postImages.length > 0" class="post-images-grid q-mb-md">
+    <div v-if="postImages.length > 0" class="post-images-grid q-mb-md q-mt-md">
       <div
         v-for="(image, index) in postImages.slice(0, 4)"
         :key="index"
@@ -101,7 +110,7 @@
 
     <!-- Footer with votes, comments, and action button -->
     <div
-      class="flex no-wrap items-center"
+      class="flex no-wrap items-center q-mt-md"
       style="gap: 10px;"
       @click.self="openPost('')"
     >
@@ -193,6 +202,14 @@ const props = defineProps({
   timeAgo: {
     type: [String, Number],
     default: "", // Default value for timeAgo
+  },
+  postTitle: {
+    type: String,
+    default: "", // New prop for post title
+  },
+  postDescription: {
+    type: String,
+    default: "", // New prop for post description
   },
   postContent: {
     type: String,
@@ -348,11 +365,35 @@ const onDelete = async () => {
     border: 1px solid #aeaeb2;
   }
 
+  .post-title {
+    h3 {
+      line-height: 1.3;
+      cursor: pointer;
+      
+      &:hover {
+        color: #1976d2;
+      }
+    }
+  }
+
+  .post-description {
+    p {
+      line-height: 1.4;
+      cursor: pointer;
+    }
+  }
+
+  .post-content {
+    p {
+      line-height: 1.5;
+    }
+  }
+
   .post-images-grid {
     display: grid;
     gap: 4px;
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 8px;
+    
     @media (max-width: 600px) {
       grid-template-columns: 1fr;
     }

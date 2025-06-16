@@ -28,6 +28,9 @@ export const useAuthStore = defineStore("auth", () => {
   ]);
 
   const isValidUsername = ref(true);
+  const isUsernameAvailable = ref(true);
+  const usernameCheckingStatus = ref('idle'); // 'idle', 'checking', 'checked'
+  const usernameError = ref('');
 
   const filteredSuggestions = computed(() => {
     const searchTerm = userDetails.value.username
@@ -47,11 +50,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   const registerStep1 = async (userData) => {
     try {
-      // console.log("working");
       const response = await api.post("/auth/register-step1", {
         name: userData.name,
-        email: userData.phone_or_email, // Assuming it's an email
-        dateOfBirth: userData.dob.split("-").reverse().join("/"), // Convert DD-MM-YYYY to YYYY/MM/DD
+        email: userData.phone_or_email,
+        dateOfBirth: userData.dob.split("-").reverse().join("/"),
       });
 
       console.log("Registration step 1 successful:", response.data);
@@ -93,18 +95,116 @@ export const useAuthStore = defineStore("auth", () => {
     const validPattern = /^[a-zA-Z0-9._]*$/;
     const noConsecutiveDotsPattern = /\.{2,}/;
 
-    if (
-      input.length > 20 ||
-      !validPattern.test(input) ||
-      noConsecutiveDotsPattern.test(input)
-    ) {
+    // Reset error state
+    usernameError.value = '';
+    
+    // Check if empty
+    if (input.length === 0) {
       isValidUsername.value = false;
-    } else {
-      isValidUsername.value = true;
+      usernameError.value = 'Username is required';
+      return false;
+    }
+    
+    // Check minimum length first (prioritize this over other validations)
+    if (input.length < 3) {
+      isValidUsername.value = false;
+      usernameError.value = 'Username must be at least 3 characters';
+      return false;
+    }
+    
+    // Check maximum length
+    if (input.length > 20) {
+      isValidUsername.value = false;
+      usernameError.value = 'Username must be 20 characters or less';
+      return false;
+    }
+    
+    // Check pattern
+    if (!validPattern.test(input)) {
+      isValidUsername.value = false;
+      usernameError.value = 'Username can only contain letters, numbers, underscores, and periods';
+      return false;
+    }
+    
+    // Check consecutive dots
+    if (noConsecutiveDotsPattern.test(input)) {
+      isValidUsername.value = false;
+      usernameError.value = 'Username cannot contain consecutive periods';
+      return false;
     }
 
-    return isValidUsername.value;
+    // If all validations pass
+    isValidUsername.value = true;
+    return true;
   };
+
+  // Debounce function
+  let usernameCheckTimeout = null;
+
+  const checkUsernameAvailability = async (username) => {
+    // Clear previous timeout
+    if (usernameCheckTimeout) {
+      clearTimeout(usernameCheckTimeout);
+    }
+
+    // If username is empty, invalid format, or too short, don't check availability
+    if (!username || !isValidUsername.value || username.length < 3) {
+      usernameCheckingStatus.value = 'idle';
+      isUsernameAvailable.value = true; // Reset availability state
+      return;
+    }
+
+    // Set checking status
+    usernameCheckingStatus.value = 'checking';
+
+    // Debounce the API call
+    usernameCheckTimeout = setTimeout(async () => {
+      try {
+        const response = await api.post("/auth/validate-username", {
+          username: username
+        });
+
+        if (response.data.data.available) {
+          isUsernameAvailable.value = true;
+          usernameCheckingStatus.value = 'checked';
+        } else {
+          isUsernameAvailable.value = false;
+          usernameError.value = 'Username is already taken';
+          usernameCheckingStatus.value = 'checked';
+        }
+      } catch (error) {
+        console.error("Username availability check error:", error);
+        usernameError.value = 'Error checking username availability';
+        isUsernameAvailable.value = false;
+        usernameCheckingStatus.value = 'idle';
+      }
+    }, 500); // 500ms debounce
+  };
+
+  const getUsernameSuggestions = async (username) => {
+    try {
+      const response = await api.post("/auth/username-suggestions", {
+        username: username
+      });
+      
+      if (response.data.data.suggestions) {
+        suggestions.value = response.data.data.suggestions.map(suggestion => `@${suggestion}`);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Username suggestions error:", error);
+      return null;
+    }
+  };
+
+  // Computed property to determine if username is fully valid (format + availability)
+  const isUsernameFullyValid = computed(() => {
+    return isValidUsername.value && 
+           isUsernameAvailable.value && 
+           usernameCheckingStatus.value === 'checked' &&
+           userDetails.value.username.length > 0;
+  });
 
   const clearUserData = () => {
     userDetails.value = {
@@ -114,6 +214,11 @@ export const useAuthStore = defineStore("auth", () => {
       password: "",
       username: "",
     };
+    // Reset username validation state
+    isValidUsername.value = true;
+    isUsernameAvailable.value = true;
+    usernameCheckingStatus.value = 'idle';
+    usernameError.value = '';
   };
 
   const setProfilePicture = (file) => {
@@ -146,8 +251,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   const registerStep3 = async () => {
     try {
-      // console.log("work");
-      // return;
       restoreUserFromSession();
       const formData = new FormData();
       formData.append("email", userDetails.value.phone_or_email);
@@ -168,8 +271,7 @@ export const useAuthStore = defineStore("auth", () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      // console.log(response);
-      // return;
+
       console.log("Registration step 3 successful:", response.data);
       sessionStorage.clear();
       localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
@@ -185,7 +287,7 @@ export const useAuthStore = defineStore("auth", () => {
     const errors = ref({
       login: "",
     });
-    errors.value.login = ""; // Clear previous errors
+    errors.value.login = "";
     try {
       const response = await api.post(
         "/auth/login",
@@ -214,7 +316,7 @@ export const useAuthStore = defineStore("auth", () => {
     const errors = ref({
       fp: "",
     });
-    errors.value.fp = ""; // Clear previous errors
+    errors.value.fp = "";
     try {
       const response = await api.post(
         "/auth/forgot-password",
@@ -258,6 +360,7 @@ export const useAuthStore = defineStore("auth", () => {
     errors.value = {
       login: "",
     };
+    usernameError.value = '';
   };
 
   const errors = ref({
@@ -271,12 +374,18 @@ export const useAuthStore = defineStore("auth", () => {
     placeholderImage,
     suggestions,
     isValidUsername,
+    isUsernameAvailable,
+    isUsernameFullyValid,
+    usernameCheckingStatus,
+    usernameError,
     filteredSuggestions,
     registerStep1,
     registerStep2,
     setPassword,
     setUsername,
     validateUsername,
+    checkUsernameAvailability,
+    getUsernameSuggestions,
     clearUserData,
     setProfilePicture,
     clearProfilePicture,

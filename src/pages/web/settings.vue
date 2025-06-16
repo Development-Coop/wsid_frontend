@@ -58,6 +58,7 @@
             :error="passwordError"
             :error-message="passwordErrorMessage"
             @keyup.enter="confirmDeleteAccount"
+            @input="clearPasswordError"
           />
         </q-card-section>
 
@@ -124,11 +125,15 @@ const logout = () => {
   router.push("/auth/web-login?tab=login");
 };
 
+const clearPasswordError = () => {
+  passwordError.value = false;
+  passwordErrorMessage.value = "";
+};
+
 const cancelDelete = () => {
   showDeleteConfirmation.value = false;
   deletePassword.value = "";
-  passwordError.value = false;
-  passwordErrorMessage.value = "";
+  clearPasswordError();
 };
 
 const confirmDeleteAccount = async () => {
@@ -140,44 +145,62 @@ const confirmDeleteAccount = async () => {
 
   try {
     deleteLoading.value = true;
-    passwordError.value = false;
-    passwordErrorMessage.value = "";
+    clearPasswordError();
 
     // Close confirmation dialog and show loading dialog
     showDeleteConfirmation.value = false;
     showLoadingDialog.value = true;
 
     // Call the delete account API
-    await profileStore.deleteAccount(deletePassword.value);
+    const result = await profileStore.deleteAccount(deletePassword.value);
+    
+    console.log("Delete account result:", result);
 
-    // Show success message
-    $q.notify({
-      type: "positive",
-      message: "Account deleted successfully",
-      position: "top",
-    });
+    // Check if deletion was successful
+    if (result && (result.status === true || result.success === true)) {
+      // Show success message
+      $q.notify({
+        type: "positive",
+        message: "Account deleted successfully",
+        position: "top",
+      });
 
-    // Clear local storage and redirect to login
-    localStorage.clear();
-    router.push("/auth/web-login?tab=login");
+      // Clear local storage and redirect to login
+      localStorage.clear();
+      router.push("/auth/web-login?tab=login");
+    } else {
+      // Handle unsuccessful deletion
+      throw new Error(result?.message || "Failed to delete account");
+    }
 
   } catch (error) {
     console.error("Delete account error:", error);
     
-    // Close loading dialog and show confirmation dialog again
+    // Close loading dialog
     showLoadingDialog.value = false;
-    showDeleteConfirmation.value = true;
     
-    // Handle specific error cases
-    if (error.response?.status === 400) {
+    // Get error message safely
+    const errorMessage = error.response?.data?.message || error.message || error.toString();
+    
+    // Check if it's a password error (400 status)
+    if (error.response?.status === 400 || 
+        errorMessage.toLowerCase().includes('invalid password')) {
+      
+      // Show confirmation dialog again with password error
+      showDeleteConfirmation.value = true;
       passwordError.value = true;
-      passwordErrorMessage.value = "Invalid password provided";
+      passwordErrorMessage.value = "Invalid password. Please try again.";
+      
     } else {
+      // Show general error notification
       $q.notify({
         type: "negative",
-        message: error.response?.data?.message || "Failed to delete account. Please try again.",
+        message: errorMessage,
         position: "top",
       });
+      
+      // Show confirmation dialog again
+      showDeleteConfirmation.value = true;
     }
   } finally {
     deleteLoading.value = false;
