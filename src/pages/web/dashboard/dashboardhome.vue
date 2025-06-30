@@ -85,7 +85,7 @@ import { usePostStore } from "src/stores/postStore";
 import { useRoute, useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 // components
-import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
+import ViewQuestion from "src/pages/web/components/view-question.vue";
 import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
 
 const posts = ref([]);

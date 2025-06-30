@@ -163,7 +163,7 @@ import { useRouter } from "vue-router";
 import fallbackImage from 'src/assets/icons/profile-user.png';
 
 // components
-import ViewQuestion from "src/pages/app/view/dashboard/view-question.vue";
+import ViewQuestion from "src/pages/web/components/view-question.vue";
 
 const postStore = usePostStore();
 const $q = useQuasar();

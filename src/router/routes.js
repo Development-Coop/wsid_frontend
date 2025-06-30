@@ -288,7 +288,7 @@ const routes = [
             path: "",
             name: "view-question",
             component: () =>
-              import("src/pages/app/view/dashboard/view-question.vue"),
+              import("src/pages/web/components/view-question.vue"),
             meta: { requiresAuth: true },
           },
         ],
