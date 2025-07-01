@@ -86,7 +86,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 // components
 import ViewQuestion from "src/pages/web/components/view-question.vue";
-import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
+import AskQuestion from "src/components/ask-question.vue";
 
 const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page

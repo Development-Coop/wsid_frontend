@@ -213,7 +213,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
-import AskQuestion from "src/pages/app/view/dashboard/ask-question.vue";
+import AskQuestion from "src/components/ask-question.vue";
 import EditProfile from "src/pages/app/view/dashboard/profile/editProfile.vue";
 
 import fallbackImage from "src/assets/icons/profile-user.png";

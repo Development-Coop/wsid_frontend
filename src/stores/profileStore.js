@@ -19,7 +19,7 @@ export const useProfileStore = defineStore("profile", () => {
 
   const getProfileDetails = async (uid="") => {
     try {
-      const response = await api.get(`/user/view?uid=${uid}`);
+      const response = await api.get(`user/view?uid=${uid}`);
       const data = response?.data?.data;
       if (!uid) {
         userDetails.value = {
@@ -80,7 +80,7 @@ export const useProfileStore = defineStore("profile", () => {
         throw new Error("No access token found. Please login again.");
       }
       
-      const response = await api.delete("/user/delete-account", {
+      const response = await api.delete("user/delete-account", {
         data: { password }, // Send password in request body
         headers: {
           "Content-Type": "application/json",

@@ -290,7 +290,7 @@ export const useAuthStore = defineStore("auth", () => {
     errors.value.login = "";
     try {
       const response = await api.post(
-        "/auth/login",
+        "auth/login",
         {
           emailOrUsername: userDetails.value.phone_or_email,
           password: userDetails.value.password,
@@ -319,7 +319,7 @@ export const useAuthStore = defineStore("auth", () => {
     errors.value.fp = "";
     try {
       const response = await api.post(
-        "/auth/forgot-password",
+        "auth/forgot-password",
         {
           email,
         },
@@ -338,7 +338,7 @@ export const useAuthStore = defineStore("auth", () => {
   const resetPassword = async (email, otp, password) => {
     try {
       const response = await api.post(
-        "/auth/reset-password",
+        "auth/reset-password",
         {
           email,
           otp,

@@ -301,7 +301,7 @@ const routes = [
           {
             path: "",
             component: () =>
-              import("src/pages/app/view/dashboard/ask-question.vue"),
+              import("src/components/ask-question.vue"),
             meta: { requiresAuth: true },
           },
         ],
