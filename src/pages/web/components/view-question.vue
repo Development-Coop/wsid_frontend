@@ -1251,4 +1251,22 @@ const animateResults = () => {
 :deep(.q-btn__content) {
   transition: all 0.3s ease;
 }
+
+.popup-container {
+  width: 100%;
+  max-width: 100vw;
+  min-width: unset;
+  padding: 8px;
+  background: #fff;
+  position: relative;
+  border-radius: 10px;
+}
+@media (min-width: 600px) {
+  .popup-container {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 12px;
+    padding: 24px;
+  }
+}
 </style>
