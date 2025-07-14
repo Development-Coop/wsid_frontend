@@ -56,10 +56,10 @@
               <span v-show="postDetails?.user?.name" class="text-grey-7"> • {{ calculateTimeAgo(postDetails.createdAt) }}</span>
               <!-- Dynamic time -->
             </p>
-            <p class="text-grey-9 q-mb-sm" style="font-weight: 600;">
+            <p class="text-grey-9 q-mb-sm" style="font-weight: 600; word-break: break-word; overflow-wrap: anywhere;">
               <span>{{ postDetails?.title }}</span>
             </p>
-            <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;">{{ postDetails?.description }}</p>
+            <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;">{{ postDetails?.description }}</p>
 
             <div
               v-if="postDetails?.images?.length > 0"
