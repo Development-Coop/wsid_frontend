@@ -1,7 +1,7 @@
 <template>
-  <div class="post cursor-pointer" @click.self="openPost('')">
+  <div class="post cursor-pointer" @click="openPost('')">
     <!-- Header with user image, details, and action menu -->
-    <div class="flex items-center no-wrap" @click.self="openPost('')">
+    <div class="flex items-center no-wrap">
       <q-img
         class="post-img cursor-pointer"
         :src="userImage"
@@ -40,18 +40,19 @@
         no-caps
         no-icon-animation
         content-class="no-arrow"
+        @click.stop
       >
         <q-list v-if="isOwnPosts">
-          <q-item v-close-popup clickable @click="emit('edit', postId)">
+          <q-item v-close-popup clickable @click.stop="emit('edit', postId)">
             <q-item-section> Edit </q-item-section>
           </q-item>
-          <q-item v-close-popup clickable @click="onDelete">
+          <q-item v-close-popup clickable @click.stop="onDelete">
             <q-item-section> Delete </q-item-section>
           </q-item>
         </q-list>
 
         <q-list v-else>
-          <q-item v-close-popup clickable @click="sharePost">
+          <q-item v-close-popup clickable @click.stop="sharePost">
             <q-item-section> Copy link </q-item-section>
           </q-item>
         </q-list>
@@ -59,17 +60,17 @@
     </div>
 
     <!-- Post Title (New) -->
-    <div v-if="postTitle" class="post-title q-mt-md" @click.self="openPost('')">
+    <div v-if="postTitle" class="post-title q-mt-md">
       <h3 class="text-subtitle1 text-weight-medium text-grey-9 q-ma-none">{{ postTitle }}</h3>
     </div>
 
     <!-- Post Description (New) -->
-    <div v-if="postDescription" class="post-description q-mt-sm" @click.self="openPost('')">
+    <div v-if="postDescription" class="post-description q-mt-sm">
       <p class="text-body2 text-grey-7 q-ma-none">{{ postDescription }}</p>
     </div>
 
     <!-- Post Content -->
-    <div v-if="postContent" :class="['post-content', 'text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]" @click.self="openPost('')">
+    <div v-if="postContent" :class="['post-content', 'text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]">
       <p class="q-ma-none" style="white-space: pre-wrap;">{{ postContent }}</p>
     </div>
 
@@ -112,7 +113,6 @@
     <div
       class="flex no-wrap items-center q-mt-md"
       style="gap: 10px;"
-      @click.self="openPost('')"
     >
       <span style="cursor: pointer" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span>
       •
@@ -156,7 +156,8 @@
         :is-popup="true"
         :tab-value="tabValue"
         @close="showViewQuePopup = false"
-        @fetch-new-post="$emit('fetch-new-post')"
+        @question-answered="handleQuestionAnswered"
+        @update-post="handleUpdatePost"
       />
       <q-btn
         flat
@@ -179,7 +180,7 @@ import { useRouter } from "vue-router";
 import fallbackImage from "src/assets/icons/profile-user.png";
 
 // components
-import ViewQuestion from "../../app/view/dashboard/viewQue.vue";
+import ViewQuestion from "src/pages/web/components/view-question.vue";
 
 const postStore = usePostStore();
 const $q = useQuasar();
@@ -241,7 +242,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["deleted", "edit", "fetch-new-post"]);
+const emit = defineEmits(["deleted", "edit", "fetch-new-post", "update-post"]);
 
 const isDialogOpen = ref(false);
 const currentImage = ref("");
@@ -249,8 +250,20 @@ const showViewQuePopup = ref(false);
 const tabValue = ref("");
 
 const openPost = (tab = "Votes") => {
+  console.log('Opening post with ID:', props.postId, 'Tab:', tab);
   showViewQuePopup.value = true;
   tabValue.value = tab;
+};
+
+// Handle question answered from popup
+const handleQuestionAnswered = () => {
+  // Don't close the popup - let user see results and close manually
+};
+
+// Handle post updates from ViewQuestion component
+const handleUpdatePost = (postId, updatedData) => {
+  // Emit to parent to update the main posts array
+  emit('update-post', postId, updatedData);
 };
 
 const goToProfile = () => {

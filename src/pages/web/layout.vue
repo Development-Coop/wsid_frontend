@@ -187,18 +187,15 @@
           >
             Privacy Policy
           </a>
-          •
           <a
             class="footer-link"
             @click="router.push({ name: 'terms-conditions' })"
           >
             Terms and Conditions
           </a>
-          •
           <a class="footer-link" @click="router.push({ name: 'about-us' })">
             About Us
           </a>
-          <span class="footer-copyright"> | WSID@{{ currentYear }} </span>
         </p>
       </div>
     </q-drawer>
@@ -254,7 +251,6 @@ const rightDrawerOpen = ref(false);
 const $q = useQuasar();
 const profileStore = useProfileStore();
 const router = useRouter();
-const currentYear = ref(new Date().getFullYear());
 
 const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
@@ -335,6 +331,8 @@ const toggleRightDrawer = () => {
   font-size: 14px;
   justify-content: center;
   text-align: center;
+  flex-direction: column;
+  display: flex;
 }
 :deep(.q-drawer__content) {
   display: grid;

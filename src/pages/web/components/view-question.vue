@@ -1,5 +1,5 @@
 <template>
-  <q-page :class="{'q-pb-xl': !isPopup, 'custom-page': isPopup}">
+  <div :class="{'q-pb-xl': !isPopup, 'custom-page': isPopup}">
     <div v-if="!isPopup" class="flex justify-between q-pa-md sticky-header">
       <q-btn
         no-caps
@@ -392,7 +392,7 @@
         <q-img :src="imageSrc" spinner-color="primary" spinner-size="22px" />
       </q-card>
     </q-dialog>
-  </q-page>
+  </div>
 </template>
 
 <script setup>
@@ -475,6 +475,8 @@ onMounted(async () => {
     await fetchPostDetails(postId);
     await fetchComments(postId);
     isLoading.value = false; // Set loading to false after data is loaded
+  } else {
+    isLoading.value = false; // Set loading to false even if no postId
   }
   const tabValue = route?.query?.tab || props?.tabValue || "Votes";
   if (tabValue) tab.value = tabValue;
@@ -549,7 +551,6 @@ const focusReplyInput = async(commentId) => {
   // Wait for the DOM to update and then focus the input box
   await nextTick(() => {
     const inputElement = replyInput.value?.$el.querySelector('input');
-    console.log(inputElement, ":::")
     if (inputElement) {
       inputElement.focus();
     }
@@ -701,17 +702,6 @@ const toggleDislike = async (commentId) => {
 const fetchComments = async (postId) => {
   try {
     comments.value = await postStore.getCommentsList(postId);
-    console.log('Fetched comments:', comments.value);
-    
-    // Debug: Check if any comments have userVote
-    comments.value.forEach((comment, index) => {
-      console.log(`Comment ${index}:`, {
-        id: comment.id,
-        text: comment.text,
-        userVote: comment.userVote,
-        createdBy: comment.createdBy?.name
-      });
-    });
     
     const newCommentCount = countTotalComments(comments.value);
     totalComments.value = newCommentCount;
@@ -759,6 +749,7 @@ const fetchPostDetails = async (postId) => {
     
     postDetails.value.options = calculateOptionsWithColors(postDetails.value.options, totalVotes.value);
   } catch (error) {
+    console.error('Error in fetchPostDetails:', error);
     $q.notify({
       color: "negative",
       message: "Failed to fetch post details. Please try again.",

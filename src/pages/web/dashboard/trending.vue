@@ -36,7 +36,7 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
-        @fetch-new-post="fetchNewPosts()"
+        @update-post="updatePost"
       />
       <Posts
         v-else
@@ -51,7 +51,7 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
-        @fetch-new-post="fetchNewPosts()"
+        @update-post="updatePost"
       />
     </div>
     <q-spinner v-if="isLoading" color="primary" class="spinner" />
@@ -80,31 +80,12 @@ defineProps({
   }
 });
 
-const fetchNewPosts = async () => {
-  isLoading.value = true;
-
-  try {
-    // Fetch new posts
-    const newPosts = await postStore.getTrendingList({
-      all: true,
-      page: 1,
-      limit: 10,
-      sortBy: "createdAt",
-      order: "desc",
-    });
-    posts.value = newPosts;
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    // Optional: Show a notification to the user
-    $q.notify({
-      message: "Failed to load posts. Please try again later.",
-      color: "negative",
-      position: "top",
-      timeout: 3000,
-      icon: "error",
-    });
-  } finally {
-    isLoading.value = false; // Reset the loading flag
+// Function to update individual post data
+const updatePost = (postId, updatedData) => {
+  const postIndex = posts.value.findIndex(post => post.id === postId);
+  if (postIndex !== -1) {
+    // Update the specific post with new data (votes, comments, hasVoted status)
+    posts.value[postIndex] = { ...posts.value[postIndex], ...updatedData };
   }
 };
 
