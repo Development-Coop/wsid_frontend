@@ -61,15 +61,17 @@
 <script setup>
 import TrendingPosts from "../components/trendingPost.vue";
 import Posts from "../components/posts.vue"
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar } from "quasar";
 
-const posts = ref([]);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
+const posts = computed(() =>
+  postStore.trendingPosts.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+);
 const $q = useQuasar();
 const postsContainer = ref(null); // Reference to the container
 
@@ -82,11 +84,7 @@ defineProps({
 
 // Function to update individual post data
 const updatePost = (postId, updatedData) => {
-  const postIndex = posts.value.findIndex(post => post.id === postId);
-  if (postIndex !== -1) {
-    // Update the specific post with new data (votes, comments, hasVoted status)
-    posts.value[postIndex] = { ...posts.value[postIndex], ...updatedData };
-  }
+  postStore.updateTrendingPostInStore(postId, updatedData);
 };
 
 // Function to fetch posts
@@ -105,8 +103,9 @@ const fetchPosts = async () => {
     // Check if newPosts contains data
     // Check if there are new posts
     if (newPosts.length > 0) {
-      // Append new posts to the existing list
-      posts.value.push(...newPosts); // Using .push() for better performance
+      const merged = [...postStore.trendingPosts, ...newPosts];
+      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      postStore.setTrendingPosts(unique);
       currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load

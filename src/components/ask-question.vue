@@ -478,6 +478,26 @@ const createPost = async () => {
       });
     } else {
       await postStore.createPost(formData);
+      // Try to get the latest post (assume backend returns the new post or fetch it)
+      // Option 1: If backend returns the new post, use it
+      // Option 2: Otherwise, fetch the latest post from the API
+      let newPost = null;
+      try {
+        // Try to fetch the latest post (assuming user is the creator)
+        const posts = await postStore.getPostList({
+          all: true,
+          page: 1,
+          limit: 1,
+          sortBy: "createdAt",
+          order: "desc",
+        });
+        if (posts && posts.length > 0) {
+          newPost = posts[0];
+          postStore.addNewPostToFeeds(newPost);
+        }
+      } catch (e) {
+        // Fallback: do nothing if fetch fails
+      }
       $q.notify({
         message: "Successfully posted!",
         color: "positive",

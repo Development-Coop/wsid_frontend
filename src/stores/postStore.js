@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
-// import { ref } from "vue";
+import { ref } from "vue";
 import { api } from "boot/axios";
 
 export const usePostStore = defineStore("post", () => {
+  const posts = ref([]); // Centralized post list
+  const trendingPosts = ref([]); // Trending feed
+  const homePosts = ref([]); // Home feed
 
   const createPost = async (data) => {
     try {
@@ -184,7 +187,66 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  // Set posts (for initial fetch or replace)
+  function setPosts(newPosts) {
+    posts.value = newPosts;
+  }
+  // Update a single post by id
+  function updatePostInStore(postId, updatedData) {
+    const idx = posts.value.findIndex(p => p.id === postId);
+    if (idx !== -1) {
+      posts.value[idx] = { ...posts.value[idx], ...updatedData };
+    }
+  }
+
+  function setTrendingPosts(newPosts) {
+    trendingPosts.value = newPosts;
+  }
+  function setHomePosts(newPosts) {
+    homePosts.value = newPosts;
+  }
+  function updateTrendingPostInStore(postId, updatedData) {
+    const idx = trendingPosts.value.findIndex(p => p.id === postId);
+    if (idx !== -1) {
+      trendingPosts.value[idx] = { ...trendingPosts.value[idx], ...updatedData };
+    }
+    // Also update in homePosts if present
+    const homeIdx = homePosts.value.findIndex(p => p.id === postId);
+    if (homeIdx !== -1) {
+      homePosts.value[homeIdx] = { ...homePosts.value[homeIdx], ...updatedData };
+    }
+  }
+  function updateHomePostInStore(postId, updatedData) {
+    const idx = homePosts.value.findIndex(p => p.id === postId);
+    if (idx !== -1) {
+      homePosts.value[idx] = { ...homePosts.value[idx], ...updatedData };
+    }
+    // Also update in trendingPosts if present
+    const trendingIdx = trendingPosts.value.findIndex(p => p.id === postId);
+    if (trendingIdx !== -1) {
+      trendingPosts.value[trendingIdx] = { ...trendingPosts.value[trendingIdx], ...updatedData };
+    }
+  }
+
+  function addNewPostToFeeds(newPost) {
+    // Add to homePosts
+    const homeUnique = [newPost, ...homePosts.value].filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+    homePosts.value = homeUnique;
+    // Add to trendingPosts
+    const trendingUnique = [newPost, ...trendingPosts.value].filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+    trendingPosts.value = trendingUnique;
+  }
+
   return {
+    posts,
+    trendingPosts,
+    homePosts,
+    setPosts,
+    setTrendingPosts,
+    setHomePosts,
+    updatePostInStore,
+    updateTrendingPostInStore,
+    updateHomePostInStore,
     createPost,
     getPostList,
     deletePost,
@@ -198,6 +260,7 @@ export const usePostStore = defineStore("post", () => {
     addDislike,
     followUser,
     searchProfile,
-    searchPost
+    searchPost,
+    addNewPostToFeeds
   };
 });

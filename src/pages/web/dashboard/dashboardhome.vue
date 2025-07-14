@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import { useRoute, useRouter } from "vue-router";
@@ -88,11 +88,11 @@ import { useQuasar } from "quasar";
 import ViewQuestion from "src/pages/web/components/view-question.vue";
 import AskQuestion from "src/components/ask-question.vue";
 
-const posts = ref([]);
+const postStore = usePostStore();
+const posts = computed(() => postStore.homePosts);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
-const postStore = usePostStore();
 const showViewQuePopup = ref(false);
 const route = useRoute();
 const router = useRouter();
@@ -148,11 +148,7 @@ const handleQuestionAnswered = () => {
 
 //NOTE:- instead, this function will be used which will update only one individual post after it has been answered
 const updatePost = (postId, updatedData) => {
-  const postIndex = posts.value.findIndex(post => post.id === postId);
-  if (postIndex !== -1) {
-    // Update the specific post with new data (votes, comments, hasVoted status)
-    posts.value[postIndex] = { ...posts.value[postIndex], ...updatedData };
-  }
+  postStore.updateHomePostInStore(postId, updatedData);
 };
 
 // Function to fetch posts
@@ -174,8 +170,9 @@ const fetchPosts = async () => {
 
     // Check if there are new posts
     if (newPosts.length > 0) {
-      // Append new posts to the existing list
-      posts.value.push(...newPosts); // Using .push() for better performance
+      const merged = [...postStore.homePosts, ...newPosts];
+      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      postStore.setHomePosts(unique);
       currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load

@@ -154,11 +154,11 @@ import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const $q = useQuasar();
 const postStore = usePostStore();
+const posts = computed(() => postStore.posts);
 
 const searchBy = ref("accounts");
 const searchText = ref("");
 const users = ref([]);
-const posts = ref([]);
 const isLoading = ref(false);
 const profileStore = useProfileStore();
 const router = useRouter();
@@ -183,7 +183,7 @@ const handleSearch = (value) => {
   } else {
     // Clear results if less than 3 characters
     users.value = [];
-    posts.value = [];
+    postStore.setPosts([]); // Clear posts when search text is less than 3
     isLoading.value = false;
   }
 };
@@ -206,7 +206,8 @@ const fetchAccounts = async () => {
 
 const fetchPosts = async () => {
   try {
-    posts.value = await postStore.searchPost(searchText?.value);
+    const newPosts = await postStore.searchPost(searchText?.value);
+    postStore.setPosts(newPosts);
   } catch (error) {
     $q.notify({
       message: "Failed to load posts. Please try again later.",

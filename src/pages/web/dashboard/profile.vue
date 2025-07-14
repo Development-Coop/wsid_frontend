@@ -224,7 +224,7 @@ const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));
 });
 
-const posts = ref([]);
+const posts = computed(() => postStore.posts);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
@@ -248,7 +248,9 @@ const fetchPosts = async (fetch = false) => {
     });
     // Check if newPosts contains data
     if (newPosts.length > 0) {
-      posts.value = [...posts.value, ...newPosts];
+      const merged = [...postStore.posts, ...newPosts];
+      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      postStore.setPosts(unique);
       currentPage.value++;
     } else {
       hasMoreData.value = false; // No more data to load
