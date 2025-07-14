@@ -319,7 +319,7 @@ const onDelete = async () => {
 
   .overlay-more {
     position: absolute;
-    top: 7px;
+    top: 0px;
     left: 0;
     right: 0;
     bottom: 0;

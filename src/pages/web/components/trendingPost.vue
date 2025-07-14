@@ -406,9 +406,8 @@ const onDelete = async () => {
     display: grid;
     gap: 4px;
     grid-template-columns: repeat(2, 1fr);
-    
     @media (max-width: 600px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
@@ -429,7 +428,7 @@ const onDelete = async () => {
 
   .overlay-more {
     position: absolute;
-    top: 7px;
+    top: 0px;
     left: 0;
     right: 0;
     bottom: 0;
