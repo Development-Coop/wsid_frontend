@@ -112,7 +112,10 @@
 
         <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
           <q-tab-panel class="q-pa-lg" name="Votes">
-            <div v-if="!selectedVote" class="q-gutter-md">
+            <div v-if="isOwner">
+              <div class="text-center q-mt-md text-grey-7">You cannot answer your own question.</div>
+            </div>
+            <div v-else-if="!selectedVote" class="q-gutter-md">
               <q-card
                 v-for="option in postDetails.options"
                 :key="option.id"
@@ -154,7 +157,7 @@
                   :class="{ 'morphing': isAnimatingResults }"
                   no-caps
                   unelevated
-                  :disable="!tempSelectedVote || isAnimatingResults"
+                  :disable="!tempSelectedVote || isAnimatingResults || isOwner"
                   @click="submitVote"
                 />
               </div>
@@ -397,9 +400,10 @@
 
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-import { ref, onUnmounted, onMounted, nextTick } from "vue";
+import { ref, onUnmounted, onMounted, nextTick, computed } from "vue";
 import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
+import { useProfileStore } from "src/stores/profileStore";
 
 // Image
 // import likeImage from 'src/assets/images/like.png';
@@ -409,6 +413,7 @@ import sadIcon from 'src/assets/icons/sad.svg';
 import fallbackImage from 'src/assets/icons/profile-user.png';
 
 const postStore = usePostStore();
+const profileStore = useProfileStore();
 const router = useRouter();
 const route = useRoute();
 const $q = useQuasar();
@@ -464,6 +469,8 @@ const postDetails = ref({
 });
 
 const isLoading = ref(true);
+const currentUserId = computed(() => profileStore.userDetails?.id);
+const isOwner = computed(() => postDetails.value.user?.id && postDetails.value.user.id === currentUserId.value);
 
 let interval;
 onMounted(async () => {
