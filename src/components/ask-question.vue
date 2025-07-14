@@ -408,9 +408,15 @@ const createPost = async () => {
     });
 
     if (invalidOptions.length > 0) {
+      let message = '';
+      if (options.value.length < 2) {
+        message = 'Please add at least 2 choices.';
+      } else {
+        message = 'Each choice must be between 2 and 100 characters.';
+      }
       $q.notify({
         color: "negative",
-        message: "Each choice must be between 2 and 100 characters",
+        message,
         position: "top",
         icon: "error",
         autoClose: true,
