@@ -206,7 +206,7 @@
       class="hello"
       show-if-above
       side="right"
-      width="400"
+      :width="isMobile ? '100%' : '400'"
       bordered
     >
       <div
@@ -251,6 +251,8 @@ const rightDrawerOpen = ref(false);
 const $q = useQuasar();
 const profileStore = useProfileStore();
 const router = useRouter();
+
+const isMobile = computed(() => $q.screen.width < 700);
 
 const user = computed(() => {
   return JSON.parse(JSON.stringify(profileStore?.userDetails));

@@ -51,13 +51,13 @@
 
     <!-- Post Title -->
     <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
-      <span v-if="postTitle" class="text-weight-bold">{{ postTitle }}</span>
+      <span v-if="postTitle" class="text-weight-bold post-title">{{ postTitle }}</span>
       <!-- Dynamic post title -->
     </p>
 
     <!-- Post Content -->
     <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;" @click.self="openPost('')">
-      <span v-if="postContent">{{ postContent }}</span>
+      <span v-if="postContent" class="post-content">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
 
@@ -449,6 +449,13 @@ const onDelete = async () => {
     justify-content: center;
     align-items: center;
     border-radius: 4px;
+  }
+
+  .post-title,
+  .post-content,
+  .post-description {
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 }
 

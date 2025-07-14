@@ -378,6 +378,13 @@ const onDelete = async () => {
     border: 1px solid #aeaeb2;
   }
 
+  .post-title,
+  .post-content,
+  .post-description {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
   .post-title {
     h3 {
       line-height: 1.3;
