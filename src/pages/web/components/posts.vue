@@ -101,6 +101,7 @@
       <span style="cursor: pointer;" @click="openPost('')">{{ localVotes }} <span class="text-grey-7">Votes</span></span> •
       <span style="cursor: pointer;" @click="openPost('Comments')">{{ localComments }} <span class="text-grey-7">Comments</span></span>
       <q-btn
+        v-if="!isOwnPosts && userId !== profileStore.userDetails?.id"
         no-caps
         size="md"
         unelevated
