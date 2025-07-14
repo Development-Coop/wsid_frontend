@@ -112,8 +112,12 @@
 
         <q-tab-panels v-model="tab" :class="[{'q-pb-lg': !isPopup}]">
           <q-tab-panel class="q-pa-lg" name="Votes">
-            <div v-if="isOwner">
-              <div class="text-center q-mt-md text-grey-7">You cannot answer your own question.</div>
+            <div v-if="isOwner" class="owner-view-panel q-pa-md q-mb-md">
+              <div class="text-center text-grey-7 flex items-center justify-center">
+                <q-icon name="lock" color="primary" class="q-mr-sm" />
+                <span>You cannot answer your own question.</span>
+                <q-badge color="primary" class="q-ml-sm">Owner</q-badge>
+              </div>
             </div>
             <div v-else-if="!selectedVote" class="q-gutter-md">
               <q-card
@@ -138,12 +142,7 @@
                   spinner-color="primary"
                   spinner-size="20px"
                   fit="cover"
-                  style="
-                    width: 58px;
-                    height: 58px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                  "
+                  style="width: 58px; height: 58px; border-radius: 4px; cursor: pointer;"
                   @click.stop="openImage(option.image)"
                 />
               </q-card>
@@ -1267,6 +1266,19 @@ const animateResults = () => {
     margin: 0 auto;
     border-radius: 12px;
     padding: 24px;
+  }
+}
+.owner-view-panel {
+  background: #f8fafc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  .vote-options.owner-disabled {
+    opacity: 0.7;
+    filter: grayscale(1);
+    cursor: not-allowed;
+    .text-grey-6 {
+      font-weight: 500;
+    }
   }
 }
 </style>
