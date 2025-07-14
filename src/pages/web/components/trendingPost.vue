@@ -70,7 +70,7 @@
 
     <!-- Post Content -->
     <div v-if="postContent" :class="['post-content', 'text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]" @click.self="openPost('')">
-      <p class="q-ma-none">{{ postContent }}</p>
+      <p class="q-ma-none" style="white-space: pre-wrap;">{{ postContent }}</p>
     </div>
 
     <!-- Single Post Image -->
