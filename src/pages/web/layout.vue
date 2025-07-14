@@ -20,7 +20,7 @@
           </div>
         </q-toolbar-title>
         <q-btn
-          class="gt-xs"
+          class="gt-xs ask-question-btn"
           style="
             background-color: black;
             color: #fff;
@@ -375,5 +375,14 @@ const toggleRightDrawer = () => {
   border: 2px solid #eaeaea;
   object-fit: cover;
   flex-shrink: 0;
+  @media (max-width: 1023px) {
+    margin-left: auto;
+    margin-right: 14px;
+  }
+}
+.ask-question-btn {
+  @media (max-width: 1023px) {
+    margin-left: auto;
+  }
 }
 </style>
