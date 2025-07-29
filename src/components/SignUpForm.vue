@@ -110,8 +110,8 @@
     <div class="terms q-mt-md">
       <q-checkbox v-model="termsAccepted" />
       <p>
-        By signing up to create an account I accept WSID's <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
-          <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
+        By signing up to create an account I accept WSID's <span>
+          <span><a @click="router.push({ name: 'terms-conditions' })">Terms of Use</a>
             &
             <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
         </span>

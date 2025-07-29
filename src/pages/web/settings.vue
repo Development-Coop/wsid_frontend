@@ -1,16 +1,97 @@
 <template>
   <q-page style="max-width: 600px; margin: 0 auto">
-    <section class="q-pa-lg pq-pb-lg">
+    <!-- Profile Information Section -->
+    <section class="q-pa-lg">
       <div class="text-h6 q-pa-lg">
-        <div class="flex flex-col gap-10">
-          <div v-for="item in items" :key="item.id" :href="item.path">
-            {{ item.name }}
-            <q-icon name="chevron_right" size="24px" />
+        <div class="profile-info">
+          <div class="text-h5 q-mb-md text-weight-medium">Profile Information</div>
+          
+          <!-- Profile Picture and Basic Info -->
+          <div class="profile-header q-mb-lg">
+            <q-img
+              v-if="user?.profilePic"
+              class="profile-img"
+              :src="user.profilePic"
+              alt="Profile Picture"
+            >
+              <template #error>
+                <img
+                  :src="fallbackImage"
+                  alt="Fallback Image"
+                  class="profile-img"
+                  style="border: none; width: 100%; height: 100%; padding: 4px"
+                />
+              </template>
+            </q-img>
+            <div v-else class="profile-placeholder">
+              {{ (user?.name || authUserDetails?.name)?.charAt(0).toUpperCase() || "?" }}
+            </div>
+            <div class="profile-details">
+              <div class="text-h6 text-weight-medium">{{ user?.name || authUserDetails?.name || 'N/A' }}</div>
+              <div class="text-grey-7">{{ user?.email || user?.emailAddress || authUserDetails?.phone_or_email || 'N/A' }}</div>
+            </div>
+          </div>
+
+          <!-- Profile Stats -->
+          <div class="profile-stats q-mb-lg">
+            <div class="stat-item">
+              <div class="stat-label">Bio</div>
+              <div class="stat-value">{{ user?.bio || 'No bio available' }}</div>
+            </div>
+            
+            <!-- Personal Data from Auth Store -->
+            <div v-if="user?.email || user?.emailAddress || authUserDetails?.phone_or_email" class="stat-item">
+              <div class="stat-label">Email</div>
+              <div class="stat-value">{{ user?.email || user?.emailAddress || authUserDetails?.phone_or_email }}</div>
+            </div>
+            
+            <div v-if="authUserDetails?.dob" class="stat-item">
+              <div class="stat-label">Date of Birth</div>
+              <div class="stat-value">{{ formatDateOfBirth(authUserDetails.dob) }}</div>
+            </div>
+            
+            <div v-if="user?.username || authUserDetails?.username" class="stat-item">
+              <div class="stat-label">Username</div>
+              <div class="stat-value">@{{ user?.username || authUserDetails?.username }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-label">Followers</div>
+              <div class="stat-value">{{ user?.followersCount || 0 }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-label">Following</div>
+              <div class="stat-value">{{ user?.followingCount || 0 }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-label">Likes</div>
+              <div class="stat-value">{{ user?.likesCount || 0 }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-label">Member Since</div>
+              <div class="stat-value">{{ formatDate(user?.createdAt) || 'N/A' }}</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Action Buttons -->
     <div class="q-pa-lg flex flex-col gap-3">
+      <!-- Sign Out Button -->
+      <q-btn
+        no-caps
+        block
+        unelevated
+        color="primary"
+        class="w-full"
+        label="Sign Out"
+        @click="logout"
+      />
+      
       <!-- Delete Account Button -->
       <q-btn
         no-caps
@@ -22,18 +103,21 @@
         label="Delete Account"
         @click="showDeleteConfirmation = true"
       />
-      
-      <!-- Logout Button -->
-      <q-btn
-        no-caps
-        block
-        unelevated
-        color="primary"
-        class="w-full"
-        label="Logout"
-        @click="logout"
-      />
     </div>
+
+    <!-- Commented out old UI -->
+    <!--
+    <section class="q-pa-lg pq-pb-lg">
+      <div class="text-h6 q-pa-lg">
+        <div class="flex flex-col gap-10">
+          <div v-for="item in items" :key="item.id" :href="item.path">
+            {{ item.name }}
+            <q-icon name="chevron_right" size="24px" />
+          </div>
+        </div>
+      </div>
+    </section>
+    -->
 
     <!-- Delete Account Confirmation Dialog -->
     <q-dialog v-model="showDeleteConfirmation" persistent>
@@ -93,16 +177,33 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useProfileStore } from "src/stores/profileStore";
+import { useAuthStore } from "src/stores/authstore";
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const router = useRouter();
 const $q = useQuasar();
 const profileStore = useProfileStore();
+const authStore = useAuthStore();
 
-// Reactive data
+// Get user data from profile store
+const user = computed(() => {
+  return JSON.parse(JSON.stringify(profileStore?.userDetails));
+});
+
+// Get personal data from auth store
+const authUserDetails = computed(() => {
+  return JSON.parse(JSON.stringify(authStore?.userDetails));
+});
+
+// Debug logging to see what data we have
+console.log('Profile Store User:', user.value);
+console.log('Auth Store User:', authUserDetails.value);
+
+// Reactive data for delete functionality
 const showDeleteConfirmation = ref(false);
 const showLoadingDialog = ref(false);
 const deletePassword = ref("");
@@ -110,6 +211,8 @@ const deleteLoading = ref(false);
 const passwordError = ref(false);
 const passwordErrorMessage = ref("");
 
+// Commented out old items array
+/*
 const items = [
   { id: 1, name: "Account" },
   { id: 2, name: "Settings & Privacy" },
@@ -119,6 +222,51 @@ const items = [
   { id: 6, name: "Help" },
   { id: 7, name: "About" },
 ];
+*/
+
+// Format date helper
+const formatDate = (dateString) => {
+  if (!dateString) return null;
+  
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
+
+// Format date of birth helper (handles DD/MM/YYYY format from auth store)
+const formatDateOfBirth = (dobString) => {
+  if (!dobString) return null;
+  
+  try {
+    // Check if it's in DD/MM/YYYY format from auth store
+    if (dobString.includes('/')) {
+      const [day, month, year] = dobString.split('/');
+      const date = new Date(year, month - 1, day); // month is 0-indexed
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+    
+    // Otherwise treat as regular date string
+    const date = new Date(dobString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
 
 const logout = () => {
   localStorage.clear();
@@ -215,18 +363,74 @@ const confirmDeleteAccount = async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  
   section {
     & > div {
       background-color: #fff;
       border-radius: 16px;
-      & > .flex {
-        gap: 40px;
-        div {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-        }
+    }
+  }
+}
+
+.profile-info {
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    .profile-img {
+      flex-shrink: 0;
+      height: 80px;
+      width: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .profile-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #1976d2;
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+    
+    .profile-details {
+      flex-grow: 1;
+    }
+  }
+  
+  .profile-stats {
+    display: grid;
+    gap: 16px;
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .stat-label {
+        font-weight: 500;
+        color: #666;
+      }
+      
+      .stat-value {
+        font-weight: 600;
+        color: #333;
       }
     }
   }

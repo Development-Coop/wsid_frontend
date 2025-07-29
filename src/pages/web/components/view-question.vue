@@ -369,6 +369,8 @@
                       color="primary"
                       unelevated
                       icon="north_east"
+                      :loading="isSubmittingComment"
+                      :disable="isSubmittingComment || !text.trim()"
                       @click="addComment"
                     />
                   </template>
@@ -775,35 +777,52 @@ const closeDialog = () => {
   dialog.value = false; // Close the dialog
 };
 
+const isSubmittingComment = ref(false);
+
 const addComment = async () => {
+  if (isSubmittingComment.value) return; // Prevent double submission
+  
+  const commentText = text.value.trim();
+  if (!commentText) return;
+
   try {
+    isSubmittingComment.value = true;
+    
     const data = {
       "postId": postDetails.value.id,
-      "text": text.value,
-      ...(
-        commentParentId.value ? { parentId: commentParentId.value } : {}
-      )
-    }
-    await postStore.createComment(data);
-    await fetchComments(postDetails.value.id);
+      "text": commentText,
+      ...(commentParentId.value ? { parentId: commentParentId.value } : {})
+    };
+
+    // Clear input immediately for better UX
     text.value = "";
     commentParentId.value = null;
+    
+    // Make API call
+    await postStore.createComment(data);
+    
+    // Refresh comments after successful submission
+    await fetchComments(postDetails.value.id);
     
     // Emit the updated comment count to parent components
     const postId = route?.query?.postId || props?.postId;
     emit('update-post', postId, { 
       commentsCount: localTotalComments.value
     });
-  } catch (e) {
+    
+  } catch (error) {
+    console.error('Error adding comment:', error);
     $q.notify({
       color: "negative",
-      message: "Please try again.",
+      message: "Failed to post comment. Please try again.",
       position: "top",
       icon: "error",
       autoClose: true,
     });
+  } finally {
+    isSubmittingComment.value = false;
   }
-}
+};
 
 // Modify showVotesResult to handle temporary selection
 const showVotesResult = (option) => {
