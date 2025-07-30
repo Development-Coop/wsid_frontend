@@ -62,7 +62,11 @@
       </div>
       <p
         class="text-grey-9 q-mb-md q-mt-sm cursor-pointer"
-        style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere"
+        style="
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+        "
         @click.self="openPost('')"
       >
         <span v-if="postContent">{{ postContent }}</span>

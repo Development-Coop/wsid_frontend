@@ -55,7 +55,11 @@
     </template>
 
     <!-- Loading spinner when loading more posts -->
-    <q-spinner v-if="isLoading && posts.length > 0" color="primary" class="spinner q-mt-md" />
+    <q-spinner
+      v-if="isLoading && posts.length > 0"
+      color="primary"
+      class="spinner q-mt-md"
+    />
   </q-page>
 </template>
 
@@ -96,7 +100,8 @@ const fetchPosts = async () => {
       } else {
         const merged = [...postStore.trendingPosts, ...newPosts];
         const unique = merged.filter(
-          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+          (post, index, self) =>
+            index === self.findIndex((p) => p.id === post.id)
         );
         postStore.setTrendingPosts(unique);
       }
@@ -143,7 +148,11 @@ watch(
   () => route.path,
   async (newPath, oldPath) => {
     // If user returns from view-question page, refresh posts to get updated vote data
-    if (oldPath && oldPath.includes('view-question') && newPath.includes('trending')) {
+    if (
+      oldPath &&
+      oldPath.includes("view-question") &&
+      newPath.includes("trending")
+    ) {
       await fetchPosts();
     }
   }

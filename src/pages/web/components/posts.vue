@@ -70,7 +70,11 @@
     <!-- Post Content -->
     <p
       class="text-grey-9 q-mb-sm q-mt-sm"
-      style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere"
+      style="
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      "
       @click.self="openPost('')"
     >
       <span v-if="postContent" class="post-content">{{ postContent }}</span>

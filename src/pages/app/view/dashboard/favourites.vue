@@ -25,9 +25,7 @@
       <div class="empty-state q-pa-lg">
         <q-icon name="favorite" size="64px" color="grey-6" />
         <p class="text-grey-7 text-h6 q-mt-md">No favorite posts yet</p>
-        <p class="text-grey-8 text-body2">
-          Like some posts to see them here!
-        </p>
+        <p class="text-grey-8 text-body2">Like some posts to see them here!</p>
       </div>
     </template>
   </q-page>
@@ -83,7 +81,7 @@ const posts = Array.from(generateDummyContent());
 const handleUpdatePost = (postId, updatedData) => {
   // This function will be used when real data is implemented
   // For now, it's a placeholder since we're using dummy data
-  console.log('Post update received:', postId, updatedData);
+  console.log("Post update received:", postId, updatedData);
 };
 </script>
 

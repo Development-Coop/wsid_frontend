@@ -82,7 +82,16 @@
         { 'q-mb-md': postImages.length == 0 },
       ]"
     >
-      <p class="q-ma-none" style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere">{{ postContent }}</p>
+      <p
+        class="q-ma-none"
+        style="
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+        "
+      >
+        {{ postContent }}
+      </p>
     </div>
 
     <!-- Single Post Image -->

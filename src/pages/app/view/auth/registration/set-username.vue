@@ -163,7 +163,7 @@ const canProceed = computed(() => {
   const isValid = authStore.isUsernameFullyValid;
   const isNotLoading = !isLoading.value;
   const hasUsername = username && username.trim().length >= 3;
-  
+
   return isValid && isNotLoading && hasUsername;
 });
 
@@ -228,7 +228,7 @@ const validateUsername = (newValue) => {
   if (newValue.trim().length < 3) {
     authStore.suggestions = [];
   }
-  
+
   // First validate the format
   const isFormatValid = authStore.validateUsername(newValue);
 
@@ -245,10 +245,15 @@ const validateUsername = (newValue) => {
 const setUserName = async () => {
   if (!canProceed.value) {
     // Show specific error message based on what's missing
-    if (!authStore.userDetails.username || authStore.userDetails.username.trim().length < 3) {
-      authStore.usernameError = "Please enter a valid username (at least 3 characters)";
+    if (
+      !authStore.userDetails.username ||
+      authStore.userDetails.username.trim().length < 3
+    ) {
+      authStore.usernameError =
+        "Please enter a valid username (at least 3 characters)";
     } else if (!authStore.isUsernameFullyValid) {
-      authStore.usernameError = "Please fix the username errors before proceeding";
+      authStore.usernameError =
+        "Please fix the username errors before proceeding";
     }
     return;
   }

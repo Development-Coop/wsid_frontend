@@ -92,7 +92,7 @@ onMounted(() => {
   }
   // Only redirect if we still don't have contact detail
   if (!contactDetail.value) {
-    router.push({ name: 'registration' });
+    router.push({ name: "registration" });
   }
 });
 

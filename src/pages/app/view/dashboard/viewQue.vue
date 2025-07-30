@@ -41,7 +41,14 @@
           <p class="text-grey-9 q-mb-sm" style="font-weight: 600">
             <span>{{ postDetails?.title }}</span>
           </p>
-          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere">
+          <p
+            class="text-grey-9 q-mb-sm q-mt-sm"
+            style="
+              white-space: pre-wrap;
+              word-break: break-word;
+              overflow-wrap: anywhere;
+            "
+          >
             {{ postDetails?.description }}
           </p>
 
@@ -418,7 +425,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["fetch-new-post", "update-post", "question-answered"]);
+const emit = defineEmits([
+  "fetch-new-post",
+  "update-post",
+  "question-answered",
+]);
 
 const postDetails = ref({
   id: "",
@@ -619,7 +630,7 @@ const addComment = async () => {
     await fetchComments(postDetails.value.id);
     text.value = "";
     commentParentId.value = null;
-    
+
     // Emit update-post instead of fetch-new-post
     const postId = route?.query?.postId || props?.postId;
     emit("update-post", postId, {
@@ -653,7 +664,7 @@ const showVotesResult = async (option) => {
       await fetchPostDetails(postId);
       Loading.hide();
     }
-    
+
     // Emit update-post instead of fetch-new-post to update only the specific post
     emit("update-post", postId, {
       hasVoted: true,

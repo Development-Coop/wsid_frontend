@@ -47,7 +47,9 @@
     <template v-else-if="!isLoading && posts.length === 0">
       <div class="empty-state q-pa-lg">
         <q-icon name="people" size="64px" color="grey-6" />
-        <p class="text-grey-7 text-h6 q-mt-md">No posts from people you follow</p>
+        <p class="text-grey-7 text-h6 q-mt-md">
+          No posts from people you follow
+        </p>
         <p class="text-grey-8 text-body2">
           Follow some people to see their posts here!
         </p>
@@ -55,7 +57,11 @@
     </template>
 
     <!-- Loading spinner when loading more posts -->
-    <q-spinner v-if="isLoading && posts.length > 0" color="primary" class="spinner q-mt-md" />
+    <q-spinner
+      v-if="isLoading && posts.length > 0"
+      color="primary"
+      class="spinner q-mt-md"
+    />
   </q-page>
 </template>
 
@@ -95,7 +101,8 @@ const fetchPosts = async () => {
       } else {
         const merged = [...postStore.homePosts, ...newPosts];
         const unique = merged.filter(
-          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+          (post, index, self) =>
+            index === self.findIndex((p) => p.id === post.id)
         );
         postStore.setHomePosts(unique);
       }
@@ -142,7 +149,11 @@ watch(
   () => route.path,
   async (newPath, oldPath) => {
     // If user returns from view-question page, refresh posts to get updated vote data
-    if (oldPath && oldPath.includes('view-question') && newPath.includes('following')) {
+    if (
+      oldPath &&
+      oldPath.includes("view-question") &&
+      newPath.includes("following")
+    ) {
       await fetchPosts();
     }
   }

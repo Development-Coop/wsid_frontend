@@ -68,7 +68,10 @@
 
       <!-- Button container with center alignment -->
       <div class="flex flex-col justify-center">
-        <div class="terms q-mt-md flex items-center" style="align-items: center; flex-wrap: nowrap;">
+        <div
+          class="terms q-mt-md flex items-center"
+          style="align-items: center; flex-wrap: nowrap"
+        >
           <q-checkbox v-model="termsAccepted" />
           <p>
             By signing up to create an account I accept WSID's
