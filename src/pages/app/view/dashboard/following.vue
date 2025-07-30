@@ -1,22 +1,61 @@
 <template>
   <q-page class="q-pb-xl">
-    <div v-for="post in posts" :key="post.id" class="post-wrapper">
-      <Posts
-        class="q-pa-md"
-        :post-id="post.id"
-        :user-image="post.user.profilePicUrl"
-        :user-id="post.user.id"
-        :username="post.user.name"
-        :time-ago="post.createdAt"
-        :post-title="post.title"
-        :post-content="post.description"
-        :post-images="post.images"
-        :votes="post.votesCount"
-        :comments="post.commentsCount"
-        :has-voted="post.hasVoted"
-      />
-    </div>
-    <q-spinner v-if="isLoading" color="primary" class="spinner q-mt-md" />
+    <!-- Skeleton loaders when loading and no posts -->
+    <template v-if="isLoading && posts.length === 0">
+      <div v-for="n in 5" :key="n" class="skeleton-post q-pa-md">
+        <div class="flex no-wrap">
+          <q-skeleton
+            type="QAvatar"
+            size="44px"
+            style="flex-shrink: 0"
+            class="q-mr-md"
+          />
+          <div class="full-width">
+            <q-skeleton type="text" width="40%" class="q-mb-sm" />
+            <q-skeleton type="text" width="60%" class="q-mb-sm" />
+            <q-skeleton type="text" width="80%" class="q-mb-md" />
+            <div class="flex q-gutter-md">
+              <q-skeleton type="text" width="20%" />
+              <q-skeleton type="text" width="20%" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Posts when available -->
+    <template v-else-if="posts.length > 0">
+      <div v-for="post in posts" :key="post.id" class="post-wrapper">
+        <Posts
+          class="q-pa-md"
+          :post-id="post.id"
+          :user-image="post.user.profilePicUrl"
+          :user-id="post.user.id"
+          :username="post.user.name"
+          :time-ago="post.createdAt"
+          :post-title="post.title"
+          :post-content="post.description"
+          :post-images="post.images"
+          :votes="post.votesCount"
+          :comments="post.commentsCount"
+          :has-voted="post.hasVoted"
+        />
+      </div>
+    </template>
+
+    <!-- Empty state when no posts and not loading -->
+    <template v-else-if="!isLoading && posts.length === 0">
+      <div class="empty-state q-pa-lg">
+        <q-icon name="people" size="64px" color="grey-6" />
+        <p class="text-grey-7 text-h6 q-mt-md">No posts from people you follow</p>
+        <p class="text-grey-8 text-body2">
+          Follow some people to see their posts here!
+        </p>
+      </div>
+    </template>
+
+    <!-- Loading spinner when loading more posts -->
+    <q-spinner v-if="isLoading && posts.length > 0" color="primary" class="spinner q-mt-md" />
   </q-page>
 </template>
 
@@ -108,5 +147,13 @@ onUnmounted(() => {
 }
 .spinner {
   justify-self: center;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 300px;
 }
 </style>

@@ -1,18 +1,32 @@
 <template>
   <q-page class="q-pb-xl">
-    <div v-for="post in posts" :key="post.username" class="post-wrapper">
-      <Posts
-        class="q-pa-md"
-        :user-image="post.userImage"
-        :username="post.username"
-        :time-ago="post.timeAgo"
-        :post-title="post.postTitle"
-        :post-content="post.postContent"
-        :post-image="post.postImage"
-        :votes="post.votes"
-        :comments="post.comments"
-      />
-    </div>
+    <!-- Posts when available -->
+    <template v-if="posts.length > 0">
+      <div v-for="post in posts" :key="post.username" class="post-wrapper">
+        <Posts
+          class="q-pa-md"
+          :user-image="post.userImage"
+          :username="post.username"
+          :time-ago="post.timeAgo"
+          :post-title="post.postTitle"
+          :post-content="post.postContent"
+          :post-image="post.postImage"
+          :votes="post.votes"
+          :comments="post.comments"
+        />
+      </div>
+    </template>
+
+    <!-- Empty state when no posts -->
+    <template v-else>
+      <div class="empty-state q-pa-lg">
+        <q-icon name="favorite" size="64px" color="grey-6" />
+        <p class="text-grey-7 text-h6 q-mt-md">No favorite posts yet</p>
+        <p class="text-grey-8 text-body2">
+          Like some posts to see them here!
+        </p>
+      </div>
+    </template>
   </q-page>
 </template>
 
@@ -68,5 +82,13 @@ const posts = Array.from(generateDummyContent());
   &:not(:last-child) {
     border-bottom: 1px solid #aeaeb2;
   }
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 300px;
 }
 </style>

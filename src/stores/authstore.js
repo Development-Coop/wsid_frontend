@@ -189,14 +189,30 @@ export const useAuthStore = defineStore("auth", () => {
       });
 
       if (response.data.data.suggestions) {
+        // Clear hardcoded suggestions and use API suggestions
         suggestions.value = response.data.data.suggestions.map(
           (suggestion) => `@${suggestion}`
         );
+      } else {
+        // Fallback to some basic suggestions if API doesn't return any
+        suggestions.value = [
+          `@${username}123`,
+          `@${username}2024`,
+          `@${username}User`,
+          `@${username}Official`,
+        ];
       }
 
       return response.data;
     } catch (error) {
       console.error("Username suggestions error:", error);
+      // Fallback suggestions on error
+      suggestions.value = [
+        `@${username}123`,
+        `@${username}2024`,
+        `@${username}User`,
+        `@${username}Official`,
+      ];
       return null;
     }
   };

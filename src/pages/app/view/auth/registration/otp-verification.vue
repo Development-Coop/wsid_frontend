@@ -86,8 +86,14 @@ const $q = useQuasar();
 
 onMounted(() => {
   contactDetail.value = route?.query?.contactDetail;
-  if (!contactDetail.value) router.go(-1);
-  // setOtpInputRef();
+  // If no contactDetail in query, try to get it from auth store
+  if (!contactDetail.value) {
+    contactDetail.value = authStore.userDetails.phone_or_email;
+  }
+  // Only redirect if we still don't have contact detail
+  if (!contactDetail.value) {
+    router.push({ name: 'registration' });
+  }
 });
 
 // Computed property to check if all inputs are valid (filled)

@@ -31,8 +31,6 @@
             outlined
             placeholder="Set your username"
             maxlength="20"
-            :error="!authStore.isValidUsername"
-            error-message="Invalid username. Only alphanumeric, underscores, and periods allowed."
             @focus="moveIconToRight"
             @update:model-value="validateUsername"
           >
@@ -44,22 +42,51 @@
               <span class="at-symbol">@</span>
             </template>
 
-            <template v-if="iconRight" #append>
-              <img src="~src/assets/icons/password-icon.svg" alt="icon-right" />
+            <!-- Loading indicator when checking availability -->
+            <template #append>
+              <q-spinner
+                v-if="authStore.usernameCheckingStatus === 'checking'"
+                color="primary"
+                size="sm"
+              />
+              <q-icon
+                v-else-if="showSuccessIcon"
+                name="check_circle"
+                color="positive"
+                size="sm"
+              />
+              <q-icon
+                v-else-if="hasError"
+                name="error"
+                color="negative"
+                size="sm"
+              />
             </template>
           </q-input>
 
-          <!-- Suggestions as a static list (No dropdown) -->
+          <!-- Error message -->
+          <div v-if="hasError" class="error-message q-mt-sm">
+            <span class="text-negative">{{ authStore.usernameError }}</span>
+          </div>
+
+          <!-- Success message -->
+          <div v-if="showSuccessMessage" class="success-message q-mt-sm">
+            <q-icon name="check_circle" color="positive" size="sm" />
+            <span class="text-positive q-ml-xs">Username is available!</span>
+          </div>
+
+          <!-- Suggestions as a static list (Show when username is taken) -->
           <div
             v-if="
-              authStore.filteredSuggestions &&
-              authStore.filteredSuggestions.length
+              authStore.usernameError === 'Username is already taken' &&
+              authStore.suggestions.length
             "
             v-motion-slide-left
-            :delay="800"
-            class="suggestions-list"
+            :delay="200"
+            class="suggestions-wrapper q-mt-md"
           >
-            <div>
+            <p class="suggestions-title">Try these suggestions:</p>
+            <div class="suggestions-list">
               <span
                 v-for="(suggestion, index) in visibleSuggestions"
                 :key="index"
@@ -73,10 +100,7 @@
 
             <!-- Show more/less option -->
             <p
-              v-if="
-                authStore.filteredSuggestions &&
-                authStore.filteredSuggestions.length > visibleCount
-              "
+              v-if="authStore.suggestions.length > visibleCount"
               class="text-green-5 show-more q-mt-sm cursor-pointer"
               @click="toggleShowAll"
             >
@@ -95,7 +119,8 @@
             label="Next"
             color="primary"
             unelevated
-            :disable="!isCodeValid"
+            :disable="!canProceed"
+            :loading="isLoading"
             @click="setUserName"
           />
         </div>
@@ -105,31 +130,87 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/authstore";
 
 const router = useRouter();
 const authStore = useAuthStore();
 const iconRight = ref(false);
-const showSuggestions = ref(true);
 const showAll = ref(false);
+const isLoading = ref(false);
 
 // Maximum visible suggestions before "Show more" is clicked
 const visibleCount = 2;
 
+// Watch for username taken status to fetch API suggestions
+watch(
+  () => authStore.usernameError,
+  async (newError) => {
+    if (
+      newError === "Username is already taken" &&
+      authStore.userDetails.username
+    ) {
+      // Fetch API suggestions for the current username
+      await authStore.getUsernameSuggestions(authStore.userDetails.username);
+    }
+  }
+);
+
+// Computed property to determine if user can proceed
+const canProceed = computed(() => {
+  const username = authStore.userDetails.username;
+  const isValid = authStore.isUsernameFullyValid;
+  const isNotLoading = !isLoading.value;
+  const hasUsername = username && username.trim().length >= 3;
+  
+  return isValid && isNotLoading && hasUsername;
+});
+
+// Computed properties for showing icons and messages
+const showSuccessIcon = computed(() => {
+  return (
+    authStore.isUsernameFullyValid &&
+    authStore.userDetails.username.length >= 3 &&
+    authStore.usernameCheckingStatus === "checked"
+  );
+});
+
+const hasError = computed(() => {
+  return (
+    !!authStore.usernameError &&
+    authStore.userDetails.username.length > 0 &&
+    authStore.usernameCheckingStatus !== "checking"
+  );
+});
+
+const showSuccessMessage = computed(() => {
+  return (
+    authStore.isUsernameFullyValid &&
+    authStore.userDetails.username.length >= 3 &&
+    authStore.usernameCheckingStatus === "checked"
+  );
+});
+
 // Computed property to show either a limited or full list of suggestions
 const visibleSuggestions = computed(() => {
-  if (!authStore.filteredSuggestions) return [];
+  if (!authStore.suggestions) return [];
   return showAll.value
-    ? authStore.filteredSuggestions
-    : authStore.filteredSuggestions.slice(0, visibleCount);
+    ? authStore.suggestions
+    : authStore.suggestions.slice(0, visibleCount);
 });
 
 // Select a suggestion and fill the input
-const selectSuggestion = (suggestion) => {
-  authStore.setUsername(suggestion.replace("@", ""));
-  showSuggestions.value = false; // Hide suggestions after selection
+const selectSuggestion = async (suggestion) => {
+  const cleanUsername = suggestion.replace("@", "");
+  authStore.userDetails.username = cleanUsername;
+  authStore.setUsername(cleanUsername);
+
+  // Validate and check availability of selected suggestion
+  const isFormatValid = authStore.validateUsername(cleanUsername);
+  if (isFormatValid) {
+    await authStore.checkUsernameAvailability(cleanUsername);
+  }
 };
 
 // Toggle showing all suggestions
@@ -137,28 +218,51 @@ const toggleShowAll = () => {
   showAll.value = !showAll.value;
 };
 
-const isCodeValid = computed(() => {
-  return !!authStore.userDetails.username && authStore.isValidUsername;
-});
-
 const moveIconToRight = () => {
   iconRight.value = true;
 };
 
 // Function to validate the username while typing
-const validateUsername = (event) => {
-  const input = event;
-  authStore.validateUsername(input);
+const validateUsername = (newValue) => {
+  // Clear suggestions when user starts typing
+  if (newValue.trim().length < 3) {
+    authStore.suggestions = [];
+  }
+  
+  // First validate the format
+  const isFormatValid = authStore.validateUsername(newValue);
 
-  // Prevent any invalid characters from being entered
-  if (!authStore.isValidUsername) {
-    authStore.setUsername(input.slice(0, -1)); // Remove invalid character
+  // Only check availability if format is valid and username is at least 3 characters
+  if (isFormatValid && newValue.trim().length >= 3) {
+    authStore.checkUsernameAvailability(newValue);
+  } else {
+    // Reset availability checking status if conditions aren't met
+    authStore.usernameCheckingStatus = "idle";
+    authStore.isUsernameAvailable = true;
   }
 };
 
-const setUserName = () => {
-  authStore.setUsername(authStore.userDetails.username);
-  router.push({ name: "set-profile" });
+const setUserName = async () => {
+  if (!canProceed.value) {
+    // Show specific error message based on what's missing
+    if (!authStore.userDetails.username || authStore.userDetails.username.trim().length < 3) {
+      authStore.usernameError = "Please enter a valid username (at least 3 characters)";
+    } else if (!authStore.isUsernameFullyValid) {
+      authStore.usernameError = "Please fix the username errors before proceeding";
+    }
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    authStore.setUsername(authStore.userDetails.username);
+    router.push({ name: "set-profile" });
+  } catch (error) {
+    console.error("Error proceeding to next step:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -190,6 +294,32 @@ const setUserName = () => {
         cursor: pointer;
       }
     }
+    .suggestions-wrapper {
+      padding: 16px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      border-left: 4px solid #1976d2;
+
+      .suggestions-title {
+        margin: 0 0 8px 0;
+        font-weight: 500;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .suggestions-list {
+        span {
+          font-size: 15px;
+          cursor: pointer;
+          color: #1976d2;
+          font-weight: 500;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
     .show-more {
       width: fit-content;
       font-weight: 500;
@@ -197,6 +327,15 @@ const setUserName = () => {
       &:hover {
         text-decoration: underline;
       }
+    }
+    .error-message {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .success-message {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
     }
   }
   .button-container {
