@@ -14,7 +14,12 @@
             <!-- Description Section -->
             <section class="description q-mb-lg">
               <p class="text-body1 text-grey-8">
-                <strong>WSID</strong> (short for "What Should I Do?") is a community-driven social media platform that empowers individuals to make informed decisions and find clarity on life's uncertainties. It’s built on the idea that sometimes, life presents us with tough choices—big or small—and getting diverse perspectives can lead to better outcomes.
+                <strong>WSID</strong> (short for "What Should I Do?") is a
+                community-driven social media platform that empowers individuals
+                to make informed decisions and find clarity on life's
+                uncertainties. It’s built on the idea that sometimes, life
+                presents us with tough choices—big or small—and getting diverse
+                perspectives can lead to better outcomes.
               </p>
             </section>
 
@@ -23,42 +28,57 @@
               <div class="feature">
                 <h5 class="text-h6">Ask Questions</h5>
                 <p class="text-grey-7">
-                  Whether you're facing life-changing choices or everyday dilemmas, WSID allows you to ask direct, focused questions and receive thoughtful input from a supportive community. Formulate your question, provide options, and let the crowd guide your decision.
+                  Whether you're facing life-changing choices or everyday
+                  dilemmas, WSID allows you to ask direct, focused questions and
+                  receive thoughtful input from a supportive community.
+                  Formulate your question, provide options, and let the crowd
+                  guide your decision.
                 </p>
               </div>
 
               <div class="feature">
                 <h5 class="text-h6">Answer Questions</h5>
                 <p class="text-grey-7">
-                  Share your knowledge and insights with others seeking guidance. Whether you're an expert or just passionate about helping others, WSID’s platform empowers you to make a difference.
+                  Share your knowledge and insights with others seeking
+                  guidance. Whether you're an expert or just passionate about
+                  helping others, WSID’s platform empowers you to make a
+                  difference.
                 </p>
               </div>
 
               <div class="feature">
                 <h5 class="text-h6">Get Answers</h5>
                 <p class="text-grey-7">
-                  WSID leverages community polls to provide clear, insightful answers. No noise, just straightforward responses tailored to your needs.
+                  WSID leverages community polls to provide clear, insightful
+                  answers. No noise, just straightforward responses tailored to
+                  your needs.
                 </p>
               </div>
 
               <div class="feature">
                 <h5 class="text-h6">Get Diverse Perspectives</h5>
                 <p class="text-grey-7">
-                  WSID fosters open discussions where contributors reveal their answers, ensuring each insight is backed by genuine opinions and engagement.
+                  WSID fosters open discussions where contributors reveal their
+                  answers, ensuring each insight is backed by genuine opinions
+                  and engagement.
                 </p>
               </div>
 
               <div class="feature">
                 <h5 class="text-h6">Why WSID?</h5>
                 <p class="text-grey-7">
-                  Amid information overload and bias, WSID offers a refreshing alternative for clear, confident answers. It’s a focused space to ask questions, get answers, and see transparent results.
+                  Amid information overload and bias, WSID offers a refreshing
+                  alternative for clear, confident answers. It’s a focused space
+                  to ask questions, get answers, and see transparent results.
                 </p>
               </div>
 
               <div class="feature">
                 <h5 class="text-h6">The Future</h5>
                 <p class="text-grey-7">
-                  Soon, users will be able to shape the platform’s future through community-driven decision-making, ensuring WSID evolves with its community’s needs.
+                  Soon, users will be able to shape the platform’s future
+                  through community-driven decision-making, ensuring WSID
+                  evolves with its community’s needs.
                 </p>
               </div>
             </section>
@@ -67,9 +87,17 @@
             <footer class="q-mt-md">
               <div class="footer-links">
                 <h5 class="text-h6 q-mb-sm">Know More</h5>
-                <div style="display: grid;">
-                  <a class="footer-link" @click="router.push({ name: 'privacy-policy' })">Privacy</a>
-                  <a class="footer-link" @click="router.push({ name: 'terms-conditions' })">Terms and Conditions</a>
+                <div style="display: grid">
+                  <a
+                    class="footer-link"
+                    @click="router.push({ name: 'privacy-policy' })"
+                    >Privacy</a
+                  >
+                  <a
+                    class="footer-link"
+                    @click="router.push({ name: 'terms-conditions' })"
+                    >Terms and Conditions</a
+                  >
                 </div>
               </div>
 
@@ -105,7 +133,11 @@ const router = useRouter();
     padding: 32px;
     overflow: hidden;
     height: 100vh;
-    background: linear-gradient(180deg, rgba(255, 87, 50, 0.7) 0%, #ff5732 46.5%);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 87, 50, 0.7) 0%,
+      #ff5732 46.5%
+    );
     border-radius: 20px 20px 88px 20px;
     margin: -10% 0 0 -5%;
     display: grid;
@@ -150,5 +182,4 @@ const router = useRouter();
   text-decoration: underline;
   cursor: pointer;
 }
-
 </style>

@@ -12,7 +12,12 @@
               spinner-size="22px"
             >
               <template #error>
-                <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                <img
+                  :src="fallbackImage"
+                  alt="Fallback Image"
+                  class="post-img"
+                  style="border: none; width: 100%; height: 100%; padding: 4px"
+                />
               </template>
             </q-img>
             <!-- <img :src="user.profilePicUrl" alt="User Avatar" /> -->
@@ -48,7 +53,7 @@ import { useQuasar, Loading } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const props = defineProps({
   searchText: {

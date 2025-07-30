@@ -51,7 +51,11 @@
               <div v-if="users.length > 0">
                 <div v-for="user in users" :key="user.id" class="user-wrapper">
                   <div class="user-info">
-                    <q-avatar size="48px" class="q-mr-md" @click="goToProfile(user.id)">
+                    <q-avatar
+                      size="48px"
+                      class="q-mr-md"
+                      @click="goToProfile(user.id)"
+                    >
                       <q-img
                         class="post-img"
                         :src="user.profilePicUrl || fallbackImage"
@@ -59,11 +63,24 @@
                         spinner-size="22px"
                       >
                         <template #error>
-                          <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+                          <img
+                            :src="fallbackImage"
+                            alt="Fallback Image"
+                            class="post-img"
+                            style="
+                              border: none;
+                              width: 100%;
+                              height: 100%;
+                              padding: 4px;
+                            "
+                          />
                         </template>
                       </q-img>
                     </q-avatar>
-                    <div class="user-details cursor-pointer" @click="goToProfile(user.id)">
+                    <div
+                      class="user-details cursor-pointer"
+                      @click="goToProfile(user.id)"
+                    >
                       <p>{{ user.name }}</p>
                     </div>
                   </div>
@@ -93,7 +110,12 @@
               <div v-for="n in 3" :key="n" class="post-wrapper">
                 <div class="skeleton-post q-pa-md">
                   <div class="flex no-wrap">
-                    <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+                    <q-skeleton
+                      type="QAvatar"
+                      size="44px"
+                      style="flex-shrink: 0"
+                      class="q-mr-md"
+                    />
                     <div class="full-width">
                       <q-skeleton type="text" width="30%" class="q-mb-sm" />
                       <q-skeleton type="text" width="60%" class="q-mb-sm" />
@@ -135,7 +157,9 @@
         <div class="initial-state">
           <q-icon name="search" size="64px" color="grey-6" />
           <p class="text-grey-7 text-h6">Search for users or posts</p>
-          <p class="text-grey-8">Enter at least 3 characters to start searching</p>
+          <p class="text-grey-8">
+            Enter at least 3 characters to start searching
+          </p>
         </div>
       </template>
     </div>
@@ -150,7 +174,7 @@ import { usePostStore } from "src/stores/postStore";
 import Posts from "../components/posts.vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const $q = useQuasar();
 const postStore = usePostStore();
@@ -233,11 +257,11 @@ const loggedInUser = computed(() => {
 });
 
 const goToProfile = (id) => {
-    if (id === loggedInUser.value.id) {
-      router.push({ name: "web-dashboard-profile" });
-    } else {
-      router.push({ name: "web-dashboard-view-profile", query: { uid: id } });
-    }
+  if (id === loggedInUser.value.id) {
+    router.push({ name: "web-dashboard-profile" });
+  } else {
+    router.push({ name: "web-dashboard-view-profile", query: { uid: id } });
+  }
 };
 
 const toggleFollow = async (id) => {
@@ -274,16 +298,16 @@ const toggleFollow = async (id) => {
   padding: 4px;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  
+
   .q-tab {
     border-radius: 6px;
     transition: all 0.3s ease;
-    
+
     &.q-tab--active {
       background-color: #000;
       color: #fff;
     }
-    
+
     &:hover:not(.q-tab--active) {
       background-color: #f8f8f8;
     }
@@ -334,12 +358,13 @@ const toggleFollow = async (id) => {
     border-radius: 8px;
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
 }
 
-.no-users, .no-posts {
+.no-users,
+.no-posts {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -375,9 +400,9 @@ const toggleFollow = async (id) => {
 }
 
 .search-bar {
-  :deep(.q-field__control){
+  :deep(.q-field__control) {
     border: none !important;
-    &:before{
+    &:before {
       border: none !important;
     }
   }
@@ -386,9 +411,10 @@ const toggleFollow = async (id) => {
     border-radius: 8px;
     transition: all 0.3s ease;
     background: white;
-    
-    &:hover, &:focus-within {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   }
 }
@@ -409,7 +435,7 @@ const toggleFollow = async (id) => {
 
   p {
     margin: 8px 0;
-    
+
     &.text-h6 {
       font-weight: 500;
     }

@@ -105,7 +105,12 @@
               <template v-if="isLoading && posts.length === 0">
                 <div v-for="n in 5" :key="n" class="skeleton-post q-pa-md">
                   <div class="flex no-wrap">
-                    <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+                    <q-skeleton
+                      type="QAvatar"
+                      size="44px"
+                      style="flex-shrink: 0"
+                      class="q-mr-md"
+                    />
                     <div class="full-width">
                       <q-skeleton type="text" width="40%" class="q-mb-sm" />
                       <q-skeleton type="text" width="60%" class="q-mb-sm" />
@@ -118,7 +123,11 @@
                   </div>
                 </div>
               </template>
-              <q-spinner v-if="isLoading && posts.length > 0" color="primary" class="spinner" />
+              <q-spinner
+                v-if="isLoading && posts.length > 0"
+                color="primary"
+                class="spinner"
+              />
               <!-- <div v-else class="ask-question-container">
                 <q-img
                   :src="user?.profilePic"
@@ -249,7 +258,9 @@ const fetchPosts = async (fetch = false) => {
     // Check if newPosts contains data
     if (newPosts.length > 0) {
       const merged = [...postStore.posts, ...newPosts];
-      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      const unique = merged.filter(
+        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+      );
       postStore.setPosts(unique);
       currentPage.value++;
     } else {

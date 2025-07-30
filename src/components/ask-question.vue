@@ -1,6 +1,9 @@
 <template>
-  <q-page :class="{'q-pb-xl': !isPopup, 'custom-page': isPopup}">
-    <div v-if="!isPopup" :class="['flex','justify-between','q-pa-md','sticky-header']">
+  <q-page :class="{ 'q-pb-xl': !isPopup, 'custom-page': isPopup }">
+    <div
+      v-if="!isPopup"
+      :class="['flex', 'justify-between', 'q-pa-md', 'sticky-header']"
+    >
       <q-btn
         no-caps
         block
@@ -24,21 +27,30 @@
       />
     </div>
     <div class="q-ma-md">
-      <div :class="['text-h6','text-weight-bold','text-uppercase', {'text-center': !isPopup}]">
+      <div
+        :class="[
+          'text-h6',
+          'text-weight-bold',
+          'text-uppercase',
+          { 'text-center': !isPopup },
+        ]"
+      >
         Ask Question
       </div>
 
-      <div :class="{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup}">
+      <div :class="{ 'q-mt-xl': !isPopup, 'q-mt-lg': isPopup }">
         <div class="q-gutter-y-md column">
-          <q-input 
-            v-model="title" 
-            outlined 
+          <q-input
+            v-model="title"
+            outlined
             label="Question"
             maxlength="70"
             counter
             :rules="[
-              val => val.length >= 3 || 'Question must be at least 3 characters',
-              val => val.length <= 70 || 'Question cannot exceed 70 characters'
+              (val) =>
+                val.length >= 3 || 'Question must be at least 3 characters',
+              (val) =>
+                val.length <= 70 || 'Question cannot exceed 70 characters',
             ]"
           />
           <q-input
@@ -89,7 +101,16 @@
         </div>
       </div>
 
-      <div :class="[{'q-mt-xl': !isPopup, 'q-mt-lg': isPopup, 'option-container-grid': isPopup && options.length > 2}, 'option-container']">
+      <div
+        :class="[
+          {
+            'q-mt-xl': !isPopup,
+            'q-mt-lg': isPopup,
+            'option-container-grid': isPopup && options.length > 2,
+          },
+          'option-container',
+        ]"
+      >
         <div
           v-for="(option, index) in options"
           :key="index"
@@ -102,8 +123,10 @@
             maxlength="100"
             counter
             :rules="[
-              val => val.length >= 2 || 'Choice must be at least 2 characters',
-              val => val.length <= 100 || 'Choice cannot exceed 100 characters'
+              (val) =>
+                val.length >= 2 || 'Choice must be at least 2 characters',
+              (val) =>
+                val.length <= 100 || 'Choice cannot exceed 100 characters',
             ]"
           >
             <template #append>
@@ -196,7 +219,7 @@ const props = defineProps({
   isPopup: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 const emit = defineEmits(["close"]);
 
@@ -232,13 +255,17 @@ const compressImage = (file, maxWidth, maxHeight) => {
       ctx.drawImage(img, 0, 0, width, height);
 
       // Convert the canvas content to a data URL
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          reject(new Error("Image compression failed"));
-        }
-      }, file.type || "image/jpeg", 0.9); // Adjust quality as needed
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Image compression failed"));
+          }
+        },
+        file.type || "image/jpeg",
+        0.9
+      ); // Adjust quality as needed
     };
 
     img.onerror = () => reject(new Error("Image loading failed"));
@@ -255,7 +282,7 @@ const uploadDescriptionImages = () => {
   input.onchange = async (event) => {
     const files = Array.from(event.target.files);
     const remainingSlots = 4 - descriptionImages.value.length;
-    
+
     if (remainingSlots <= 0) {
       $q.notify({
         color: "negative",
@@ -402,17 +429,17 @@ const createPost = async () => {
     }
 
     // Validate that all options have text and meet length requirements
-    const invalidOptions = options.value.filter(option => {
+    const invalidOptions = options.value.filter((option) => {
       const text = option.text.trim();
       return !text || text.length < 2 || text.length > 100;
     });
 
     if (invalidOptions.length > 0) {
-      let message = '';
+      let message = "";
       if (options.value.length < 2) {
-        message = 'Please add at least 2 choices.';
+        message = "Please add at least 2 choices.";
       } else {
-        message = 'Each choice must be between 2 and 100 characters.';
+        message = "Each choice must be between 2 and 100 characters.";
       }
       $q.notify({
         color: "negative",
@@ -440,7 +467,10 @@ const createPost = async () => {
         const fileFieldname = `file${index + 1}`;
 
         // Attach the image to FormData if available
-        if (option.image && !(typeof option.image === "string" && option.image.startsWith("http"))) {
+        if (
+          option.image &&
+          !(typeof option.image === "string" && option.image.startsWith("http"))
+        ) {
           const response = await fetch(option.image); // Fetch the image URL
           const blob = await response.blob();
           formData.append(fileFieldname, blob, `file${index + 1}`); // Append the file with the generated fieldname
@@ -515,7 +545,7 @@ const createPost = async () => {
     if (!props.isPopup) {
       router.back();
     } else {
-      emit("close")
+      emit("close");
     }
   } catch (e) {
     console.log(e);
@@ -544,7 +574,7 @@ const fetchPostDetails = async (postId) => {
     options.value = postDetails.options.map((option) => ({
       text: option.text,
       image: option.image,
-      id: option.id
+      id: option.id,
     }));
   } catch (error) {
     $q.notify({

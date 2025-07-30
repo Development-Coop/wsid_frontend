@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title style="flex: unset;">
+        <q-toolbar-title style="flex: unset">
           <div
             class="text-h5 text-weight-bold cursor-pointer"
             @click="router.push({ name: 'web-dashboard-home' })"

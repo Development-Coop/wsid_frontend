@@ -1,7 +1,10 @@
 <template>
-  <q-page :class="{'custom-page': isPopup}">
+  <q-page :class="{ 'custom-page': isPopup }">
     <div class="q-pa-lg">
-      <div v-if="!isPopup" :class="['flex','justify-between', {'q-pb-lg': !isPopup} ]">
+      <div
+        v-if="!isPopup"
+        :class="['flex', 'justify-between', { 'q-pb-lg': !isPopup }]"
+      >
         <q-btn
           style="width: 80px"
           no-caps
@@ -104,7 +107,7 @@ const props = defineProps({
   isPopup: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 const emit = defineEmits(["close"]);
 
@@ -131,21 +134,25 @@ const onFileChange = (e) => {
   }
 };
 
-watch(user, (newValue) => {
-  form.value = {
-    name: newValue?.name || "",
-    dateOfBirth: newValue?.dateOfBirth || "",
-    username: newValue?.username || "",
-    bio: newValue?.bio || "",
-    profilePic: newValue?.profilePic || "",
-  };
-}, { immediate: true });
+watch(
+  user,
+  (newValue) => {
+    form.value = {
+      name: newValue?.name || "",
+      dateOfBirth: newValue?.dateOfBirth || "",
+      username: newValue?.username || "",
+      bio: newValue?.bio || "",
+      profilePic: newValue?.profilePic || "",
+    };
+  },
+  { immediate: true }
+);
 
 const uploadProfile = () => {
   document.querySelector('input[type="file"]').click();
 };
 
-const updateDetails = async() => {
+const updateDetails = async () => {
   try {
     Loading.show();
     await profileStore.updateProfileDetails(form.value);
@@ -157,11 +164,11 @@ const updateDetails = async() => {
       icon: "check_circle",
     });
     if (props.isPopup) {
-      emit("close")
+      emit("close");
     } else {
-      router.back()
+      router.back();
     }
-  } catch(e) {
+  } catch (e) {
     $q.notify({
       color: "negative",
       message:
@@ -174,7 +181,7 @@ const updateDetails = async() => {
   } finally {
     Loading.hide();
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

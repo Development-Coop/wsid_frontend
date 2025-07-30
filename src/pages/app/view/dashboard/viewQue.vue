@@ -37,13 +37,16 @@
             }}</span>
             <!-- Dynamic username -->
             <span v-show="postDetails?.user?.name" class="text-grey-7">
-              • {{ calculateTimeAgo(postDetails.createdAt) }}</span>
+              • {{ calculateTimeAgo(postDetails.createdAt) }}</span
+            >
             <!-- Dynamic time -->
           </p>
           <p class="text-grey-9 q-mb-sm" style="font-weight: 600">
             <span>{{ postDetails?.title }}</span>
           </p>
-          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;">{{ postDetails?.description }}</p>
+          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap">
+            {{ postDetails?.description }}
+          </p>
 
           <div
             v-if="postDetails?.images?.length > 0"
@@ -190,14 +193,19 @@
                     comment?.createdBy?.name
                   }}</span>
                   <span class="text-grey-7">
-                    • {{ calculateTimeAgo(comment?.createdAt) }}</span>
+                    • {{ calculateTimeAgo(comment?.createdAt) }}</span
+                  >
                 </p>
                 <!-- <p class="text-weight-medium text-weight-bold">{{ comment.text }}</p> -->
                 <p class="text-grey-9 q-mt-xs">
                   <span>{{ comment?.text }}</span>
                 </p>
                 <p class="flex items-center q-mt-sm q-mb-md">
-                  <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                  <span
+                    class="q-mr-md cursor-pointer"
+                    @click="focusReplyInput(comment?.id)"
+                    >Reply</span
+                  >
                   <span
                     class="like-container q-mr-md flex items-center cursor-pointer"
                     @click="toggleLike(comment?.id)"
@@ -268,13 +276,18 @@
                         reply?.createdBy?.name
                       }}</span>
                       <span class="text-grey-7">
-                        • {{ calculateTimeAgo(reply?.createdAt) }}</span>
+                        • {{ calculateTimeAgo(reply?.createdAt) }}</span
+                      >
                     </p>
                     <p class="text-grey-9 q-mb-xs">
                       <span>{{ reply?.text }}</span>
                     </p>
                     <p class="flex items-center q-mt-sm q-mb-md">
-                      <span class="q-mr-md cursor-pointer" @click="focusReplyInput(comment?.id)">Reply</span>
+                      <span
+                        class="q-mr-md cursor-pointer"
+                        @click="focusReplyInput(comment?.id)"
+                        >Reply</span
+                      >
                       <span
                         class="like-container q-mr-md flex items-center cursor-pointer"
                         @click="toggleLike(reply.id)"

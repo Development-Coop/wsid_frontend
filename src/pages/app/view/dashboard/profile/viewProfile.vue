@@ -317,13 +317,13 @@ onUnmounted(() => {
 }
 
 .follow-button-wrapper {
-    margin-left: 16px;
-    .follow-btn {
-      transition: background-color 0.3s ease, color 0.3s ease;
-      &:hover {
-        cursor: pointer;
-        background-color: #f5f5f5;
-      }
+  margin-left: 16px;
+  .follow-btn {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    &:hover {
+      cursor: pointer;
+      background-color: #f5f5f5;
     }
   }
+}
 </style>

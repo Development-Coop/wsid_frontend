@@ -20,10 +20,12 @@
           @update:model-value="authStore.setBio"
         >
         </q-input>
-        
+
         <!-- Character count -->
         <div class="character-count q-mt-sm text-right">
-          <span class="text-grey-6">{{ authStore.userDetails.bio.length }}/160</span>
+          <span class="text-grey-6"
+            >{{ authStore.userDetails.bio.length }}/160</span
+          >
         </div>
       </div>
     </div>
@@ -117,7 +119,7 @@ const navigateToNextStep = async () => {
     span.bio-length {
       font-size: 16px;
     }
-    
+
     .character-count {
       font-size: 14px;
     }

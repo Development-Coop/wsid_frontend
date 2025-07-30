@@ -8,17 +8,28 @@
       @click="goToProfile"
     >
       <template #error>
-        <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+        <img
+          :src="fallbackImage"
+          alt="Fallback Image"
+          class="post-img"
+          style="border: none; width: 100%; height: 100%; padding: 4px"
+        />
       </template>
     </q-img>
     <div style="flex-grow: 1">
-      <div class="flex items-center no-wrap cursor-pointer" @click.self="openPost('')">
-        <div style="flex-grow: 1;" class="cursor-pointer" @click="goToProfile">
+      <div
+        class="flex items-center no-wrap cursor-pointer"
+        @click.self="openPost('')"
+      >
+        <div style="flex-grow: 1" class="cursor-pointer" @click="goToProfile">
           <p>
-            <span v-if="username" class="text-weight-medium">{{ username }}</span>
+            <span v-if="username" class="text-weight-medium">{{
+              username
+            }}</span>
             <!-- Dynamic username -->
             <span v-if="timeAgo" class="text-grey-7">
-              • {{ calculateTimeAgo }}</span>
+              • {{ calculateTimeAgo }}</span
+            >
             <!-- Dynamic time -->
           </p>
         </div>
@@ -49,7 +60,10 @@
           </q-list> -->
         </q-btn-dropdown>
       </div>
-      <p class="text-grey-9 q-mb-md q-mt-sm cursor-pointer" @click.self="openPost('')">
+      <p
+        class="text-grey-9 q-mb-md q-mt-sm cursor-pointer"
+        @click.self="openPost('')"
+      >
         <span v-if="postContent">{{ postContent }}</span>
         <!-- Dynamic post content -->
       </p>
@@ -70,7 +84,11 @@
             @click="openImage(image)"
           />
           <!-- Overlay for additional images -->
-          <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost('')">
+          <div
+            v-if="index === 3 && postImages.length > 4"
+            class="overlay-more cursor-pointer"
+            @click="openPost('')"
+          >
             +{{ postImages.length - 4 }}
           </div>
         </div>
@@ -78,11 +96,16 @@
 
       <div
         class="flex no-wrap items-center"
-        style="gap: 10px; margin-top: 16px;"
+        style="gap: 10px; margin-top: 16px"
         @click.self="openPost('')"
       >
-        <span class="cursor-pointer" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span> •
-        <span class="cursor-pointer" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
+        <span class="cursor-pointer" @click="openPost('')"
+          >{{ votes }} <span class="text-grey-7">Votes</span></span
+        >
+        •
+        <span class="cursor-pointer" @click="openPost('Comments')"
+          >{{ comments }} <span class="text-grey-7">Comments</span></span
+        >
         <q-btn
           no-caps
           size="md"
@@ -91,7 +114,7 @@
           text-color="black"
           label="Answer"
           class="q-ml-auto"
-          style="cursor: pointer;"
+          style="cursor: pointer"
           @click="openPost('')"
         />
       </div>
@@ -123,7 +146,7 @@ import { useQuasar, Loading } from "quasar";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const postStore = usePostStore();
 const $q = useQuasar();
@@ -176,16 +199,16 @@ const props = defineProps({
   },
   userId: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 const goToProfile = () => {
   if (props.userId === user.value.id) {
-    router.push({name: "view-profile"});
+    router.push({ name: "view-profile" });
   } else {
-    router.push({name: "view", query: { uid: props.userId }});
+    router.push({ name: "view", query: { uid: props.userId } });
   }
-}
+};
 
 const openImage = (image) => {
   currentImage.value = image;
@@ -244,7 +267,7 @@ const calculateTimeAgo = computed(() => {
 // };
 
 const openPost = (tab = "Votes") => {
-  router.push({name: "view-question", query: {postId: props.postId, tab}})
+  router.push({ name: "view-question", query: { postId: props.postId, tab } });
 };
 
 const onDelete = async () => {

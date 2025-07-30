@@ -29,8 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isValidUsername = ref(true);
   const isUsernameAvailable = ref(true);
-  const usernameCheckingStatus = ref('idle'); // 'idle', 'checking', 'checked'
-  const usernameError = ref('');
+  const usernameCheckingStatus = ref("idle"); // 'idle', 'checking', 'checked'
+  const usernameError = ref("");
 
   const filteredSuggestions = computed(() => {
     const searchTerm = userDetails.value.username
@@ -96,40 +96,41 @@ export const useAuthStore = defineStore("auth", () => {
     const noConsecutiveDotsPattern = /\.{2,}/;
 
     // Reset error state
-    usernameError.value = '';
-    
+    usernameError.value = "";
+
     // Check if empty
     if (input.length === 0) {
       isValidUsername.value = false;
-      usernameError.value = 'Username is required';
+      usernameError.value = "Username is required";
       return false;
     }
-    
+
     // Check minimum length first (prioritize this over other validations)
     if (input.length < 3) {
       isValidUsername.value = false;
-      usernameError.value = 'Username must be at least 3 characters';
+      usernameError.value = "Username must be at least 3 characters";
       return false;
     }
-    
+
     // Check maximum length
     if (input.length > 20) {
       isValidUsername.value = false;
-      usernameError.value = 'Username must be 20 characters or less';
+      usernameError.value = "Username must be 20 characters or less";
       return false;
     }
-    
+
     // Check pattern
     if (!validPattern.test(input)) {
       isValidUsername.value = false;
-      usernameError.value = 'Username can only contain letters, numbers, underscores, and periods';
+      usernameError.value =
+        "Username can only contain letters, numbers, underscores, and periods";
       return false;
     }
-    
+
     // Check consecutive dots
     if (noConsecutiveDotsPattern.test(input)) {
       isValidUsername.value = false;
-      usernameError.value = 'Username cannot contain consecutive periods';
+      usernameError.value = "Username cannot contain consecutive periods";
       return false;
     }
 
@@ -149,34 +150,34 @@ export const useAuthStore = defineStore("auth", () => {
 
     // If username is empty, invalid format, or too short, don't check availability
     if (!username || !isValidUsername.value || username.length < 3) {
-      usernameCheckingStatus.value = 'idle';
+      usernameCheckingStatus.value = "idle";
       isUsernameAvailable.value = true; // Reset availability state
       return;
     }
 
     // Set checking status
-    usernameCheckingStatus.value = 'checking';
+    usernameCheckingStatus.value = "checking";
 
     // Debounce the API call
     usernameCheckTimeout = setTimeout(async () => {
       try {
         const response = await api.post("/auth/validate-username", {
-          username: username
+          username: username,
         });
 
         if (response.data.data.available) {
           isUsernameAvailable.value = true;
-          usernameCheckingStatus.value = 'checked';
+          usernameCheckingStatus.value = "checked";
         } else {
           isUsernameAvailable.value = false;
-          usernameError.value = 'Username is already taken';
-          usernameCheckingStatus.value = 'checked';
+          usernameError.value = "Username is already taken";
+          usernameCheckingStatus.value = "checked";
         }
       } catch (error) {
         console.error("Username availability check error:", error);
-        usernameError.value = 'Error checking username availability';
+        usernameError.value = "Error checking username availability";
         isUsernameAvailable.value = false;
-        usernameCheckingStatus.value = 'idle';
+        usernameCheckingStatus.value = "idle";
       }
     }, 500); // 500ms debounce
   };
@@ -184,13 +185,15 @@ export const useAuthStore = defineStore("auth", () => {
   const getUsernameSuggestions = async (username) => {
     try {
       const response = await api.post("/auth/username-suggestions", {
-        username: username
+        username: username,
       });
-      
+
       if (response.data.data.suggestions) {
-        suggestions.value = response.data.data.suggestions.map(suggestion => `@${suggestion}`);
+        suggestions.value = response.data.data.suggestions.map(
+          (suggestion) => `@${suggestion}`
+        );
       }
-      
+
       return response.data;
     } catch (error) {
       console.error("Username suggestions error:", error);
@@ -200,10 +203,12 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Computed property to determine if username is fully valid (format + availability)
   const isUsernameFullyValid = computed(() => {
-    return isValidUsername.value && 
-           isUsernameAvailable.value && 
-           usernameCheckingStatus.value === 'checked' &&
-           userDetails.value.username.length > 0;
+    return (
+      isValidUsername.value &&
+      isUsernameAvailable.value &&
+      usernameCheckingStatus.value === "checked" &&
+      userDetails.value.username.length > 0
+    );
   });
 
   const clearUserData = () => {
@@ -217,8 +222,8 @@ export const useAuthStore = defineStore("auth", () => {
     // Reset username validation state
     isValidUsername.value = true;
     isUsernameAvailable.value = true;
-    usernameCheckingStatus.value = 'idle';
-    usernameError.value = '';
+    usernameCheckingStatus.value = "idle";
+    usernameError.value = "";
   };
 
   const setProfilePicture = (file) => {
@@ -360,7 +365,7 @@ export const useAuthStore = defineStore("auth", () => {
     errors.value = {
       login: "",
     };
-    usernameError.value = '';
+    usernameError.value = "";
   };
 
   const errors = ref({

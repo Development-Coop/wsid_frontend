@@ -21,49 +21,46 @@
           <template #prepend>
             <span class="at-symbol">@</span>
           </template>
-          
+
           <!-- Loading indicator when checking availability -->
           <template #append>
-            <q-spinner 
-              v-if="authStore.usernameCheckingStatus === 'checking'" 
-              color="primary" 
-              size="sm" 
+            <q-spinner
+              v-if="authStore.usernameCheckingStatus === 'checking'"
+              color="primary"
+              size="sm"
             />
-            <q-icon 
-              v-else-if="showSuccessIcon" 
-              name="check_circle" 
-              color="positive" 
-              size="sm" 
+            <q-icon
+              v-else-if="showSuccessIcon"
+              name="check_circle"
+              color="positive"
+              size="sm"
             />
-            <q-icon 
-              v-else-if="hasError" 
-              name="error" 
-              color="negative" 
-              size="sm" 
+            <q-icon
+              v-else-if="hasError"
+              name="error"
+              color="negative"
+              size="sm"
             />
           </template>
         </q-input>
 
         <!-- Error message -->
-        <div 
-          v-if="hasError"
-          class="error-message q-mt-sm"
-        >
+        <div v-if="hasError" class="error-message q-mt-sm">
           <span class="text-negative">{{ authStore.usernameError }}</span>
         </div>
 
         <!-- Success message -->
-        <div 
-          v-if="showSuccessMessage"
-          class="success-message q-mt-sm"
-        >
+        <div v-if="showSuccessMessage" class="success-message q-mt-sm">
           <q-icon name="check_circle" color="positive" size="sm" />
           <span class="text-positive q-ml-xs">Username is available!</span>
         </div>
 
         <!-- Suggestions as a static list (Show when username is taken) -->
         <div
-          v-if="authStore.usernameError === 'Username is already taken' && authStore.suggestions.length"
+          v-if="
+            authStore.usernameError === 'Username is already taken' &&
+            authStore.suggestions.length
+          "
           v-motion-slide-left
           :delay="200"
           class="suggestions-wrapper q-mt-md"
@@ -92,7 +89,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="button-container">
       <!-- Submit Button -->
       <div>
@@ -128,21 +125,27 @@ const visibleCount = 3;
 
 // Computed properties for showing icons and messages
 const showSuccessIcon = computed(() => {
-  return authStore.isUsernameFullyValid && 
-         authStore.userDetails.username.length >= 3 &&
-         authStore.usernameCheckingStatus === 'checked';
+  return (
+    authStore.isUsernameFullyValid &&
+    authStore.userDetails.username.length >= 3 &&
+    authStore.usernameCheckingStatus === "checked"
+  );
 });
 
 const hasError = computed(() => {
-  return !!authStore.usernameError && 
-         authStore.userDetails.username.length > 0 &&
-         authStore.usernameCheckingStatus !== 'checking';
+  return (
+    !!authStore.usernameError &&
+    authStore.userDetails.username.length > 0 &&
+    authStore.usernameCheckingStatus !== "checking"
+  );
 });
 
 const showSuccessMessage = computed(() => {
-  return authStore.isUsernameFullyValid && 
-         authStore.userDetails.username.length >= 3 &&
-         authStore.usernameCheckingStatus === 'checked';
+  return (
+    authStore.isUsernameFullyValid &&
+    authStore.userDetails.username.length >= 3 &&
+    authStore.usernameCheckingStatus === "checked"
+  );
 });
 
 // Computed property to show either a limited or full list of suggestions
@@ -161,13 +164,13 @@ const canProceed = computed(() => {
 const handleUsernameChange = (newValue) => {
   // First validate the format
   const isFormatValid = authStore.validateUsername(newValue);
-  
+
   // Only check availability if format is valid and username is at least 3 characters
   if (isFormatValid && newValue.trim().length >= 3) {
     authStore.checkUsernameAvailability(newValue);
   } else {
     // Reset availability checking status if conditions aren't met
-    authStore.usernameCheckingStatus = 'idle';
+    authStore.usernameCheckingStatus = "idle";
     authStore.isUsernameAvailable = true;
   }
 };
@@ -177,7 +180,7 @@ const selectSuggestion = async (suggestion) => {
   const cleanUsername = suggestion.replace("@", "");
   authStore.userDetails.username = cleanUsername;
   authStore.setUsername(cleanUsername);
-  
+
   // Validate and check availability of selected suggestion
   const isFormatValid = authStore.validateUsername(cleanUsername);
   if (isFormatValid) {
@@ -196,9 +199,9 @@ const moveIconToRight = () => {
 
 const setUserName = async () => {
   if (!canProceed.value) return;
-  
+
   isLoading.value = true;
-  
+
   try {
     authStore.setUsername(authStore.userDetails.username);
     router.push({ name: "web-set-profile" });
@@ -213,7 +216,10 @@ const setUserName = async () => {
 watch(
   () => authStore.usernameError,
   async (newError) => {
-    if (newError === 'Username is already taken' && authStore.userDetails.username) {
+    if (
+      newError === "Username is already taken" &&
+      authStore.userDetails.username
+    ) {
       // Fetch suggestions for the current username
       await authStore.getUsernameSuggestions(authStore.userDetails.username);
     }
@@ -245,46 +251,46 @@ watch(
       font-size: 16px;
     }
   }
-  
+
   .input-wrapper {
     .error-message {
       font-size: 14px;
       font-weight: 500;
     }
-    
+
     .success-message {
       display: flex;
       align-items: center;
       font-size: 14px;
     }
-    
+
     .suggestions-wrapper {
       padding: 16px;
       background-color: #f5f5f5;
       border-radius: 8px;
       border-left: 4px solid #1976d2;
-      
+
       .suggestions-title {
         margin: 0 0 8px 0;
         font-weight: 500;
         font-size: 14px;
         color: #666;
       }
-      
+
       .suggestions-list {
         span {
           font-size: 15px;
           cursor: pointer;
           color: #1976d2;
           font-weight: 500;
-          
+
           &:hover {
             text-decoration: underline;
           }
         }
       }
     }
-    
+
     .show-more {
       width: fit-content;
       font-weight: 500;
@@ -295,7 +301,7 @@ watch(
       }
     }
   }
-  
+
   .button-container {
     display: grid;
     grid-gap: 24px;
@@ -312,25 +318,25 @@ watch(
       text-transform: none;
     }
   }
-  
+
   :deep(.q-field__control) {
     height: 40px;
     input {
       font-size: 16px;
     }
   }
-  
+
   :deep(.q-field__marginal) {
     height: 42px;
   }
-  
+
   // Error state styling
   :deep(.q-field--error) {
     .q-field__control {
       border-color: #c62828;
     }
   }
-  
+
   // Success state styling
   .success-message {
     font-size: 14px;

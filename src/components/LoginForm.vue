@@ -70,14 +70,14 @@ import { useAuthStore } from "src/stores/authstore";
 import { useQuasar } from "quasar";
 
 const router = useRouter();
-const route = useRoute()
+const route = useRoute();
 const authStore = useAuthStore();
 
 const loading = ref(false);
 const showError = ref(false);
 const $q = useQuasar();
 
-onMounted(()=> {
+onMounted(() => {
   const params = route?.query?.expired?.trim().toLowerCase();
   if (params === "true") {
     $q.notify({
@@ -88,14 +88,16 @@ onMounted(()=> {
       autoClose: true,
     });
   }
-})
+});
 
 const handleSubmit = async () => {
   loading.value = true;
   authStore.clearErrors();
   try {
     await authStore.login();
-    const redirectTo = router.currentRoute.value.query.redirectTo || { name: "web-dashboard-trending" };
+    const redirectTo = router.currentRoute.value.query.redirectTo || {
+      name: "web-dashboard-trending",
+    };
     // Redirect to the specified path or default to the dashboard
     router.push(redirectTo);
   } catch (error) {

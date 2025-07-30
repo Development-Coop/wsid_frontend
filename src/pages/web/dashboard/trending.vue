@@ -1,10 +1,26 @@
 <template>
-  <div ref="postsContainer" :style="!isPopup ? 'max-width: 600px; margin: 0 auto;' : ''" :class="[isPopup ? 'posts-container' : 'q-pa-lg']">
+  <div
+    ref="postsContainer"
+    :style="!isPopup ? 'max-width: 600px; margin: 0 auto;' : ''"
+    :class="[isPopup ? 'posts-container' : 'q-pa-lg']"
+  >
     <template v-if="isLoading && posts.length === 0">
-      <div v-for="n in 5" :key="n" :class="['post-wrapper', isPopup ? 'post-wrapper-popup' : 'post-wrapper-gap']">
+      <div
+        v-for="n in 5"
+        :key="n"
+        :class="[
+          'post-wrapper',
+          isPopup ? 'post-wrapper-popup' : 'post-wrapper-gap',
+        ]"
+      >
         <div class="skeleton-post q-pa-md">
           <div class="flex no-wrap">
-            <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+            <q-skeleton
+              type="QAvatar"
+              size="44px"
+              style="flex-shrink: 0"
+              class="q-mr-md"
+            />
             <div class="full-width">
               <q-skeleton type="text" width="40%" class="q-mb-sm" />
               <q-skeleton type="text" width="60%" class="q-mb-sm" />
@@ -19,9 +35,13 @@
       </div>
     </template>
     <div
-      v-for="post in posts" 
+      v-for="post in posts"
       :key="post.id"
-      :class="['post-wrapper', { 'post-wrapper-popup': isPopup }, { 'post-wrapper-gap': !isPopup }]"
+      :class="[
+        'post-wrapper',
+        { 'post-wrapper-popup': isPopup },
+        { 'post-wrapper-gap': !isPopup },
+      ]"
     >
       <TrendingPosts
         v-if="isPopup"
@@ -60,7 +80,7 @@
 
 <script setup>
 import TrendingPosts from "../components/trendingPost.vue";
-import Posts from "../components/posts.vue"
+import Posts from "../components/posts.vue";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar } from "quasar";
@@ -70,7 +90,9 @@ const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
 const posts = computed(() =>
-  postStore.trendingPosts.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  postStore.trendingPosts
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 );
 const $q = useQuasar();
 const postsContainer = ref(null); // Reference to the container
@@ -79,7 +101,7 @@ defineProps({
   isPopup: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 // Function to update individual post data
@@ -104,7 +126,9 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       const merged = [...postStore.trendingPosts, ...newPosts];
-      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      const unique = merged.filter(
+        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+      );
       postStore.setTrendingPosts(unique);
       currentPage.value++; // Increment the page number
     } else {
@@ -136,7 +160,7 @@ const fetchPosts = async () => {
 
 // Infinite scroll handler for the container div
 const onScroll = async () => {
-  console.log(postsContainer.value, "::::")
+  console.log(postsContainer.value, "::::");
   if (!postsContainer.value) return;
   const container = postsContainer.value;
   const { scrollTop, scrollHeight, clientHeight } = container;
@@ -153,7 +177,7 @@ onMounted(async () => {
   // window.addEventListener("scroll", onScroll);
   if (postsContainer.value) {
     postsContainer.value.addEventListener("scroll", onScroll);
-    console.log(postsContainer.value, "::::")
+    console.log(postsContainer.value, "::::");
   }
 });
 
@@ -166,7 +190,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-html, body {
+html,
+body {
   height: 100%;
   overflow-y: scroll;
 }

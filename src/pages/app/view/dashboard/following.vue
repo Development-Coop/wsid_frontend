@@ -49,7 +49,10 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       // Append new posts to the existing list
-      console.log("Loaded posts:", newPosts.map(p => ({ id: p.id, hasVoted: p.hasVoted })));
+      console.log(
+        "Loaded posts:",
+        newPosts.map((p) => ({ id: p.id, hasVoted: p.hasVoted }))
+      );
       posts.value.push(...newPosts); // Using .push() for better performance
       currentPage.value++; // Increment the page number
     } else {
@@ -88,7 +91,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
 });
-
 </script>
 
 <style scoped lang="scss">

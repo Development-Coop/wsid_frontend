@@ -10,15 +10,25 @@
         @click="goToProfile"
       >
         <template #error>
-          <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+          <img
+            :src="fallbackImage"
+            alt="Fallback Image"
+            class="post-img"
+            style="border: none; width: 100%; height: 100%; padding: 4px"
+          />
         </template>
       </q-img>
-      <div style="flex-grow: 1;" class="q-ml-sm cursor-pointer" @click="goToProfile">
+      <div
+        style="flex-grow: 1"
+        class="q-ml-sm cursor-pointer"
+        @click="goToProfile"
+      >
         <p>
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
           <span v-if="timeAgo" class="text-grey-7">
-            • {{ calculateTimeAgo }}</span>
+            • {{ calculateTimeAgo }}</span
+          >
           <!-- Dynamic time -->
         </p>
       </div>
@@ -51,12 +61,18 @@
 
     <!-- Post Title -->
     <p class="text-grey-9 q-mb-sm q-mt-sm" @click.self="openPost('')">
-      <span v-if="postTitle" class="text-weight-bold post-title">{{ postTitle }}</span>
+      <span v-if="postTitle" class="text-weight-bold post-title">{{
+        postTitle
+      }}</span>
       <!-- Dynamic post title -->
     </p>
 
     <!-- Post Content -->
-    <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap;" @click.self="openPost('')">
+    <p
+      class="text-grey-9 q-mb-sm q-mt-sm"
+      style="white-space: pre-wrap"
+      @click.self="openPost('')"
+    >
       <span v-if="postContent" class="post-content">{{ postContent }}</span>
       <!-- Dynamic post content -->
     </p>
@@ -86,7 +102,11 @@
           @click="openImage(image)"
         />
         <!-- Overlay for additional images -->
-        <div v-if="index === 3 && postImages.length > 4" class="overlay-more cursor-pointer" @click="openPost('')">
+        <div
+          v-if="index === 3 && postImages.length > 4"
+          class="overlay-more cursor-pointer"
+          @click="openPost('')"
+        >
           +{{ postImages.length - 4 }}
         </div>
       </div>
@@ -98,8 +118,13 @@
       style="gap: 10px; border-top: 2px solid #f1f2f5"
       @click.self="openPost('')"
     >
-      <span style="cursor: pointer;" @click="openPost('')">{{ localVotes }} <span class="text-grey-7">Votes</span></span> •
-      <span style="cursor: pointer;" @click="openPost('Comments')">{{ localComments }} <span class="text-grey-7">Comments</span></span>
+      <span style="cursor: pointer" @click="openPost('')"
+        >{{ localVotes }} <span class="text-grey-7">Votes</span></span
+      >
+      •
+      <span style="cursor: pointer" @click="openPost('Comments')"
+        >{{ localComments }} <span class="text-grey-7">Comments</span></span
+      >
       <q-btn
         v-if="!isOwnPosts && userId !== profileStore.userDetails?.id"
         no-caps
@@ -109,7 +134,7 @@
         text-color="black"
         :label="localHasVoted ? 'See Results' : 'Answer'"
         class="q-ml-auto"
-        style="cursor: pointer;"
+        style="cursor: pointer"
         @click="openPost('')"
       />
     </div>
@@ -161,7 +186,7 @@ import { useQuasar, Loading, copyToClipboard } from "quasar";
 import { ref, computed, onUnmounted, onMounted, watch } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 // components
 import ViewQuestion from "src/pages/web/components/view-question.vue";
@@ -218,12 +243,12 @@ const props = defineProps({
   },
   userId: {
     type: String,
-    default: ""
+    default: "",
   },
   hasVoted: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const emit = defineEmits(["deleted", "edit", "update-post"]);
@@ -234,17 +259,26 @@ const localVotes = ref(props.votes);
 const localComments = ref(props.comments);
 
 // Watch for prop changes (in case parent updates)
-watch(() => props.hasVoted, (newValue) => {
-  localHasVoted.value = newValue;
-});
+watch(
+  () => props.hasVoted,
+  (newValue) => {
+    localHasVoted.value = newValue;
+  }
+);
 
-watch(() => props.votes, (newValue) => {
-  localVotes.value = newValue;
-});
+watch(
+  () => props.votes,
+  (newValue) => {
+    localVotes.value = newValue;
+  }
+);
 
-watch(() => props.comments, (newValue) => {
-  localComments.value = newValue;
-});
+watch(
+  () => props.comments,
+  (newValue) => {
+    localComments.value = newValue;
+  }
+);
 
 const isDialogOpen = ref(false);
 const currentImage = ref("");
@@ -273,18 +307,21 @@ const handleUpdatePost = (postId, updatedData) => {
   if (updatedData.commentsCount !== undefined) {
     localComments.value = updatedData.commentsCount;
   }
-  
+
   // Then emit to parent to update the main posts array
-  emit('update-post', postId, updatedData);
+  emit("update-post", postId, updatedData);
 };
 
 const goToProfile = () => {
   if (props.userId === user.value.id) {
-    router.push({name: "web-dashboard-profile"});
+    router.push({ name: "web-dashboard-profile" });
   } else {
-    router.push({name: "web-dashboard-view-profile", query: { uid: props.userId }});
+    router.push({
+      name: "web-dashboard-view-profile",
+      query: { uid: props.userId },
+    });
   }
-}
+};
 
 const openImage = (image) => {
   currentImage.value = image;
@@ -316,15 +353,15 @@ const calculateTimeAgo = computed(() => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     // Format time as HH:MM AM/PM
-    const timeOptions = { 
-      hour: 'numeric', 
-      minute: '2-digit', 
-      hour12: true 
+    const timeOptions = {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     };
-    const timeString = date.toLocaleTimeString('en-US', timeOptions);
-    
+    const timeString = date.toLocaleTimeString("en-US", timeOptions);
+
     // Check if it's today or yesterday
     if (date.toDateString() === today.toDateString()) {
       return `Today at ${timeString}`;
@@ -332,12 +369,13 @@ const calculateTimeAgo = computed(() => {
       return `Yesterday at ${timeString}`;
     } else {
       // For older dates, show full date
-      const dateOptions = { 
-        month: 'short', 
-        day: 'numeric',
-        year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+      const dateOptions = {
+        month: "short",
+        day: "numeric",
+        year:
+          date.getFullYear() !== today.getFullYear() ? "numeric" : undefined,
       };
-      const dateString = date.toLocaleDateString('en-US', dateOptions);
+      const dateString = date.toLocaleDateString("en-US", dateOptions);
       return `${dateString} at ${timeString}`;
     }
   }

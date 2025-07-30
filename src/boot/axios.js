@@ -25,13 +25,11 @@ const api = axios.create({
   },
 });
 
-
-
 export default boot(({ app, router }) => {
   // Request Interceptor: Add Authorization Header
   api.interceptors.request.use(
     (config) => {
-      console.log('Making request to:', config.baseURL + config.url);
+      console.log("Making request to:", config.baseURL + config.url);
       const token = localStorage.getItem("access-token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -39,7 +37,7 @@ export default boot(({ app, router }) => {
       return config;
     },
     (error) => {
-      console.error('Request interceptor error:', error);
+      console.error("Request interceptor error:", error);
       return Promise.reject(error);
     }
   );

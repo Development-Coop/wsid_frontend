@@ -71,9 +71,16 @@
         <div class="terms q-mt-md">
           <q-checkbox v-model="termsAccepted" />
           <p>
-            By signing up to create an account I accept WSID's <span><a @click="router.push({ name: 'terms-conditions' })">Terms of use</a>
+            By signing up to create an account I accept WSID's
+            <span
+              ><a @click="router.push({ name: 'terms-conditions' })"
+                >Terms of use</a
+              >
               &
-              <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
+              <a @click="router.push({ name: 'privacy-policy' })"
+                >Privacy Policy</a
+              ></span
+            >.
           </p>
         </div>
         <q-btn
@@ -155,7 +162,7 @@ const validateForm = () => {
     const minAgeDate = new Date();
     minAgeDate.setFullYear(minAgeDate.getFullYear() - 13);
     const dob = parseDate(authStore.userDetails.dob);
-    
+
     if (dob > minAgeDate) {
       errors.value.dob = "You must be at least 13 years old to sign up";
       isValid = false;
@@ -168,7 +175,7 @@ const validateForm = () => {
       message: "Please accept the terms and conditions to continue",
       color: "negative",
       position: "top",
-      icon: "error"
+      icon: "error",
     });
     isValid = false;
   }
@@ -181,7 +188,7 @@ const onDateSelect = (date) => {
   const selectedDate = parseDate(date);
   const minAgeDate = new Date();
   minAgeDate.setFullYear(minAgeDate.getFullYear() - 13);
-  
+
   if (selectedDate > minAgeDate) {
     $q.notify({
       color: "negative",

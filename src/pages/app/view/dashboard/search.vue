@@ -1,9 +1,7 @@
 <template>
   <q-page>
     <!-- Sticky Header with Search -->
-    <div
-      class="q-pa-md"
-    >
+    <div class="q-pa-md">
       <div class="search-bar">
         <q-input
           v-model="searchText"

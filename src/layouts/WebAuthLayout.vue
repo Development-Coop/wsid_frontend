@@ -51,8 +51,7 @@
   </q-layout>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 .auth {
@@ -132,7 +131,7 @@
       place-items: center;
       .main-content {
         display: grid;
-        .registration-actions{
+        .registration-actions {
           display: grid;
           grid-template-columns: 1fr;
           justify-content: center;

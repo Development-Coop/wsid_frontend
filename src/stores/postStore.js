@@ -11,7 +11,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       await api.post("post/create", data, {
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
         },
       });
     } catch (error) {
@@ -24,7 +24,7 @@ export const usePostStore = defineStore("post", () => {
     try {
       await api.put(`post/update/${postId}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
         },
       });
     } catch (error) {
@@ -33,7 +33,14 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
-  const getPostList = async ({ all = true, page = 1, limit = 10, sortBy = "createdAt", order = "desc", uid = "" }) => {
+  const getPostList = async ({
+    all = true,
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    order = "desc",
+    uid = "",
+  }) => {
     try {
       // Construct the query string with the provided parameters
       const queryParams = new URLSearchParams({
@@ -51,7 +58,7 @@ export const usePostStore = defineStore("post", () => {
       return response?.data?.data?.posts || [];
     } catch (error) {
       console.error(error);
-      return []
+      return [];
     }
   };
 
@@ -60,7 +67,10 @@ export const usePostStore = defineStore("post", () => {
       const response = await api.delete(`post/delete/${postId}`);
       return response.data; // Return response if needed
     } catch (error) {
-      console.error("Error deleting the post:", error.response?.data || error.message);
+      console.error(
+        "Error deleting the post:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   };
@@ -70,12 +80,21 @@ export const usePostStore = defineStore("post", () => {
       const response = await api.get(`post/get/${postId}`);
       return response?.data?.data; // Return response if needed
     } catch (error) {
-      console.error("Error deleting the post:", error.response?.data || error.message);
+      console.error(
+        "Error deleting the post:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   };
 
-  const getTrendingList = async ({ all = true, page = 1, limit = 10, sortBy = "createdAt", order = "desc" }) => {
+  const getTrendingList = async ({
+    all = true,
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    order = "desc",
+  }) => {
     try {
       const queryParams = new URLSearchParams({
         all: all.toString(),
@@ -85,15 +104,18 @@ export const usePostStore = defineStore("post", () => {
         order,
       });
       // Make a GET request with the constructed query string
-      const response = await api.get(`post/trending?${queryParams.toString()}`, {
-        headers: {
-          "Content-Type": "application/json"
-        },
-      });
+      const response = await api.get(
+        `post/trending?${queryParams.toString()}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return response?.data?.data?.posts || [];
     } catch (error) {
       console.error(error);
-      return []
+      return [];
     }
   };
 
@@ -120,13 +142,13 @@ export const usePostStore = defineStore("post", () => {
       // Make a GET request with the constructed query string
       const response = await api.get(`comment/get/${postId}`, {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       });
       return response?.data?.data || [];
     } catch (error) {
       console.error(error);
-      return []
+      return [];
     }
   };
 
@@ -162,13 +184,13 @@ export const usePostStore = defineStore("post", () => {
       // Make a GET request with the constructed query string
       const response = await api.get(`user/search?query=${text}`, {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       });
       return response?.data?.data || [];
     } catch (error) {
       console.error(error);
-      return []
+      return [];
     }
   };
 
@@ -177,13 +199,13 @@ export const usePostStore = defineStore("post", () => {
       // Make a GET request with the constructed query string
       const response = await api.get(`post/search?query=${text}`, {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       });
       return response?.data?.data || [];
     } catch (error) {
       console.error(error);
-      return []
+      return [];
     }
   };
 
@@ -193,7 +215,7 @@ export const usePostStore = defineStore("post", () => {
   }
   // Update a single post by id
   function updatePostInStore(postId, updatedData) {
-    const idx = posts.value.findIndex(p => p.id === postId);
+    const idx = posts.value.findIndex((p) => p.id === postId);
     if (idx !== -1) {
       posts.value[idx] = { ...posts.value[idx], ...updatedData };
     }
@@ -206,34 +228,47 @@ export const usePostStore = defineStore("post", () => {
     homePosts.value = newPosts;
   }
   function updateTrendingPostInStore(postId, updatedData) {
-    const idx = trendingPosts.value.findIndex(p => p.id === postId);
+    const idx = trendingPosts.value.findIndex((p) => p.id === postId);
     if (idx !== -1) {
-      trendingPosts.value[idx] = { ...trendingPosts.value[idx], ...updatedData };
+      trendingPosts.value[idx] = {
+        ...trendingPosts.value[idx],
+        ...updatedData,
+      };
     }
     // Also update in homePosts if present
-    const homeIdx = homePosts.value.findIndex(p => p.id === postId);
+    const homeIdx = homePosts.value.findIndex((p) => p.id === postId);
     if (homeIdx !== -1) {
-      homePosts.value[homeIdx] = { ...homePosts.value[homeIdx], ...updatedData };
+      homePosts.value[homeIdx] = {
+        ...homePosts.value[homeIdx],
+        ...updatedData,
+      };
     }
   }
   function updateHomePostInStore(postId, updatedData) {
-    const idx = homePosts.value.findIndex(p => p.id === postId);
+    const idx = homePosts.value.findIndex((p) => p.id === postId);
     if (idx !== -1) {
       homePosts.value[idx] = { ...homePosts.value[idx], ...updatedData };
     }
     // Also update in trendingPosts if present
-    const trendingIdx = trendingPosts.value.findIndex(p => p.id === postId);
+    const trendingIdx = trendingPosts.value.findIndex((p) => p.id === postId);
     if (trendingIdx !== -1) {
-      trendingPosts.value[trendingIdx] = { ...trendingPosts.value[trendingIdx], ...updatedData };
+      trendingPosts.value[trendingIdx] = {
+        ...trendingPosts.value[trendingIdx],
+        ...updatedData,
+      };
     }
   }
 
   function addNewPostToFeeds(newPost) {
     // Add to homePosts
-    const homeUnique = [newPost, ...homePosts.value].filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+    const homeUnique = [newPost, ...homePosts.value].filter(
+      (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+    );
     homePosts.value = homeUnique;
     // Add to trendingPosts
-    const trendingUnique = [newPost, ...trendingPosts.value].filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+    const trendingUnique = [newPost, ...trendingPosts.value].filter(
+      (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+    );
     trendingPosts.value = trendingUnique;
   }
 
@@ -261,6 +296,6 @@ export const usePostStore = defineStore("post", () => {
     followUser,
     searchProfile,
     searchPost,
-    addNewPostToFeeds
+    addNewPostToFeeds,
   };
 });

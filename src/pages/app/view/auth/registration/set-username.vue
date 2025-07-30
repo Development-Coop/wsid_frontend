@@ -53,7 +53,7 @@
           <div
             v-if="
               authStore.filteredSuggestions &&
-                authStore.filteredSuggestions.length
+              authStore.filteredSuggestions.length
             "
             v-motion-slide-left
             :delay="800"
@@ -75,7 +75,7 @@
             <p
               v-if="
                 authStore.filteredSuggestions &&
-                  authStore.filteredSuggestions.length > visibleCount
+                authStore.filteredSuggestions.length > visibleCount
               "
               class="text-green-5 show-more q-mt-sm cursor-pointer"
               @click="toggleShowAll"

@@ -25,13 +25,12 @@
         :error-message="emailError"
         :rules="[(val) => !!val || 'Email is required']"
       />
-      
+
       <!-- Email already exists message -->
       <div v-if="emailError" class="email-error-container q-mt-sm">
         <div class="email-error-message">
           <q-icon name="info" color="primary" size="sm" class="q-mr-xs" />
-          <span><p>An account with this email already exists.</p>
-          </span>
+          <span><p>An account with this email already exists.</p> </span>
         </div>
       </div>
     </div>
@@ -110,10 +109,17 @@
     <div class="terms q-mt-md">
       <q-checkbox v-model="termsAccepted" />
       <p>
-        By signing up to create an account I accept WSID's <span>
-          <span><a @click="router.push({ name: 'terms-conditions' })">Terms of Use</a>
+        By signing up to create an account I accept WSID's
+        <span>
+          <span
+            ><a @click="router.push({ name: 'terms-conditions' })"
+              >Terms of Use</a
+            >
             &
-            <a @click="router.push({ name: 'privacy-policy' })">Privacy Policy</a></span>.
+            <a @click="router.push({ name: 'privacy-policy' })"
+              >Privacy Policy</a
+            ></span
+          >.
         </span>
       </p>
     </div>
@@ -137,14 +143,20 @@ const isLoading = ref(false);
 const $q = useQuasar();
 const router = useRouter();
 const termsAccepted = ref(false);
-const emailError = ref('');
+const emailError = ref("");
 
 // Watch for email changes to clear error
-watch(() => authStore.userDetails.phone_or_email, () => {
-  emailError.value = '';
-});
+watch(
+  () => authStore.userDetails.phone_or_email,
+  () => {
+    emailError.value = "";
+  }
+);
 
-const handleSignIn = async (signInMethod, redirectTo = { name: "web-dashboard-trending" }) => {
+const handleSignIn = async (
+  signInMethod,
+  redirectTo = { name: "web-dashboard-trending" }
+) => {
   try {
     Loading.show();
     await signInMethod();
@@ -155,7 +167,7 @@ const handleSignIn = async (signInMethod, redirectTo = { name: "web-dashboard-tr
       message: "Sign-in failed. Please try again.",
       color: "negative",
       position: "top",
-      icon: "error"
+      icon: "error",
     });
   } finally {
     Loading.hide();
@@ -174,7 +186,12 @@ const parseDate = (dateString) => {
 const isFormValid = computed(() => {
   const isNameValid = authStore.userDetails.name.trim() !== "";
   const isEmailValid = authStore.userDetails.phone_or_email.trim() !== "";
-  return isNameValid && isEmailValid && !!authStore.userDetails.dob && termsAccepted.value;
+  return (
+    isNameValid &&
+    isEmailValid &&
+    !!authStore.userDetails.dob &&
+    termsAccepted.value
+  );
 });
 
 // Add new function to handle date selection
@@ -182,7 +199,7 @@ const onDateSelect = (date) => {
   const selectedDate = parseDate(date);
   const minAgeDate = new Date();
   minAgeDate.setFullYear(minAgeDate.getFullYear() - 16);
-  
+
   if (selectedDate > minAgeDate) {
     $q.notify({
       color: "negative",
@@ -198,15 +215,20 @@ const onDateSelect = (date) => {
 const handleSubmit = async () => {
   if (isFormValid.value && !emailError.value) {
     isLoading.value = true;
-    emailError.value = ''; // Clear any previous errors
-    
+    emailError.value = ""; // Clear any previous errors
+
     try {
       const res = await authStore.registerStep1(authStore.userDetails);
-      
+
       if (!res?.status) {
         // Check if the error is about email already existing
-        if (res && (res.includes('already exist') || res.includes('already registered') || res.includes('Email already exist'))) {
-          emailError.value = 'An account with this email already exists.';
+        if (
+          res &&
+          (res.includes("already exist") ||
+            res.includes("already registered") ||
+            res.includes("Email already exist"))
+        ) {
+          emailError.value = "An account with this email already exists.";
         } else {
           // Show other errors as notifications
           $q.notify({
@@ -279,13 +301,13 @@ const handleSubmit = async () => {
     border-radius: 8px;
     font-size: 14px;
     color: #1976d2;
-    
+
     .login-link {
       color: #1976d2;
       font-weight: 600;
       cursor: pointer;
       text-decoration: underline;
-      
+
       &:hover {
         color: #1565c0;
       }

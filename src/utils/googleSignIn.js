@@ -9,7 +9,7 @@ export default async function googleSignIn() {
     const result = await signInWithPopup(auth, provider);
     const idToken = await result.user.getIdToken();
 
-    const response = await api.post("/auth/login-with-google",{ idToken });
+    const response = await api.post("/auth/login-with-google", { idToken });
     localStorage.setItem("refresh-token", response?.data?.data?.refreshToken);
     localStorage.setItem("access-token", response?.data?.data?.accessToken);
     return response?.data;

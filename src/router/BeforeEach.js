@@ -13,8 +13,13 @@ export default function (router) {
       } else {
         next({ name: "web-login", query: { redirectTo: to.fullPath } }); // Desktop login route with redirect
       }
-    } else if (!to.meta.requiresAuth && isAuthenticated && (to.name === "login" || to.name === "web-login")) {
-      const pathName = window.innerWidth <= 768 ? "trending" : "web-dashboard-trending";
+    } else if (
+      !to.meta.requiresAuth &&
+      isAuthenticated &&
+      (to.name === "login" || to.name === "web-login")
+    ) {
+      const pathName =
+        window.innerWidth <= 768 ? "trending" : "web-dashboard-trending";
       // If the user is already authenticated and trying to access login pages, redirect to dashboard
       next({ name: pathName });
     } else {

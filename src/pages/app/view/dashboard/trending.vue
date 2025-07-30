@@ -87,7 +87,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
 });
-
 </script>
 
 <style scoped lang="scss">

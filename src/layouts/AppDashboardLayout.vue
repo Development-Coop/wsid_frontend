@@ -3,10 +3,21 @@
     <q-page-container>
       <div
         class="q-pa-md"
-        style="position: sticky; top: 0; z-index: 100; background-color: #fff; box-shadow: 0px 1px 4px rgba(205, 207, 209, 0.5);"
+        style="
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          background-color: #fff;
+          box-shadow: 0px 1px 4px rgba(205, 207, 209, 0.5);
+        "
       >
         <q-toolbar-title>
-          <div class="text-h5 cursor-pointer logo-title" @click="router.push({name: 'following'})">WSID</div>
+          <div
+            class="text-h5 cursor-pointer logo-title"
+            @click="router.push({ name: 'following' })"
+          >
+            WSID
+          </div>
         </q-toolbar-title>
       </div>
       <router-view />
@@ -47,8 +58,8 @@
           <q-icon
             v-if="
               $route.path === '/app/profile' ||
-                $route.path === '/app/profile/settings' ||
-                $route.path === '/app/profile/edit-profile'
+              $route.path === '/app/profile/settings' ||
+              $route.path === '/app/profile/edit-profile'
             "
             size="24px"
           >

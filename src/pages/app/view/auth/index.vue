@@ -39,7 +39,9 @@
       />
       <div class="text-center relative-position q-py-lg q-mb-md">
         <hr class="divider q-my-none" />
-        <span class="bg-white q-px-sm absolute-center text-h6 text-grey-7">or</span>
+        <span class="bg-white q-px-sm absolute-center text-h6 text-grey-7"
+          >or</span
+        >
       </div>
       <q-btn
         v-motion-pop
@@ -70,11 +72,14 @@ import appleSignIn from "src/utils/appleSignIn";
 const $q = useQuasar();
 const router = useRouter();
 
-const handleSignIn = async (signInMethod, redirectTo = { name: "following" }) => {
+const handleSignIn = async (
+  signInMethod,
+  redirectTo = { name: "following" }
+) => {
   try {
     Loading.show(); // Show loading indicator
     await signInMethod();
-    
+
     // Redirect after successful sign-in
     router.push(redirectTo);
   } catch (error) {
@@ -83,7 +88,7 @@ const handleSignIn = async (signInMethod, redirectTo = { name: "following" }) =>
       message: "Sign-in failed. Please try again.",
       color: "negative",
       position: "top",
-      icon: "error"
+      icon: "error",
     });
   } finally {
     Loading.hide(); // Hide loading indicator

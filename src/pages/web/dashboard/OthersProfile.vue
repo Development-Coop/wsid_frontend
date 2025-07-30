@@ -4,7 +4,12 @@
       <div class="flex no-wrap items-center profile-wrapper">
         <q-img class="profile-img" :src="userDetails?.profilePic">
           <template #error>
-            <img :src="fallbackImage" alt="Fallback Image" class="post-img" style="border: none;width: 100%;height: 100%;padding: 4px;" />
+            <img
+              :src="fallbackImage"
+              alt="Fallback Image"
+              class="post-img"
+              style="border: none; width: 100%; height: 100%; padding: 4px"
+            />
           </template>
         </q-img>
         <div class="profile-details">
@@ -100,7 +105,7 @@ import Posts from "../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
 import { useRoute, useRouter } from "vue-router";
 
-import fallbackImage from 'src/assets/icons/profile-user.png';
+import fallbackImage from "src/assets/icons/profile-user.png";
 
 const tab = ref("Posts");
 const profileStore = useProfileStore();
@@ -119,9 +124,9 @@ const hovered = ref(false);
 const getFollowLabel = computed(() => {
   const isFollowing = userDetails.value?.isFollowing; // Check if the user is followed
   if (hovered.value) {
-    return isFollowing ? 'Unfollow' : 'Follow';
+    return isFollowing ? "Unfollow" : "Follow";
   }
-  return isFollowing ? 'Following' : 'Follow';
+  return isFollowing ? "Following" : "Follow";
 });
 
 // Function to fetch posts
@@ -136,12 +141,14 @@ const fetchPosts = async () => {
       limit: 10,
       sortBy: "createdAt",
       order: "desc",
-      uid: userDetails.value?.id
+      uid: userDetails.value?.id,
     });
     // Check if newPosts contains data
     if (newPosts.length > 0) {
       const merged = [...postStore.posts, ...newPosts];
-      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      const unique = merged.filter(
+        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+      );
       postStore.setPosts(unique);
       currentPage.value++;
     } else {
@@ -158,16 +165,15 @@ const toggleFollow = async () => {
   try {
     Loading.show();
     const req = {
-      targetUserId: userDetails.value.id
-    }
+      targetUserId: userDetails.value.id,
+    };
     await postStore.followUser(req);
     await getDetails(userDetails.value.id);
-  } catch(e) {
+  } catch (e) {
     $q.notify({
       color: "negative",
       message:
-        e.response?.data?.message ||
-        "Something went wrong!. Please try again.",
+        e.response?.data?.message || "Something went wrong!. Please try again.",
       position: "top",
       icon: "error",
       autoClose: true,
@@ -204,7 +210,7 @@ const getDetails = async (id) => {
       followersCount: data?.followersCount,
       followingCount: data?.followingCount,
       coverPic: data?.user?.coverPic,
-      isFollowing: data?.isFollowing
+      isFollowing: data?.isFollowing,
     };
   } catch (error) {
     $q.notify({

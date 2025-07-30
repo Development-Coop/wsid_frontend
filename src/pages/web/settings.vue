@@ -4,8 +4,10 @@
     <section class="q-pa-lg">
       <div class="text-h6 q-pa-lg">
         <div class="profile-info">
-          <div class="text-h5 q-mb-md text-weight-medium">Profile Information</div>
-          
+          <div class="text-h5 q-mb-md text-weight-medium">
+            Profile Information
+          </div>
+
           <!-- Profile Picture and Basic Info -->
           <div class="profile-header q-mb-lg">
             <q-img
@@ -24,11 +26,24 @@
               </template>
             </q-img>
             <div v-else class="profile-placeholder">
-              {{ (user?.name || authUserDetails?.name)?.charAt(0).toUpperCase() || "?" }}
+              {{
+                (user?.name || authUserDetails?.name)
+                  ?.charAt(0)
+                  .toUpperCase() || "?"
+              }}
             </div>
             <div class="profile-details">
-              <div class="text-h6 text-weight-medium">{{ user?.name || authUserDetails?.name || 'N/A' }}</div>
-              <div class="text-grey-7">{{ user?.email || user?.emailAddress || authUserDetails?.phone_or_email || 'N/A' }}</div>
+              <div class="text-h6 text-weight-medium">
+                {{ user?.name || authUserDetails?.name || "N/A" }}
+              </div>
+              <div class="text-grey-7">
+                {{
+                  user?.email ||
+                  user?.emailAddress ||
+                  authUserDetails?.phone_or_email ||
+                  "N/A"
+                }}
+              </div>
             </div>
           </div>
 
@@ -36,43 +51,67 @@
           <div class="profile-stats q-mb-lg">
             <div class="stat-item">
               <div class="stat-label">Bio</div>
-              <div class="stat-value">{{ user?.bio || 'No bio available' }}</div>
+              <div class="stat-value">
+                {{ user?.bio || "No bio available" }}
+              </div>
             </div>
-            
+
             <!-- Personal Data from Auth Store -->
-            <div v-if="user?.email || user?.emailAddress || authUserDetails?.phone_or_email" class="stat-item">
+            <div
+              v-if="
+                user?.email ||
+                user?.emailAddress ||
+                authUserDetails?.phone_or_email
+              "
+              class="stat-item"
+            >
               <div class="stat-label">Email</div>
-              <div class="stat-value">{{ user?.email || user?.emailAddress || authUserDetails?.phone_or_email }}</div>
+              <div class="stat-value">
+                {{
+                  user?.email ||
+                  user?.emailAddress ||
+                  authUserDetails?.phone_or_email
+                }}
+              </div>
             </div>
-            
+
             <div v-if="authUserDetails?.dob" class="stat-item">
               <div class="stat-label">Date of Birth</div>
-              <div class="stat-value">{{ formatDateOfBirth(authUserDetails.dob) }}</div>
+              <div class="stat-value">
+                {{ formatDateOfBirth(authUserDetails.dob) }}
+              </div>
             </div>
-            
-            <div v-if="user?.username || authUserDetails?.username" class="stat-item">
+
+            <div
+              v-if="user?.username || authUserDetails?.username"
+              class="stat-item"
+            >
               <div class="stat-label">Username</div>
-              <div class="stat-value">@{{ user?.username || authUserDetails?.username }}</div>
+              <div class="stat-value">
+                @{{ user?.username || authUserDetails?.username }}
+              </div>
             </div>
-            
+
             <div class="stat-item">
               <div class="stat-label">Followers</div>
               <div class="stat-value">{{ user?.followersCount || 0 }}</div>
             </div>
-            
+
             <div class="stat-item">
               <div class="stat-label">Following</div>
               <div class="stat-value">{{ user?.followingCount || 0 }}</div>
             </div>
-            
+
             <div class="stat-item">
               <div class="stat-label">Likes</div>
               <div class="stat-value">{{ user?.likesCount || 0 }}</div>
             </div>
-            
+
             <div class="stat-item">
               <div class="stat-label">Member Since</div>
-              <div class="stat-value">{{ formatDate(user?.createdAt) || 'N/A' }}</div>
+              <div class="stat-value">
+                {{ formatDate(user?.createdAt) || "N/A" }}
+              </div>
             </div>
           </div>
         </div>
@@ -91,7 +130,7 @@
         label="Sign Out"
         @click="logout"
       />
-      
+
       <!-- Delete Account Button -->
       <q-btn
         no-caps
@@ -128,7 +167,8 @@
 
         <q-card-section class="q-pt-none">
           <p class="text-body2 q-mb-md">
-            This action cannot be undone. All your data, posts, and profile information will be permanently deleted.
+            This action cannot be undone. All your data, posts, and profile
+            information will be permanently deleted.
           </p>
           <p class="text-body2 q-mb-md text-weight-medium">
             Please enter your password to confirm:
@@ -147,18 +187,14 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn 
-            flat 
-            label="Cancel" 
-            @click="cancelDelete" 
-          />
-          <q-btn 
-            flat 
-            label="Delete Account" 
-            color="negative" 
+          <q-btn flat label="Cancel" @click="cancelDelete" />
+          <q-btn
+            flat
+            label="Delete Account"
+            color="negative"
             :loading="deleteLoading"
             :disable="!deletePassword.trim()"
-            @click="confirmDeleteAccount" 
+            @click="confirmDeleteAccount"
           />
         </q-card-actions>
       </q-card>
@@ -200,8 +236,8 @@ const authUserDetails = computed(() => {
 });
 
 // Debug logging to see what data we have
-console.log('Profile Store User:', user.value);
-console.log('Auth Store User:', authUserDetails.value);
+console.log("Profile Store User:", user.value);
+console.log("Auth Store User:", authUserDetails.value);
 
 // Reactive data for delete functionality
 const showDeleteConfirmation = ref(false);
@@ -227,44 +263,44 @@ const items = [
 // Format date helper
 const formatDate = (dateString) => {
   if (!dateString) return null;
-  
+
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   } catch (error) {
-    return 'Invalid date';
+    return "Invalid date";
   }
 };
 
 // Format date of birth helper (handles DD/MM/YYYY format from auth store)
 const formatDateOfBirth = (dobString) => {
   if (!dobString) return null;
-  
+
   try {
     // Check if it's in DD/MM/YYYY format from auth store
-    if (dobString.includes('/')) {
-      const [day, month, year] = dobString.split('/');
+    if (dobString.includes("/")) {
+      const [day, month, year] = dobString.split("/");
       const date = new Date(year, month - 1, day); // month is 0-indexed
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
     }
-    
+
     // Otherwise treat as regular date string
     const date = new Date(dobString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   } catch (error) {
-    return 'Invalid date';
+    return "Invalid date";
   }
 };
 
@@ -301,7 +337,7 @@ const confirmDeleteAccount = async () => {
 
     // Call the delete account API
     const result = await profileStore.deleteAccount(deletePassword.value);
-    
+
     console.log("Delete account result:", result);
 
     // Check if deletion was successful
@@ -320,25 +356,25 @@ const confirmDeleteAccount = async () => {
       // Handle unsuccessful deletion
       throw new Error(result?.message || "Failed to delete account");
     }
-
   } catch (error) {
     console.error("Delete account error:", error);
-    
+
     // Close loading dialog
     showLoadingDialog.value = false;
-    
+
     // Get error message safely
-    const errorMessage = error.response?.data?.message || error.message || error.toString();
-    
+    const errorMessage =
+      error.response?.data?.message || error.message || error.toString();
+
     // Check if it's a password error (400 status)
-    if (error.response?.status === 400 || 
-        errorMessage.toLowerCase().includes('invalid password')) {
-      
+    if (
+      error.response?.status === 400 ||
+      errorMessage.toLowerCase().includes("invalid password")
+    ) {
       // Show confirmation dialog again with password error
       showDeleteConfirmation.value = true;
       passwordError.value = true;
       passwordErrorMessage.value = "Invalid password. Please try again.";
-      
     } else {
       // Show general error notification
       $q.notify({
@@ -346,7 +382,7 @@ const confirmDeleteAccount = async () => {
         message: errorMessage,
         position: "top",
       });
-      
+
       // Show confirmation dialog again
       showDeleteConfirmation.value = true;
     }
@@ -363,7 +399,7 @@ const confirmDeleteAccount = async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  
+
   section {
     & > div {
       background-color: #fff;
@@ -377,7 +413,7 @@ const confirmDeleteAccount = async () => {
     display: flex;
     align-items: center;
     gap: 20px;
-    
+
     .profile-img {
       flex-shrink: 0;
       height: 80px;
@@ -386,7 +422,7 @@ const confirmDeleteAccount = async () => {
       object-fit: cover;
       border: 2px solid #e0e0e0;
     }
-    
+
     .profile-placeholder {
       display: flex;
       align-items: center;
@@ -402,32 +438,32 @@ const confirmDeleteAccount = async () => {
       letter-spacing: 1px;
       flex-shrink: 0;
     }
-    
+
     .profile-details {
       flex-grow: 1;
     }
   }
-  
+
   .profile-stats {
     display: grid;
     gap: 16px;
-    
+
     .stat-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid #f0f0f0;
-      
+
       &:last-child {
         border-bottom: none;
       }
-      
+
       .stat-label {
         font-weight: 500;
         color: #666;
       }
-      
+
       .stat-value {
         font-weight: 600;
         color: #333;

@@ -27,7 +27,8 @@
           <span v-if="username" class="text-weight-medium">{{ username }}</span>
           <!-- Dynamic username -->
           <span v-if="timeAgo" class="text-grey-7">
-            • {{ calculateTimeAgo }}</span>
+            • {{ calculateTimeAgo }}</span
+          >
           <!-- Dynamic time -->
         </p>
       </div>
@@ -61,7 +62,9 @@
 
     <!-- Post Title (New) -->
     <div v-if="postTitle" class="post-title q-mt-md">
-      <h3 class="text-subtitle1 text-weight-medium text-grey-9 q-ma-none">{{ postTitle }}</h3>
+      <h3 class="text-subtitle1 text-weight-medium text-grey-9 q-ma-none">
+        {{ postTitle }}
+      </h3>
     </div>
 
     <!-- Post Description (New) -->
@@ -70,8 +73,16 @@
     </div>
 
     <!-- Post Content -->
-    <div v-if="postContent" :class="['post-content', 'text-grey-9','q-mt-md', { 'q-mb-md': postImages.length == 0}]">
-      <p class="q-ma-none" style="white-space: pre-wrap;">{{ postContent }}</p>
+    <div
+      v-if="postContent"
+      :class="[
+        'post-content',
+        'text-grey-9',
+        'q-mt-md',
+        { 'q-mb-md': postImages.length == 0 },
+      ]"
+    >
+      <p class="q-ma-none" style="white-space: pre-wrap">{{ postContent }}</p>
     </div>
 
     <!-- Single Post Image -->
@@ -110,13 +121,14 @@
     </div>
 
     <!-- Footer with votes, comments, and action button -->
-    <div
-      class="flex no-wrap items-center q-mt-md"
-      style="gap: 10px;"
-    >
-      <span style="cursor: pointer" @click="openPost('')">{{ votes }} <span class="text-grey-7">Votes</span></span>
+    <div class="flex no-wrap items-center q-mt-md" style="gap: 10px">
+      <span style="cursor: pointer" @click="openPost('')"
+        >{{ votes }} <span class="text-grey-7">Votes</span></span
+      >
       •
-      <span style="cursor: pointer" @click="openPost('Comments')">{{ comments }} <span class="text-grey-7">Comments</span></span>
+      <span style="cursor: pointer" @click="openPost('Comments')"
+        >{{ comments }} <span class="text-grey-7">Comments</span></span
+      >
       <!-- <q-btn
         no-caps
         size="md"
@@ -250,7 +262,7 @@ const showViewQuePopup = ref(false);
 const tabValue = ref("");
 
 const openPost = (tab = "Votes") => {
-  console.log('Opening post with ID:', props.postId, 'Tab:', tab);
+  console.log("Opening post with ID:", props.postId, "Tab:", tab);
   showViewQuePopup.value = true;
   tabValue.value = tab;
 };
@@ -263,7 +275,7 @@ const handleQuestionAnswered = () => {
 // Handle post updates from ViewQuestion component
 const handleUpdatePost = (postId, updatedData) => {
   // Emit to parent to update the main posts array
-  emit('update-post', postId, updatedData);
+  emit("update-post", postId, updatedData);
 };
 
 const goToProfile = () => {
@@ -389,7 +401,7 @@ const onDelete = async () => {
     h3 {
       line-height: 1.3;
       cursor: pointer;
-      
+
       &:hover {
         color: #1976d2;
       }
@@ -495,6 +507,6 @@ const onDelete = async () => {
 }
 
 .menu-btn {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 </style>

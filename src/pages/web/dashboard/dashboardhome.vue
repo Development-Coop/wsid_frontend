@@ -1,11 +1,16 @@
 <template>
-  <div class="q-pa-lg" style="max-width: 600px;margin: 0 auto;">
+  <div class="q-pa-lg" style="max-width: 600px; margin: 0 auto">
     <div class="post-container">
       <div class="post-wrapper">
         <template v-if="isLoading && posts.length === 0">
           <div v-for="n in 5" :key="n" class="skeleton-post q-pa-md">
             <div class="flex no-wrap">
-              <q-skeleton type="QAvatar" size="44px" style="flex-shrink: 0;" class="q-mr-md" />
+              <q-skeleton
+                type="QAvatar"
+                size="44px"
+                style="flex-shrink: 0"
+                class="q-mr-md"
+              />
               <div class="full-width">
                 <q-skeleton type="text" width="40%" class="q-mb-sm" />
                 <q-skeleton type="text" width="60%" class="q-mb-sm" />
@@ -62,17 +67,14 @@
   </q-dialog>
   <q-dialog v-model="showAskQuePopup" persistent>
     <div class="popup-container">
-      <AskQuestion
-        :is-popup="true"
-        @close="closePopup"
-      />
+      <AskQuestion :is-popup="true" @close="closePopup" />
       <q-btn
         flat
         round
         dense
         icon="close"
         class="close-button"
-        @click="showAskQuePopup=false"
+        @click="showAskQuePopup = false"
       />
     </div>
   </q-dialog>
@@ -105,10 +107,10 @@ const closeModal = () => {
     path: router.currentRoute.value.path, // Keep the current path
     query: {}, // Clear the query object
   });
-}
+};
 
 const closePopup = () => {
-  showAskQuePopup.value=false;
+  showAskQuePopup.value = false;
   // No need to fetch new posts when just closing the ask question popup
 };
 
@@ -171,7 +173,9 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       const merged = [...postStore.homePosts, ...newPosts];
-      const unique = merged.filter((post, index, self) => index === self.findIndex(p => p.id === post.id));
+      const unique = merged.filter(
+        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+      );
       postStore.setHomePosts(unique);
       currentPage.value++; // Increment the page number
     } else {
@@ -207,7 +211,7 @@ onMounted(async () => {
   // Check for query params immediately
   const openAskQuestion = route?.query?.openAskQuestion;
   const postId = route?.query?.postId;
-  
+
   if (openAskQuestion) {
     showAskQuePopup.value = true;
     // Clear the query parameter after opening
@@ -216,7 +220,7 @@ onMounted(async () => {
       query: {},
     });
   }
-  
+
   if (postId) {
     showViewQuePopup.value = true;
   }
@@ -242,7 +246,7 @@ watch(
         query: {},
       });
     }
-    
+
     if (newQuery.postId) {
       showViewQuePopup.value = true;
     }
@@ -252,7 +256,8 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-html, body {
+html,
+body {
   height: 100%;
   overflow-y: scroll;
 }
