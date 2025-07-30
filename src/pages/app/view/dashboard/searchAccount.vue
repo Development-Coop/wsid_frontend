@@ -1,7 +1,19 @@
 <template>
   <q-page class="q-pa-lg">
+    <!-- Show skeleton loaders when loading -->
+    <div v-if="isLoading" class="skeleton-container">
+      <div v-for="i in 3" :key="i" class="skeleton-user q-mb-md">
+        <q-skeleton type="QAvatar" size="48px" class="q-mr-md" />
+        <div class="skeleton-content">
+          <q-skeleton type="text" width="120px" class="q-mb-sm" />
+          <q-skeleton type="text" width="80px" />
+        </div>
+        <q-skeleton type="QBtn" width="100px" />
+      </div>
+    </div>
+
     <!-- Show users if available -->
-    <div v-if="users.length > 0">
+    <div v-else-if="users.length > 0">
       <div v-for="user in users" :key="user.id" class="user-wrapper">
         <div class="user-info">
           <q-avatar size="48px" class="q-mr-md" @click="goToProfile(user.id)">
@@ -49,11 +61,13 @@
 
 <script setup>
 import { defineProps, watch, ref, onMounted, computed } from "vue";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
 import fallbackImage from "src/assets/icons/profile-user.png";
+
+const emit = defineEmits(["searching"]);
 
 const props = defineProps({
   searchText: {
@@ -67,6 +81,7 @@ const debouncedSearchText = ref("");
 const $q = useQuasar();
 const postStore = usePostStore();
 const users = ref([]);
+const isLoading = ref(false); // Added loading state
 const profileStore = useProfileStore();
 const router = useRouter();
 
@@ -82,6 +97,11 @@ watch(
       debouncedSearchText.value = newText;
       if (debouncedSearchText.value) {
         await fetchPosts();
+      } else {
+        // Clear results when search text is empty
+        users.value = [];
+        isLoading.value = false;
+        emit("searching", false);
       }
     }, 300); // 300ms debounce delay
   }
@@ -89,7 +109,8 @@ watch(
 
 const fetchPosts = async () => {
   try {
-    Loading.show();
+    isLoading.value = true; // Set loading to true
+    emit("searching", true); // Emit searching event
     users.value = await postStore.searchProfile(debouncedSearchText.value);
   } catch (error) {
     $q.notify({
@@ -100,7 +121,8 @@ const fetchPosts = async () => {
       icon: "error",
     });
   } finally {
-    Loading.hide();
+    isLoading.value = false; // Set loading to false after fetching
+    emit("searching", false); // Emit searching event
   }
 };
 
@@ -121,7 +143,6 @@ const goToProfile = (id) => {
 
 const toggleFollow = async (id) => {
   try {
-    Loading.show();
     const req = {
       targetUserId: id,
     };
@@ -140,8 +161,6 @@ const toggleFollow = async (id) => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 </script>
@@ -205,5 +224,23 @@ const toggleFollow = async (id) => {
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #aeaeb2;
+}
+
+.footer-copyright {
+  font-weight: bold;
+}
+
+.skeleton-container {
+  padding: 16px;
+  .skeleton-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    .skeleton-content {
+      flex-grow: 1;
+      margin-left: 12px;
+    }
+  }
 }
 </style>

@@ -21,29 +21,60 @@
         </q-btn>
       </div>
       <div class="flex no-wrap items-center profile-wrapper-top">
-        <q-img class="profile-img" :src="user?.profilePic" />
+        <q-skeleton
+          v-if="!user?.profilePic"
+          type="QAvatar"
+          size="100px"
+          class="profile-img"
+        />
+        <q-img v-else class="profile-img" :src="user?.profilePic" />
         <div>
-          <p class="text-h6 text-weight-medium">{{ user?.name }}</p>
-          <p class="text-grey-7">
+          <q-skeleton
+            v-if="!user?.name"
+            type="text"
+            width="60%"
+            class="q-mb-sm"
+          />
+          <p v-else class="text-h6 text-weight-medium">{{ user?.name }}</p>
+          <q-skeleton v-if="!user?.bio" type="text" width="80%" />
+          <p v-else class="text-grey-7">
             {{ user?.bio }}
           </p>
         </div>
       </div>
       <div class="flex justify-around q-my-lg">
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!user?.followersCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ user?.followersCount }}
           </p>
           <p>Followers</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!user?.followingCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ user?.followingCount }}
           </p>
           <p>Following</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!user?.likesCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ user?.likesCount }}
           </p>
           <p>Likes</p>
@@ -76,40 +107,11 @@
             v-if="!posts.length && !isLoading"
             class="text-center flex flex-col justify-center items-center h-full"
           >
-            <div class="text-h6 text-weight-bold">Ask Question</div>
+            <div class="text-h6 text-weight-bold">No Posts Yet</div>
             <p class="q-mb-md text-grey-7">You don't have any posts yet</p>
-            <q-btn
-              v-motion-pop
-              :delay="100"
-              no-caps
-              size="md"
-              to="/app/ask-question"
-              label="Ask Question"
-              color="primary"
-              unelevated
-            />
           </div>
           <div v-else :class="['post-wrapper']">
             <q-spinner v-if="isLoading" color="primary" class="spinner" />
-            <div v-else class="ask-question-container">
-              <q-img
-                :src="user?.profilePic"
-                class="user-avatar"
-                spinner-color="primary"
-                spinner-size="20px"
-              />
-              <div class="question-box">
-                <q-btn
-                  flat
-                  icon="add"
-                  color="rgba(255, 87, 50, 0.08)"
-                  label="Ask a Question"
-                  to="/app/ask-question"
-                  class="ask-question-btn"
-                  unelevated
-                />
-              </div>
-            </div>
             <div v-for="post in posts" :key="post.id" class="post-container">
               <Posts
                 class="q-pa-md"
@@ -153,7 +155,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { usePostStore } from "src/stores/postStore";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import Posts from "../../../components/posts.vue";
 
@@ -172,7 +174,6 @@ const user = computed(() => {
 });
 
 const handleSubmit = async () => {
-  Loading.show();
   try {
     await profileStore.getProfileDetails();
   } catch (error) {
@@ -185,8 +186,6 @@ const handleSubmit = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
@@ -288,38 +287,6 @@ onMounted(async () => {
   justify-content: center;
   height: 100%; /* Ensures full height usage */
   background: white;
-}
-.question-box {
-  flex-grow: 1;
-  background-color: #fff5f2;
-  padding: 4px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ask-question-btn {
-  font-weight: 500;
-  color: #f15b29;
-}
-.ask-question-container {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  padding: 10px 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  gap: 24px;
-  text-transform: none;
-}
-.user-avatar {
-  height: 44px;
-  width: 44px;
-  border-radius: 50%;
-  border: 2px solid #eaeaea;
-  object-fit: cover;
 }
 
 .post-container {

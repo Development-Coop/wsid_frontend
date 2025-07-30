@@ -20,15 +20,32 @@
         />
       </div>
       <div class="flex no-wrap items-center profile-wrapper-top">
-        <q-img class="profile-img" :src="userDetails?.profilePic" />
+        <q-skeleton
+          v-if="!userDetails?.profilePic"
+          type="QAvatar"
+          size="100px"
+          class="profile-img"
+        />
+        <q-img v-else class="profile-img" :src="userDetails?.profilePic" />
         <div>
-          <p class="text-h6 text-weight-medium">{{ userDetails?.name }}</p>
-          <p class="text-grey-7">
+          <q-skeleton
+            v-if="!userDetails?.name"
+            type="text"
+            width="60%"
+            class="q-mb-sm"
+          />
+          <p v-else class="text-h6 text-weight-medium">
+            {{ userDetails?.name }}
+          </p>
+          <q-skeleton v-if="!userDetails?.bio" type="text" width="80%" />
+          <p v-else class="text-grey-7">
             {{ userDetails?.bio }}
           </p>
         </div>
         <div class="follow-button-wrapper">
+          <q-skeleton v-if="!userDetails?.id" type="QBtn" width="100px" />
           <q-btn
+            v-else
             :label="getFollowLabel"
             :color="userDetails?.isFollowing ? 'primary' : 'positive'"
             :outline="!userDetails.isFollowing"
@@ -41,19 +58,37 @@
       </div>
       <div class="flex justify-around q-my-lg">
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!userDetails?.followersCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ userDetails?.followersCount }}
           </p>
           <p>Followers</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!userDetails?.followingCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ userDetails?.followingCount }}
           </p>
           <p>Following</p>
         </div>
         <div class="text-center">
-          <p class="text-h6 text-weight-medium text-primary">
+          <q-skeleton
+            v-if="!userDetails?.likesCount"
+            type="text"
+            width="40px"
+            class="q-mb-xs"
+          />
+          <p v-else class="text-h6 text-weight-medium text-primary">
             {{ userDetails?.likesCount }}
           </p>
           <p>Likes</p>
@@ -110,7 +145,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { useProfileStore } from "src/stores/profileStore";
 import Posts from "../../../components/posts.vue";
 import { usePostStore } from "src/stores/postStore";
@@ -168,7 +203,6 @@ const fetchPosts = async () => {
 
 const toggleFollow = async () => {
   try {
-    Loading.show();
     const req = {
       targetUserId: userDetails.value.id,
     };
@@ -183,8 +217,6 @@ const toggleFollow = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
@@ -204,7 +236,6 @@ const onScroll = async () => {
 };
 
 const getDetails = async (id) => {
-  Loading.show();
   try {
     const data = await profileStore.getProfileDetails(id);
     userDetails.value = {
@@ -231,8 +262,6 @@ const getDetails = async (id) => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 

@@ -193,7 +193,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 
 const router = useRouter();
@@ -361,7 +361,6 @@ const removeChoice = (index) => {
 };
 
 const createPost = async () => {
-  Loading.show();
   try {
     // Validate title
     if (!title.value.trim()) {
@@ -372,7 +371,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -384,7 +382,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -396,7 +393,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -409,7 +405,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -421,7 +416,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -445,7 +439,6 @@ const createPost = async () => {
         icon: "error",
         autoClose: true,
       });
-      Loading.hide();
       return;
     }
 
@@ -555,14 +548,11 @@ const createPost = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
 const fetchPostDetails = async (postId) => {
   try {
-    Loading.show();
     const postDetails = await postStore.getPostDetails(postId);
     // Populate the fields with fetched data
     title.value = postDetails.title;
@@ -581,8 +571,6 @@ const fetchPostDetails = async (postId) => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 

@@ -454,10 +454,8 @@ onMounted(async () => {
   }, 1000); // Update every second
   const postId = route?.query?.postId || props?.postId;
   if (postId) {
-    Loading.show();
     await fetchPostDetails(postId);
     await fetchComments(postId);
-    Loading.hide();
   }
   const tabValue = route?.query?.tab || props?.tabValue || "Votes";
   if (tabValue) tab.value = tabValue;

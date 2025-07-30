@@ -15,6 +15,9 @@
           <template #prepend>
             <q-icon name="search" />
           </template>
+          <template v-if="isSearching" #append>
+            <q-spinner-dots color="primary" size="20px" />
+          </template>
         </q-input>
       </div>
 
@@ -38,7 +41,7 @@
     </div>
 
     <!-- Dynamic Router View -->
-    <router-view :search-text="searchText" />
+    <router-view :search-text="searchText" @searching="handleSearching" />
   </q-page>
 </template>
 
@@ -52,11 +55,17 @@ export default {
     const searchText = ref(""); // Search input state
     const activeTab = ref("accounts"); // Active tab state
     const route = useRoute(); // Access the current route
+    const isSearching = ref(false); // Loading indicator state
 
     // Handle search input updates
     const handleSearchInput = (newText) => {
       searchText.value = newText;
       updateActiveTab();
+    };
+
+    // Handle searching event from router-view
+    const handleSearching = (value) => {
+      isSearching.value = value;
     };
 
     // Update the active tab based on the current route
@@ -74,6 +83,8 @@ export default {
       searchText,
       activeTab,
       handleSearchInput,
+      isSearching,
+      handleSearching,
     };
   },
 };

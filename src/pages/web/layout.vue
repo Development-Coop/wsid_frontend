@@ -242,7 +242,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
-import { useQuasar, Loading } from "quasar";
+import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import trending from "./dashboard/trending.vue";
 
@@ -259,7 +259,6 @@ const user = computed(() => {
 });
 
 const handleSubmit = async () => {
-  Loading.show();
   try {
     await profileStore.getProfileDetails();
   } catch (error) {
@@ -272,8 +271,6 @@ const handleSubmit = async () => {
       icon: "error",
       autoClose: true,
     });
-  } finally {
-    Loading.hide();
   }
 };
 
