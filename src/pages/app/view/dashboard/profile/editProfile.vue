@@ -6,14 +6,11 @@
         :class="['flex', 'justify-between', { 'q-pb-lg': !isPopup }]"
       >
         <q-btn
-          style="width: 80px"
-          no-caps
-          block
-          label="Back"
-          color="grey-12"
-          text-color="black"
-          unelevated
-          size="md"
+          flat
+          round
+          dense
+          icon="arrow_back"
+          color="grey-8"
           to="/app/profile"
         />
         <q-btn

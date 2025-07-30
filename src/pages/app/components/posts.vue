@@ -62,6 +62,7 @@
       </div>
       <p
         class="text-grey-9 q-mb-md q-mt-sm cursor-pointer"
+        style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere"
         @click.self="openPost('')"
       >
         <span v-if="postContent">{{ postContent }}</span>
@@ -155,7 +156,7 @@ const router = useRouter();
 const currentImage = ref("");
 const isDialogOpen = ref(false);
 
-const emit = defineEmits(["deleted", "edit"]);
+const emit = defineEmits(["deleted", "edit", "update-post"]);
 const props = defineProps({
   postId: {
     type: String,

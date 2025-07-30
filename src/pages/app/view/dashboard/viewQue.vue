@@ -2,14 +2,11 @@
   <div :class="{ 'q-pb-xl': !isPopup, 'custom-page': isPopup }">
     <div v-if="!isPopup" class="flex justify-between q-pa-md sticky-header">
       <q-btn
-        no-caps
-        block
-        unelevated
-        size="md"
-        color="grey-12"
-        text-color="black"
-        label="Back"
-        style="width: 80px"
+        flat
+        round
+        dense
+        icon="arrow_back"
+        color="grey-8"
         @click="router.back()"
       />
     </div>
@@ -44,7 +41,7 @@
           <p class="text-grey-9 q-mb-sm" style="font-weight: 600">
             <span>{{ postDetails?.title }}</span>
           </p>
-          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap">
+          <p class="text-grey-9 q-mb-sm q-mt-sm" style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere">
             {{ postDetails?.description }}
           </p>
 
@@ -421,7 +418,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["fetch-new-post"]);
+const emit = defineEmits(["fetch-new-post", "update-post", "question-answered"]);
 
 const postDetails = ref({
   id: "",
@@ -622,7 +619,12 @@ const addComment = async () => {
     await fetchComments(postDetails.value.id);
     text.value = "";
     commentParentId.value = null;
-    emit("fetch-new-post");
+    
+    // Emit update-post instead of fetch-new-post
+    const postId = route?.query?.postId || props?.postId;
+    emit("update-post", postId, {
+      commentsCount: totalComments.value,
+    });
   } catch (e) {
     $q.notify({
       color: "negative",
@@ -651,7 +653,13 @@ const showVotesResult = async (option) => {
       await fetchPostDetails(postId);
       Loading.hide();
     }
-    emit("fetch-new-post");
+    
+    // Emit update-post instead of fetch-new-post to update only the specific post
+    emit("update-post", postId, {
+      hasVoted: true,
+      votesCount: totalVotes.value,
+    });
+    emit("question-answered");
   } catch (e) {
     $q.notify({
       color: "negative",

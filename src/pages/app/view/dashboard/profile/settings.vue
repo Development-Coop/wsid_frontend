@@ -2,18 +2,13 @@
   <q-page>
     <div class="q-pa-lg">
       <q-btn
+        flat
+        round
         dense
-        no-caps
-        block
-        unelevated
-        class="justify-self-start align-self-start"
-        style="border-radius: 0px"
+        icon="arrow_back"
+        color="grey-8"
         @click="router.push({ path: '/app/profile' })"
-      >
-        <q-icon v-motion-pop-visible size="24px">
-          <img src="~src/assets/icons/arrow-left.svg" alt="logo" />
-        </q-icon>
-      </q-btn>
+      />
     </div>
     <section class="q-px-lg pq-pb-lg">
       <div class="text-h6 q-pa-lg">

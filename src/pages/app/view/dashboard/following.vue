@@ -38,7 +38,7 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
-          :has-voted="post.hasVoted"
+          @update-post="handleUpdatePost"
         />
       </div>
     </template>
@@ -61,16 +61,18 @@
 
 <script setup>
 import Posts from "../../components/posts.vue";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar } from "quasar";
+import { useRoute } from "vue-router";
 
-const posts = ref([]);
+const posts = computed(() => postStore.homePosts);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
 const $q = useQuasar();
+const route = useRoute();
 
 // Function to fetch posts
 const fetchPosts = async () => {
@@ -87,12 +89,16 @@ const fetchPosts = async () => {
     });
     // Check if there are new posts
     if (newPosts.length > 0) {
-      // Append new posts to the existing list
-      console.log(
-        "Loaded posts:",
-        newPosts.map((p) => ({ id: p.id, hasVoted: p.hasVoted }))
-      );
-      posts.value.push(...newPosts); // Using .push() for better performance
+      // Use the store's setHomePosts method
+      if (currentPage.value === 1) {
+        postStore.setHomePosts(newPosts);
+      } else {
+        const merged = [...postStore.homePosts, ...newPosts];
+        const unique = merged.filter(
+          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+        );
+        postStore.setHomePosts(unique);
+      }
       currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load
@@ -130,6 +136,23 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
 });
+
+// Watch for route changes to refresh posts when user returns from voting
+watch(
+  () => route.path,
+  async (newPath, oldPath) => {
+    // If user returns from view-question page, refresh posts to get updated vote data
+    if (oldPath && oldPath.includes('view-question') && newPath.includes('following')) {
+      await fetchPosts();
+    }
+  }
+);
+
+// Handle post updates from ViewQuestion component
+const handleUpdatePost = (postId, updatedData) => {
+  // Use the post store's update method to update the home posts
+  postStore.updateHomePostInStore(postId, updatedData);
+};
 </script>
 
 <style scoped lang="scss">

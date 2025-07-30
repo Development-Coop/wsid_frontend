@@ -2,17 +2,20 @@
   <q-page class="q-pb-xl">
     <!-- Posts when available -->
     <template v-if="posts.length > 0">
-      <div v-for="post in posts" :key="post.username" class="post-wrapper">
+      <div v-for="post in posts" :key="post.id" class="post-wrapper">
         <Posts
           class="q-pa-md"
-          :user-image="post.userImage"
-          :username="post.username"
-          :time-ago="post.timeAgo"
-          :post-title="post.postTitle"
-          :post-content="post.postContent"
-          :post-image="post.postImage"
-          :votes="post.votes"
-          :comments="post.comments"
+          :post-id="post.id"
+          :user-image="post.user.profilePicUrl"
+          :user-id="post.user.id"
+          :username="post.user.name"
+          :time-ago="post.createdAt"
+          :post-title="post.title"
+          :post-content="post.description"
+          :post-images="post.images"
+          :votes="post.votesCount"
+          :comments="post.commentsCount"
+          @update-post="handleUpdatePost"
         />
       </div>
     </template>
@@ -75,6 +78,13 @@ function* generateDummyContent() {
 }
 
 const posts = Array.from(generateDummyContent());
+
+// Handle post updates from ViewQuestion component (for future use when real data is implemented)
+const handleUpdatePost = (postId, updatedData) => {
+  // This function will be used when real data is implemented
+  // For now, it's a placeholder since we're using dummy data
+  console.log('Post update received:', postId, updatedData);
+};
 </script>
 
 <style scoped lang="scss">

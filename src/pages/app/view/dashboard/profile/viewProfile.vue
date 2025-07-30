@@ -8,6 +8,17 @@
       style="height: 150px; width: 100%; object-fit: cover"
     />
     <div class="q-px-lg q-py-md">
+      <!-- Back button -->
+      <div class="flex justify-between items-center q-mb-md">
+        <q-btn
+          flat
+          round
+          dense
+          icon="arrow_back"
+          color="grey-8"
+          @click="goBack"
+        />
+      </div>
       <div class="flex no-wrap items-center profile-wrapper-top">
         <q-img class="profile-img" :src="userDetails?.profilePic" />
         <div>
@@ -175,6 +186,10 @@ const toggleFollow = async () => {
   } finally {
     Loading.hide();
   }
+};
+
+const goBack = () => {
+  router.back();
 };
 
 // Infinite scroll handler

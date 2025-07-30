@@ -5,14 +5,11 @@
       :class="['flex', 'justify-between', 'q-pa-md', 'sticky-header']"
     >
       <q-btn
-        no-caps
-        block
-        unelevated
-        size="md"
-        color="grey-12"
-        text-color="black"
-        label="Back"
-        style="width: 80px"
+        flat
+        round
+        dense
+        icon="arrow_back"
+        color="grey-8"
         @click="router.back()"
       />
       <q-btn
