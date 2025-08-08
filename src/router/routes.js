@@ -70,6 +70,12 @@ const routes = [
     component: () => import("src/pages/web/layout.vue"),
     children: [
       {
+        path: "/web/delete-account",
+        name: "delete-account",
+        component: () => import("src/pages/web/DeleteAccount.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "/web/dashboard/home",
         name: "web-dashboard-home",
         component: () => import("src/pages/web/dashboard/dashboardhome.vue"),
