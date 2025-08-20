@@ -56,6 +56,8 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
+        :has-voted="post.hasVoted"
+        :is-own-posts="post.user.id === profileStore.userDetails?.id"
         @update-post="updatePost"
       />
       <Posts
@@ -71,6 +73,8 @@
         :post-images="post.images"
         :votes="post.votesCount"
         :comments="post.commentsCount"
+        :has-voted="post.hasVoted"
+        :is-own-posts="post.user.id === profileStore.userDetails?.id"
         @update-post="updatePost"
       />
     </div>
@@ -84,11 +88,13 @@ import Posts from "../components/posts.vue";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar } from "quasar";
+import { useProfileStore } from "src/stores/profileStore";
 
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
+const profileStore = useProfileStore();
 const posts = computed(() =>
   postStore.trendingPosts
     .slice()
@@ -122,14 +128,23 @@ const fetchPosts = async () => {
       sortBy: "createdAt",
       order: "desc",
     });
+    
     // Check if newPosts contains data
-    // Check if there are new posts
     if (newPosts.length > 0) {
-      const merged = [...postStore.trendingPosts, ...newPosts];
-      const unique = merged.filter(
-        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
-      );
-      postStore.setTrendingPosts(unique);
+      // Merge posts with stored voting status from local storage
+      const postsWithVotingStatus = postStore.mergePostsWithStoredVotingStatus(newPosts);
+      
+      // Use the store's setTrendingPosts method
+      if (currentPage.value === 1) {
+        postStore.setTrendingPosts(postsWithVotingStatus);
+      } else {
+        const merged = [...postStore.trendingPosts, ...postsWithVotingStatus];
+        const unique = merged.filter(
+          (post, index, self) =>
+            index === self.findIndex((p) => p.id === post.id)
+        );
+        postStore.setTrendingPosts(unique);
+      }
       currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load

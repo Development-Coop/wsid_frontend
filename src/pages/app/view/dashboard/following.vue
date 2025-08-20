@@ -38,6 +38,8 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
+          :has-voted="post.hasVoted"
+          :is-own-posts="post.user.id === profileStore.userDetails?.id"
           @update-post="handleUpdatePost"
         />
       </div>
@@ -71,21 +73,26 @@ import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
+import { useProfileStore } from "src/stores/profileStore";
 
 const posts = computed(() => postStore.homePosts);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
 const hasMoreData = ref(true); // Tracks if more data is available
 const postStore = usePostStore();
+const profileStore = useProfileStore();
 const $q = useQuasar();
 const route = useRoute();
 
 // Function to fetch posts
 const fetchPosts = async () => {
+  // Prevent duplicate requests or unnecessary calls
   if (isLoading.value || !hasMoreData.value) return;
 
   isLoading.value = true;
+
   try {
+    // Fetch new posts
     const newPosts = await postStore.getPostList({
       all: true,
       page: currentPage.value,
@@ -93,24 +100,25 @@ const fetchPosts = async () => {
       sortBy: "createdAt",
       order: "desc",
     });
+
     // Check if there are new posts
     if (newPosts.length > 0) {
-      // Use the store's setHomePosts method
-      if (currentPage.value === 1) {
-        postStore.setHomePosts(newPosts);
-      } else {
-        const merged = [...postStore.homePosts, ...newPosts];
-        const unique = merged.filter(
-          (post, index, self) =>
-            index === self.findIndex((p) => p.id === post.id)
-        );
-        postStore.setHomePosts(unique);
-      }
+      // Merge posts with stored voting status from local storage
+      const postsWithVotingStatus = postStore.mergePostsWithStoredVotingStatus(newPosts);
+      
+      const merged = [...postStore.homePosts, ...postsWithVotingStatus];
+      const unique = merged.filter(
+        (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+      );
+      postStore.setHomePosts(unique);
       currentPage.value++; // Increment the page number
     } else {
       hasMoreData.value = false; // No more data to load
     }
   } catch (error) {
+    console.error("Error fetching posts:", error);
+
+    // Optional: Show a notification to the user
     $q.notify({
       message: "Failed to load posts. Please try again later.",
       color: "negative",
@@ -119,7 +127,7 @@ const fetchPosts = async () => {
       icon: "error",
     });
   } finally {
-    isLoading.value = false;
+    isLoading.value = false; // Reset the loading flag
   }
 };
 
@@ -138,11 +146,23 @@ const onScroll = async () => {
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
   window.addEventListener("scroll", onScroll);
+  
+  // Add focus event listener for when user returns to the page
+  window.addEventListener("focus", handlePageFocus);
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
+  window.removeEventListener("focus", handlePageFocus);
 });
+
+// Handle page focus (when user returns from another tab/app)
+const handlePageFocus = async () => {
+  // Reset pagination and fetch fresh posts
+  currentPage.value = 1;
+  hasMoreData.value = true;
+  await fetchPosts();
+};
 
 // Watch for route changes to refresh posts when user returns from voting
 watch(
@@ -154,6 +174,9 @@ watch(
       oldPath.includes("view-question") &&
       newPath.includes("following")
     ) {
+      // Reset pagination and fetch fresh posts from beginning
+      currentPage.value = 1;
+      hasMoreData.value = true;
       await fetchPosts();
     }
   }

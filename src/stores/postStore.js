@@ -202,11 +202,77 @@ export const usePostStore = defineStore("post", () => {
           "Content-Type": "application/json",
         },
       });
-      return response?.data?.data || [];
+      const rawPosts = response?.data?.data || [];
+      // Return posts with merged voting status
+      return mergePostsWithStoredVotingStatus(rawPosts);
     } catch (error) {
       console.error(error);
       return [];
     }
+  };
+
+  // Get user voting status for specific posts
+  const getUserVotingStatus = async (postIds) => {
+    try {
+      const response = await api.post("vote/user-status", {
+        postIds: postIds,
+      });
+      return response?.data?.data || {};
+    } catch (error) {
+      console.error("Error fetching user voting status:", error);
+      return {};
+    }
+  };
+
+  // Enhanced function to get posts with user voting status
+  const getPostsWithUserStatus = async (posts, fetchUserStatus = true) => {
+    if (!fetchUserStatus || !posts.length) return posts;
+    
+    try {
+      const postIds = posts.map(post => post.id);
+      const userVotingStatus = await getUserVotingStatus(postIds);
+      
+      return posts.map(post => ({
+        ...post,
+        hasVoted: userVotingStatus[post.id] || false,
+      }));
+    } catch (error) {
+      console.error("Error fetching user voting status:", error);
+      return posts;
+    }
+  };
+
+  // Local storage functions for user voting status
+  const getUserVotingStatusFromStorage = () => {
+    try {
+      const stored = localStorage.getItem('user-voting-status');
+      return stored ? JSON.parse(stored) : {};
+    } catch (error) {
+      console.error('Error reading voting status from storage:', error);
+      return {};
+    }
+  };
+
+  const saveUserVotingStatusToStorage = (postId, hasVoted) => {
+    try {
+      const currentStatus = getUserVotingStatusFromStorage();
+      currentStatus[postId] = hasVoted;
+      localStorage.setItem('user-voting-status', JSON.stringify(currentStatus));
+    } catch (error) {
+      console.error('Error saving voting status to storage:', error);
+    }
+  };
+
+  // Enhanced function to merge posts with stored voting status
+  const mergePostsWithStoredVotingStatus = (posts) => {
+    if (!posts.length) return posts;
+    
+    const storedVotingStatus = getUserVotingStatusFromStorage();
+    
+    return posts.map(post => ({
+      ...post,
+      hasVoted: storedVotingStatus[post.id] || false,
+    }));
   };
 
   // Set posts (for initial fetch or replace)
@@ -222,10 +288,10 @@ export const usePostStore = defineStore("post", () => {
   }
 
   function setTrendingPosts(newPosts) {
-    trendingPosts.value = newPosts;
+    trendingPosts.value = mergePostsWithStoredVotingStatus(newPosts);
   }
   function setHomePosts(newPosts) {
-    homePosts.value = newPosts;
+    homePosts.value = mergePostsWithStoredVotingStatus(newPosts);
   }
   function updateTrendingPostInStore(postId, updatedData) {
     const idx = trendingPosts.value.findIndex((p) => p.id === postId);
@@ -234,6 +300,11 @@ export const usePostStore = defineStore("post", () => {
         ...trendingPosts.value[idx],
         ...updatedData,
       };
+      
+      // Save voting status to local storage if it's being updated
+      if (updatedData.hasVoted !== undefined) {
+        saveUserVotingStatusToStorage(postId, updatedData.hasVoted);
+      }
     }
     // Also update in homePosts if present
     const homeIdx = homePosts.value.findIndex((p) => p.id === postId);
@@ -242,12 +313,22 @@ export const usePostStore = defineStore("post", () => {
         ...homePosts.value[homeIdx],
         ...updatedData,
       };
+      
+      // Save voting status to local storage if it's being updated
+      if (updatedData.hasVoted !== undefined) {
+        saveUserVotingStatusToStorage(postId, updatedData.hasVoted);
+      }
     }
   }
   function updateHomePostInStore(postId, updatedData) {
     const idx = homePosts.value.findIndex((p) => p.id === postId);
     if (idx !== -1) {
       homePosts.value[idx] = { ...homePosts.value[idx], ...updatedData };
+      
+      // Save voting status to local storage if it's being updated
+      if (updatedData.hasVoted !== undefined) {
+        saveUserVotingStatusToStorage(postId, updatedData.hasVoted);
+      }
     }
     // Also update in trendingPosts if present
     const trendingIdx = trendingPosts.value.findIndex((p) => p.id === postId);
@@ -256,6 +337,11 @@ export const usePostStore = defineStore("post", () => {
         ...trendingPosts.value[trendingIdx],
         ...updatedData,
       };
+      
+      // Save voting status to local storage if it's being updated
+      if (updatedData.hasVoted !== undefined) {
+        saveUserVotingStatusToStorage(postId, updatedData.hasVoted);
+      }
     }
   }
 
@@ -264,12 +350,12 @@ export const usePostStore = defineStore("post", () => {
     const homeUnique = [newPost, ...homePosts.value].filter(
       (post, index, self) => index === self.findIndex((p) => p.id === post.id)
     );
-    homePosts.value = homeUnique;
+    homePosts.value = mergePostsWithStoredVotingStatus(homeUnique);
     // Add to trendingPosts
     const trendingUnique = [newPost, ...trendingPosts.value].filter(
       (post, index, self) => index === self.findIndex((p) => p.id === post.id)
     );
-    trendingPosts.value = trendingUnique;
+    trendingPosts.value = mergePostsWithStoredVotingStatus(trendingUnique);
   }
 
   return {
@@ -297,5 +383,10 @@ export const usePostStore = defineStore("post", () => {
     searchProfile,
     searchPost,
     addNewPostToFeeds,
+    getUserVotingStatus,
+    getPostsWithUserStatus,
+    getUserVotingStatusFromStorage,
+    saveUserVotingStatusToStorage,
+    mergePostsWithStoredVotingStatus,
   };
 });

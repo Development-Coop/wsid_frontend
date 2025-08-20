@@ -261,6 +261,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  hasVoted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["deleted", "edit", "fetch-new-post", "update-post"]);

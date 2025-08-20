@@ -15,6 +15,8 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
+          :has-voted="post.hasVoted"
+          :is-own-posts="post.user.id === profileStore.userDetails?.id"
           @update-post="handleUpdatePost"
         />
       </div>
@@ -33,6 +35,7 @@
 
 <script setup>
 import Posts from "../../components/posts.vue";
+import { useProfileStore } from "../../../stores/profileStore";
 
 function* generateDummyContent() {
   const userImages = [
@@ -76,6 +79,7 @@ function* generateDummyContent() {
 }
 
 const posts = Array.from(generateDummyContent());
+const profileStore = useProfileStore();
 
 // Handle post updates from ViewQuestion component (for future use when real data is implemented)
 const handleUpdatePost = (postId, updatedData) => {

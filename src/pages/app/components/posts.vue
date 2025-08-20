@@ -60,6 +60,14 @@
           </q-list> -->
         </q-btn-dropdown>
       </div>
+      <!-- Post Title -->
+      <p
+        v-if="postTitle"
+        class="text-grey-9 q-mb-sm q-mt-sm cursor-pointer text-weight-bold"
+        @click.self="openPost('')"
+      >
+        {{ postTitle }}
+      </p>
       <p
         class="text-grey-9 q-mb-md q-mt-sm cursor-pointer"
         style="
@@ -117,7 +125,7 @@
           unelevated
           color="grey-12"
           text-color="black"
-          label="Answer"
+          :label="(isOwnPosts || hasVoted) ? 'See Results' : 'Answer'"
           class="q-ml-auto"
           style="cursor: pointer"
           @click="openPost('')"
@@ -205,6 +213,14 @@ const props = defineProps({
   userId: {
     type: String,
     default: "",
+  },
+  postTitle: {
+    type: String,
+    default: "",
+  },
+  hasVoted: {
+    type: Boolean,
+    default: false,
   },
 });
 const goToProfile = () => {

@@ -38,6 +38,7 @@
           :votes="post.votesCount"
           :comments="post.commentsCount"
           :has-voted="post.hasVoted"
+          :is-own-posts="post.user.id === profileStore.userDetails?.id"
           @update-post="updatePost"
         />
         <q-spinner v-if="isLoading && posts.length > 0" color="primary" />
@@ -89,8 +90,10 @@ import { useQuasar } from "quasar";
 // components
 import ViewQuestion from "src/pages/web/components/view-question.vue";
 import AskQuestion from "src/components/ask-question.vue";
+import { useProfileStore } from "src/stores/profileStore";
 
 const postStore = usePostStore();
+const profileStore = useProfileStore();
 const posts = computed(() => postStore.homePosts);
 const currentPage = ref(1); // Tracks the current page
 const isLoading = ref(false); // Tracks the loading state
@@ -172,7 +175,10 @@ const fetchPosts = async () => {
 
     // Check if there are new posts
     if (newPosts.length > 0) {
-      const merged = [...postStore.homePosts, ...newPosts];
+      // Merge posts with stored voting status from local storage
+      const postsWithVotingStatus = postStore.mergePostsWithStoredVotingStatus(newPosts);
+      
+      const merged = [...postStore.homePosts, ...postsWithVotingStatus];
       const unique = merged.filter(
         (post, index, self) => index === self.findIndex((p) => p.id === post.id)
       );

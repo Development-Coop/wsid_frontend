@@ -27,6 +27,8 @@
           :post-images="post.images"
           :votes="post.votesCount"
           :comments="post.commentsCount"
+          :has-voted="post.hasVoted"
+          :is-own-posts="post.user.id === profileStore.userDetails?.id"
         />
       </div>
     </div>
@@ -44,6 +46,7 @@ import { defineProps, watch, ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import Posts from "../../components/posts.vue";
+import { useProfileStore } from "src/stores/profileStore";
 
 const emit = defineEmits(["searching"]);
 
@@ -58,6 +61,7 @@ let debounceTimeout;
 const debouncedSearchText = ref("");
 const $q = useQuasar();
 const postStore = usePostStore();
+const profileStore = useProfileStore();
 const posts = ref([]);
 const isLoading = ref(false); // Added isLoading state
 
@@ -83,7 +87,9 @@ const fetchPosts = async () => {
   isLoading.value = true; // Set loading to true
   emit("searching", true); // Emit searching event
   try {
-    posts.value = await postStore.searchPost(debouncedSearchText.value);
+    const rawPosts = await postStore.searchPost(debouncedSearchText.value);
+    // Merge posts with stored voting status from local storage
+    posts.value = postStore.mergePostsWithStoredVotingStatus(rawPosts);
   } catch (error) {
     $q.notify({
       message: "Failed to load posts. Please try again later.",
