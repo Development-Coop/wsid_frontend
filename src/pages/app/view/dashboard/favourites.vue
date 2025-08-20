@@ -35,7 +35,7 @@
 
 <script setup>
 import Posts from "../../components/posts.vue";
-import { useProfileStore } from "../../../stores/profileStore";
+import { useProfileStore } from "src/stores/profileStore";
 
 function* generateDummyContent() {
   const userImages = [

@@ -128,12 +128,13 @@ const fetchPosts = async () => {
       sortBy: "createdAt",
       order: "desc",
     });
-    
+
     // Check if newPosts contains data
     if (newPosts.length > 0) {
       // Merge posts with stored voting status from local storage
-      const postsWithVotingStatus = postStore.mergePostsWithStoredVotingStatus(newPosts);
-      
+      const postsWithVotingStatus =
+        postStore.mergePostsWithStoredVotingStatus(newPosts);
+
       // Use the store's setTrendingPosts method
       if (currentPage.value === 1) {
         postStore.setTrendingPosts(postsWithVotingStatus);

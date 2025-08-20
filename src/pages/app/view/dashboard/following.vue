@@ -104,8 +104,9 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       // Merge posts with stored voting status from local storage
-      const postsWithVotingStatus = postStore.mergePostsWithStoredVotingStatus(newPosts);
-      
+      const postsWithVotingStatus =
+        postStore.mergePostsWithStoredVotingStatus(newPosts);
+
       const merged = [...postStore.homePosts, ...postsWithVotingStatus];
       const unique = merged.filter(
         (post, index, self) => index === self.findIndex((p) => p.id === post.id)
@@ -145,17 +146,17 @@ const onScroll = async () => {
 // Add event listeners
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
-  
+
   // Restore scroll position if available
-  const savedScrollPosition = sessionStorage.getItem('mobile-following-scroll');
+  const savedScrollPosition = sessionStorage.getItem("mobile-following-scroll");
   if (savedScrollPosition) {
     setTimeout(() => {
       window.scrollTo(0, parseInt(savedScrollPosition));
     }, 100);
   }
-  
+
   window.addEventListener("scroll", onScroll);
-  
+
   // Add focus event listener for when user returns to the page
   window.addEventListener("focus", handlePageFocus);
 });
@@ -163,8 +164,11 @@ onMounted(async () => {
 onUnmounted(() => {
   // Save scroll position before unmounting
   const currentScrollPosition = window.scrollY;
-  sessionStorage.setItem('mobile-following-scroll', currentScrollPosition.toString());
-  
+  sessionStorage.setItem(
+    "mobile-following-scroll",
+    currentScrollPosition.toString()
+  );
+
   window.removeEventListener("scroll", onScroll);
   window.removeEventListener("focus", handlePageFocus);
 });

@@ -273,25 +273,30 @@ onMounted(async () => {
   } else {
     router.back();
   }
-  
+
   await fetchPosts(); // Load initial posts
-  
+
   // Restore scroll position if available
-  const savedScrollPosition = sessionStorage.getItem('mobile-viewProfile-scroll');
+  const savedScrollPosition = sessionStorage.getItem(
+    "mobile-viewProfile-scroll"
+  );
   if (savedScrollPosition) {
     setTimeout(() => {
       window.scrollTo(0, parseInt(savedScrollPosition));
     }, 100);
   }
-  
+
   window.addEventListener("scroll", onScroll);
 });
 
 onUnmounted(() => {
   // Save scroll position before unmounting
   const currentScrollPosition = window.scrollY;
-  sessionStorage.setItem('mobile-viewProfile-scroll', currentScrollPosition.toString());
-  
+  sessionStorage.setItem(
+    "mobile-viewProfile-scroll",
+    currentScrollPosition.toString()
+  );
+
   window.removeEventListener("scroll", onScroll);
 });
 </script>
