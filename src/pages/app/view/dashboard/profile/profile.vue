@@ -233,19 +233,29 @@ const editQuestion = (id) => {
 
 // Add event listeners
 onMounted(async () => {
+  if (!user.value?.name) {
+    await handleSubmit();
+  }
+  
   await fetchPosts(); // Load initial posts
+  
+  // Restore scroll position if available
+  const savedScrollPosition = sessionStorage.getItem('mobile-profile-scroll');
+  if (savedScrollPosition) {
+    setTimeout(() => {
+      window.scrollTo(0, parseInt(savedScrollPosition));
+    }, 100);
+  }
+  
   window.addEventListener("scroll", onScroll);
 });
 
 onUnmounted(() => {
+  // Save scroll position before unmounting
+  const currentScrollPosition = window.scrollY;
+  sessionStorage.setItem('mobile-profile-scroll', currentScrollPosition.toString());
+  
   window.removeEventListener("scroll", onScroll);
-});
-
-onMounted(async () => {
-  if (!user.value?.name) {
-    await handleSubmit();
-  }
-  window.addEventListener("scroll", onScroll);
 });
 </script>
 

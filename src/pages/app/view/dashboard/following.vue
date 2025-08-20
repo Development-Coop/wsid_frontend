@@ -145,6 +145,15 @@ const onScroll = async () => {
 // Add event listeners
 onMounted(async () => {
   await fetchPosts(); // Load initial posts
+  
+  // Restore scroll position if available
+  const savedScrollPosition = sessionStorage.getItem('mobile-following-scroll');
+  if (savedScrollPosition) {
+    setTimeout(() => {
+      window.scrollTo(0, parseInt(savedScrollPosition));
+    }, 100);
+  }
+  
   window.addEventListener("scroll", onScroll);
   
   // Add focus event listener for when user returns to the page
@@ -152,6 +161,10 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  // Save scroll position before unmounting
+  const currentScrollPosition = window.scrollY;
+  sessionStorage.setItem('mobile-following-scroll', currentScrollPosition.toString());
+  
   window.removeEventListener("scroll", onScroll);
   window.removeEventListener("focus", handlePageFocus);
 });
