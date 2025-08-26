@@ -1,5 +1,18 @@
 <template>
   <section class="home">
+    <!-- Mobile App Download Banner (only show on mobile) -->
+    <div v-if="isMobile" class="mobile-app-banner">
+      <div class="mobile-app-banner__content">
+        <div class="mobile-app-banner__text">
+          <h3>Get the WSID Mobile App</h3>
+          <p>Ask questions and get answers on the go</p>
+        </div>
+        <button class="mobile-app-banner__button" @click="downloadApp">
+          Download App
+        </button>
+      </div>
+    </div>
+
     <section class="home-banner">
       <section class="banner-section banner-section--left">
         <Header />
@@ -17,7 +30,7 @@
               v-motion-pop
               :delay="700"
               class="btn btn-primary"
-              @click="router.push({ path: '/auth/web-login?tab=login' })"
+              @click="handleGetStarted"
             >
               Get Started
             </button>
@@ -195,7 +208,7 @@ const commentsList = ref([
     imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment:
-      "What’s a good action movie to show someone that hates action flicks?",
+      "What's a good action movie to show someone that hates action flicks?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
@@ -221,7 +234,7 @@ const commentsList = ref([
     imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment:
-      "I’ve been thinking about changing things up. What should I name my kid?",
+      "I've been thinking about changing things up. What should I name my kid?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
@@ -267,12 +280,12 @@ const commentsList = ref([
     imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
-      "Piano may sound daunting, but it’s actually easier than you think! play",
+      "Piano may sound daunting, but it's actually easier than you think! play",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
-    comment: "Where to move if you can’t afford NYC?",
+    comment: "Where to move if you can't afford NYC?",
   },
   {
     imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
@@ -297,14 +310,89 @@ const commentsList = ref([
   {
     imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
-    comment: "What is weighing me down that I don’t need in my life?",
+    comment: "What is weighing me down that I don't need in my life?",
   },
 ]);
 
-const isMobile = computed(() => $q.screen.width < 992);
+const isMobile = computed(() => $q.platform.is.mobile || $q.platform.is.tablet);
+
+const handleGetStarted = () => {
+  if (isMobile.value) {
+    // Direct mobile users to mobile app auth
+    router.push({ path: '/app/auth' });
+  } else {
+    // Direct desktop users to web login
+    router.push({ path: '/auth/web-login?tab=login' });
+  }
+};
+
+const downloadApp = () => {
+  // This function would handle app download logic
+  // For now it's non-functional as requested
+  console.log('Download app clicked - non-functional');
+};
 </script>
 
 <style scoped lang="scss">
+.mobile-app-banner {
+  background: linear-gradient(135deg, #ff5732 0%, #ff4520 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(255, 87, 50, 0.3);
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  &__text {
+    flex: 1;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 2px 0 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.2;
+    }
+  }
+
+  &__button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 12px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
 .home {
   overflow-x: hidden;
   &-banner {

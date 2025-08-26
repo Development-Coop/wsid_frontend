@@ -235,8 +235,8 @@ const routes = [
             component: () => import("src/pages/app/view/dashboard/layout.vue"),
             children: [
               {
-                path: "trending", // Default child route for "layout"
-                name: "trending",
+                path: "home", // Default child route for "layout"
+                name: "home",
                 component: () =>
                   import("src/pages/app/view/dashboard/trending.vue"),
                 meta: { requiresAuth: true },
