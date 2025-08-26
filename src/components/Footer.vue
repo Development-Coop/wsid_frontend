@@ -1,19 +1,5 @@
 <template>
   <footer class="footer">
-    <div class="footer__contact">
-      <div class="footer__social-links">
-        <a target="_blank" href="https://x.com/wsidcom">
-          <img src="../assets/icons/twitter.svg" alt="twitter-icon" />
-        </a>
-        <a target="_blank" href="https://www.instagram.com/WSIDcom/">
-          <img src="../assets/icons/instagram.svg" alt="instagram-icon" />
-        </a>
-        <a target="_blank" href="https://www.facebook.com/WSIDcom/">
-          <img src="../assets/icons/facebook.svg" alt="facebook-icon" />
-        </a>
-      </div>
-      <a href=""><span>What should I do?</span></a>
-    </div>
     <div class="footer__content">
       <h1>
         <span>Hurry Up</span>At WSID, you have unlimited lifelines. Join Now,
@@ -25,6 +11,17 @@
             <router-link :to="item.path">{{ item.name }}</router-link>
           </li>
         </ul>
+        <div class="footer__social-links">
+          <a target="_blank" href="https://x.com/wsidcom">
+            <img src="../assets/icons/twitter.svg" alt="twitter-icon" />
+          </a>
+          <a target="_blank" href="https://www.instagram.com/WSIDcom/">
+            <img src="../assets/icons/instagram.svg" alt="instagram-icon" />
+          </a>
+          <a target="_blank" href="https://www.facebook.com/WSIDcom/">
+            <img src="../assets/icons/facebook.svg" alt="facebook-icon" />
+          </a>
+        </div>
         <div class="send-message">
           <input v-model="message" type="text" placeholder="SEND MESSAGE" />
           <div>
@@ -50,7 +47,7 @@ const message = ref("");
 <style scoped lang="scss">
 .footer {
   display: grid;
-  align-content: space-between;
+  align-content: center;
   padding: 48px;
   height: 650px;
   @media screen and (max-width: 992px) {
@@ -63,21 +60,6 @@ const message = ref("");
   }
   a {
     text-decoration: none;
-  }
-  &__contact {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    @media screen and (max-width: 992px) {
-      display: grid;
-      justify-items: center;
-      grid-gap: 16px;
-    }
-    span {
-      font-size: 20px;
-      color: $primary;
-    }
   }
   &__social-links {
     display: flex;
@@ -130,12 +112,12 @@ const message = ref("");
       gap: 32px;
     }
     ul {
-      display: flex; /* Flex layout for horizontal alignment */
+      display: flex;
       list-style: none;
-      gap: 12px; /* Spacing between list items */
+      gap: 12px;
       font-size: 16px;
       font-weight: 500;
-      padding: 0; /* Ensure no padding on the ul */
+      padding: 0;
       margin: 0;
       li {
         cursor: pointer;

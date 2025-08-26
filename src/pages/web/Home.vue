@@ -42,13 +42,7 @@
         </div>
         <div class="primary-img">
           <span class="shadow"></span>
-          <img
-            src="../../assets/images/banner-img.png"
-            alt="banner-img"
-            srcset="
-              ../../assets/images/2x/banner-img.png,../../assets/images/3x/banner-img.png,../../assets/images/4x/banner-img.png
-            "
-          />
+          <img src="../../assets/images/betaCoverPhoto.avif" alt="banner-img" />
         </div>
       </section>
     </section>
@@ -78,10 +72,10 @@
           <div class="app-info__actions-container">
             <div class="app-info__actions-names">
               <img
-                src="../../assets/images/ask-que.png"
+                src="../../assets/images/ask-question.png"
                 alt="action-img"
                 srcset="
-                  ../../assets/images/2x/ask-que.png,../../assets/images/3x/ask-que.png,../../assets/images/4x/ask-que.png
+                  ../../assets/images/2x/ask-question.png,../../assets/images/3x/ask-question.png,../../assets/images/4x/ask-question.png
                 "
               />
               <p>Ask Questions</p>
@@ -130,7 +124,11 @@
           finding numerous and diverse perspectives on-demand.
         </p>
       </div>
-      <CommentsSlider />
+      <!-- <CommentsSlider /> -->
+      <img
+        class="grow-together__img"
+        src="../../assets/images/staticAnimation.avif"
+      />
     </section>
 
     <section class="footer">
@@ -143,7 +141,6 @@
 import Header from "../../components/Header.vue";
 import Footer from "../../components/Footer.vue";
 import CommentCard from "../../components/CommentCard.vue";
-import CommentsSlider from "../../components/CommentsSlider.vue";
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
@@ -152,154 +149,155 @@ const $q = useQuasar();
 const router = useRouter();
 const commentsList = ref([
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
+      .href,
+    comment: "Should I quit my job to start a food truck?",
+  },
+  {
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
-      "I have long hair and need trim. What’s the perfect haircut for my face shape?",
+      "Helping one cat might not change the whole world, but it could change the world for one person.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
-    comment: "Is this goal worth the cost?",
+    comment: "What should I do this weekend?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/5.svg", import.meta.url)
       .href,
-    comment: "Just came into some extra cash. How should I spend $10,000?",
+    comment: "Which school should I send my kids too?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
-    comment: "2484 Votes (65%)",
+    comment:
+      "Choose the path that brings you the most happiness and peace of mind.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
-    comment: "What is the best tea to lose belly fat really quickly?",
+    comment: "Invest in Bitcoin!",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
       "Should I go back to school for computer science as a 38 year old?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Where do should I travel next?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment:
       "What’s a good action movie to show someone that hates action flicks?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "What day of the week is best to break up with someone?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "175 Votes (55%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Is this goal worth the cost?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "That makes perfect sense to me.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment:
       "I’ve been thinking about changing things up. What should I name my kid?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "What should improve today the house or the car?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "I strongly agree",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "Should I break the law to save a loved one?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Which Martial Art is right for me?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "2484 Votes (65%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Which is worse, failing or never trying?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-10.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "388 Votes (12%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-1.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Other than that make sure it matches your style and personality.",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-2.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment:
       "Piano may sound daunting, but it’s actually easier than you think! play",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-3.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Where to move if you can’t afford NYC?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-4.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "What profession is not a complete joke?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-5.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/1.svg", import.meta.url)
       .href,
     comment: "Agree, no need to watch the 1st one and skip the 3rd",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-6.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/2.svg", import.meta.url)
       .href,
     comment: "1802 Votes (15%)",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-7.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/3.svg", import.meta.url)
       .href,
     comment: "Why do I keep dreaming of balloons?",
   },
   {
-    imgSrc: new URL("../../assets/icons/sample-profile-8.svg", import.meta.url)
+    imgSrc: new URL("../../assets/icons/sample-profile/4.svg", import.meta.url)
       .href,
     comment: "What is weighing me down that I don’t need in my life?",
-  },
-  {
-    imgSrc: new URL("../../assets/icons/sample-profile-9.svg", import.meta.url)
-      .href,
-    comment: "Nope",
   },
 ]);
 
@@ -552,6 +550,16 @@ const isMobile = computed(() => $q.screen.width < 992);
       }
     }
   }
+  .grow-together__img {
+        display: block;
+        margin: 0 auto;
+        max-width: calc(100% - 200px);
+        width: auto;
+        @media screen and (max-width: 992px) {
+          max-width: calc(100% - 40px);
+        }
+      }
+
   .grow-together {
     background: #161616;
     height: 1000px;

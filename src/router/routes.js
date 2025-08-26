@@ -3,7 +3,7 @@ const routes = [
     path: "",
     component: () => import("layouts/RegularLayout.vue"),
     children: [
-      { path: "", component: () => import("src/pages/web/Beta.vue") },
+      { path: "", component: () => import("src/pages/web/Home.vue") },
       { path: "beta", component: () => import("src/pages/web/Beta.vue") },
       {
         path: "terms-conditions",
