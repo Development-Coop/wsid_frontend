@@ -155,7 +155,7 @@ watch(
 
 const handleSignIn = async (
   signInMethod,
-  redirectTo = { name: "web-dashboard-trending" }
+  redirectTo = { name: "web-dashboard-home" }
 ) => {
   try {
     Loading.show();

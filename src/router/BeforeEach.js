@@ -19,7 +19,7 @@ export default function (router) {
       (to.name === "login" || to.name === "web-login")
     ) {
       const pathName =
-        window.innerWidth <= 768 ? "trending" : "web-dashboard-trending";
+        window.innerWidth <= 768 ? "trending" : "web-dashboard-home";
       // If the user is already authenticated and trying to access login pages, redirect to dashboard
       next({ name: pathName });
     } else {

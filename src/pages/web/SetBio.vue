@@ -77,7 +77,7 @@ const navigateToNextStep = async () => {
         timeout: 3000, // Duration the toast will be visible, in milliseconds
         icon: "check_circle", // Optional: adds an icon, Quasar icons or Material Icons can be used
       });
-      router.push({ name: "web-dashboard-trending" });
+      router.push({ name: "web-dashboard-home" });
     }
   } catch (error) {
     console.error("Registration error:", error);
