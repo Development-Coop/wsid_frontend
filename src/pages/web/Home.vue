@@ -6,7 +6,7 @@
         <div class="banner-content">
           <span class="banner-subtitle">What Should I Do?</span>
           <h1 v-motion-slide-left :delay="500" class="banner-title">
-            Forums for everyday life. Discuss with the world.
+            Ask the world.
           </h1>
           <p class="banner-description">
             Submit questions to find assistance, ranging from being trivial to

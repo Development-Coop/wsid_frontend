@@ -26,11 +26,9 @@
             <span v-if="username" class="text-weight-medium">{{
               username
             }}</span>
-            <!-- Dynamic username -->
             <span v-if="timeAgo" class="text-grey-7">
               • {{ calculateTimeAgo }}</span
             >
-            <!-- Dynamic time -->
           </p>
         </div>
         <!-- Three Dots Dropdown Menu -->
@@ -52,12 +50,6 @@
               <q-item-section> Delete </q-item-section>
             </q-item>
           </q-list>
-
-          <!-- <q-list v-else>
-            <q-item v-close-popup clickable @click="sharePost">
-              <q-item-section> Copy link </q-item-section>
-            </q-item>
-          </q-list> -->
         </q-btn-dropdown>
       </div>
       <!-- Post Title -->
@@ -78,7 +70,6 @@
         @click.self="openPost('')"
       >
         <span v-if="postContent">{{ postContent }}</span>
-        <!-- Dynamic post content -->
       </p>
 
       <!-- Twitter-style images layout -->
@@ -113,32 +104,19 @@
         @click.self="openPost('')"
       >
         <span class="cursor-pointer" @click="openPost('')"
-          >{{ votes }} <span class="text-grey-7">Votes</span></span
+          >{{ localVotes }} <span class="text-grey-7">Votes</span></span
         >
         •
         <span class="cursor-pointer" @click="openPost('Comments')"
-          >{{ comments }} <span class="text-grey-7">Comments</span></span
+          >{{ localComments }} <span class="text-grey-7">Comments</span></span
         >
         <q-btn
-          v-if="!isOwnPosts && userId !== profileStore.userDetails?.id"
           no-caps
           size="md"
           unelevated
           color="grey-12"
           text-color="black"
-          :label="hasVoted ? 'See Results' : 'Answer'"
-          class="q-ml-auto"
-          style="cursor: pointer"
-          @click="openPost('')"
-        />
-        <q-btn
-          v-if="isOwnPosts || userId === profileStore.userDetails?.id"
-          no-caps
-          size="md"
-          unelevated
-          color="grey-12"
-          text-color="black"
-          label="See Results"
+          :label="localHasVoted || isOwnPosts || userId === profileStore.userDetails?.id ? 'See Results' : 'Answer'"
           class="q-ml-auto"
           style="cursor: pointer"
           @click="openPost('')"
@@ -146,6 +124,8 @@
       </div>
     </div>
   </div>
+  
+  <!-- Image preview dialog -->
   <q-dialog v-model="isDialogOpen" @hide="isDialogOpen = false">
     <q-card class="q-pa-none">
       <q-img
@@ -164,15 +144,30 @@
       />
     </q-card>
   </q-dialog>
+  
+  <!-- Mobile View Question Popup -->
+  <q-dialog v-model="showViewQuePopup" maximized persistent>
+    <MobileViewQuestion
+      v-if="showViewQuePopup"
+      :post-id="postId"
+      :tab-value="tabValue"
+      @close="closeModal"
+      @question-answered="handleQuestionAnswered"
+      @update-post="handleUpdatePost"
+    />
+  </q-dialog>
 </template>
 
 <script setup>
 import { usePostStore } from "src/stores/postStore";
 import { useQuasar, Loading } from "quasar";
-import { ref, computed, onUnmounted, onMounted } from "vue";
+import { ref, computed, onUnmounted, onMounted, watch } from "vue";
 import { useProfileStore } from "src/stores/profileStore";
 import { useRouter } from "vue-router";
 import fallbackImage from "src/assets/icons/profile-user.png";
+
+// Import the new mobile view question component
+import MobileViewQuestion from "./ask-que.vue";
 
 const postStore = usePostStore();
 const $q = useQuasar();
@@ -180,48 +175,50 @@ const profileStore = useProfileStore();
 const router = useRouter();
 const currentImage = ref("");
 const isDialogOpen = ref(false);
+const showViewQuePopup = ref(false);
+const tabValue = ref("");
 
 const emit = defineEmits(["deleted", "edit", "update-post"]);
 const props = defineProps({
   postId: {
     type: String,
-    required: true, // Required since it's used as the key
+    required: true,
   },
   userImage: {
     type: String,
-    default: "", // Default value for userImage
+    default: "",
   },
   username: {
     type: String,
-    default: "", // Default value for username
+    default: "",
   },
   timeAgo: {
     type: [String, Number],
-    default: "", // Default value for timeAgo
+    default: "",
   },
   postContent: {
     type: String,
-    default: "", // Default value for postContent
+    default: "",
   },
   postImage: {
     type: String,
-    default: "", // Default value for postImage
+    default: "",
   },
   postImages: {
     type: Array,
-    default: () => [], // Default value for postImages as an empty array
+    default: () => [],
   },
   votes: {
     type: Number,
-    default: 0, // Default value for votes
+    default: 0,
   },
   comments: {
     type: Number,
-    default: 0, // Default value for comments
+    default: 0,
   },
   isOwnPosts: {
     type: Boolean,
-    default: false, // Default value for comments
+    default: false,
   },
   userId: {
     type: String,
@@ -236,6 +233,65 @@ const props = defineProps({
     default: false,
   },
 });
+
+// Local reactive variables to track state changes
+const localHasVoted = ref(props.hasVoted);
+const localVotes = ref(props.votes);
+const localComments = ref(props.comments);
+
+// Watch for prop changes (in case parent updates)
+watch(
+  () => props.hasVoted,
+  (newValue) => {
+    localHasVoted.value = newValue;
+  }
+);
+
+watch(
+  () => props.votes,
+  (newValue) => {
+    localVotes.value = newValue;
+  }
+);
+
+watch(
+  () => props.comments,
+  (newValue) => {
+    localComments.value = newValue;
+  }
+);
+
+const openPost = (tab = "Votes") => {
+  showViewQuePopup.value = true;
+  tabValue.value = tab;
+};
+
+const closeModal = () => {
+  showViewQuePopup.value = false;
+};
+
+// Handle question answered from popup
+const handleQuestionAnswered = () => {
+  // Don't close the popup - let user see results and close manually
+};
+
+// Handle post updates from ViewQuestion component
+const handleUpdatePost = (postId, updatedData) => {
+  // Update local state first for immediate UI feedback
+  if (updatedData.hasVoted !== undefined) {
+    localHasVoted.value = updatedData.hasVoted;
+  }
+  if (updatedData.votesCount !== undefined) {
+    localVotes.value = updatedData.votesCount;
+  }
+  if (updatedData.commentsCount !== undefined) {
+    localComments.value = updatedData.commentsCount;
+  }
+
+  // Then emit to parent to update the main posts array
+  emit("update-post", postId, updatedData);
+};
+
 const goToProfile = () => {
   if (props.userId === user.value.id) {
     router.push({ name: "view-profile" });
@@ -257,11 +313,11 @@ let interval;
 onMounted(() => {
   interval = setInterval(() => {
     now.value = Date.now();
-  }, 1000); // Update every second
+  }, 1000);
 });
 
 onUnmounted(() => {
-  clearInterval(interval); // Cleanup on component unmount
+  clearInterval(interval);
 });
 
 const now = ref(Date.now());
@@ -287,22 +343,6 @@ const calculateTimeAgo = computed(() => {
     return `${months} month${months > 1 ? "s" : ""} ago`;
   }
 });
-
-// const sharePost = () => {
-//   const baseUrl = `${window.location.origin}/#/app/view-question?postId=${props.postId}`;
-//   copyToClipboard(baseUrl);
-//   $q.notify({
-//     message: "Copied to clipboard",
-//     color: "positive",
-//     position: "top",
-//     timeout: 3000,
-//     icon: "check_circle",
-//   });
-// };
-
-const openPost = (tab = "Votes") => {
-  router.push({ name: "view-question", query: { postId: props.postId, tab } });
-};
 
 const onDelete = async () => {
   try {
@@ -334,11 +374,7 @@ const onDelete = async () => {
 
 <style scoped lang="scss">
 .post {
-  // background-color: #fff;
   gap: 16px;
-  border-radius: 10px;
-  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  // padding: 16px;
 
   .post-img {
     flex-shrink: 0;
@@ -362,7 +398,7 @@ const onDelete = async () => {
   .image-wrapper {
     position: relative;
     width: 100%;
-    height: 100%; /* Adjust as needed */
+    height: 100%;
     max-height: 500px;
     overflow: hidden;
     border-radius: 4px;
@@ -398,9 +434,8 @@ const onDelete = async () => {
 }
 
 .image-item {
-  width: 100px; /* Adjust as needed */
-  height: 100px; /* Adjust as needed */
-  // margin: 8px;
+  width: 100px;
+  height: 100px;
   border-radius: 8px;
   object-fit: cover;
 }
@@ -408,16 +443,9 @@ const onDelete = async () => {
 .large-image {
   min-width: 300px;
   height: auto;
-  max-height: 80vh; /* Limit height for better UX */
+  max-height: 80vh;
 }
 
-.popup-container {
-  width: 90vw;
-  max-width: 600px;
-  padding: 16px;
-  background: #fff;
-  position: relative;
-}
 .close-button {
   position: absolute;
   top: 10px;

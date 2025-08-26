@@ -130,13 +130,12 @@
         >{{ localComments }} <span class="text-grey-7">Comments</span></span
       >
       <q-btn
-        v-if="!isOwnPosts && userId !== profileStore.userDetails?.id"
         no-caps
         size="md"
         unelevated
         color="grey-12"
         text-color="black"
-        :label="localHasVoted ? 'See Results' : 'Answer'"
+        :label="localHasVoted || isOwnPosts || userId === profileStore.userDetails?.id ? 'See Results' : 'Answer'"
         class="q-ml-auto"
         style="cursor: pointer"
         @click="openPost('')"

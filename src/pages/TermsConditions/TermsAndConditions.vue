@@ -1,7 +1,7 @@
 <template>
   <q-page class="terms-page">
     <div class="content">
-      <h1 class="title">Terms of Service</h1>
+      <h1 class="title">Terms of Use</h1>
 
       <section>
         <h2>General Conditions</h2>

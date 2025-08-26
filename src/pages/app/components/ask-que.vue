@@ -1,15 +1,17 @@
 <template>
-  <div :class="{ 'q-pb-xl': !isPopup, 'custom-page': isPopup }">
-    <div v-if="!isPopup" class="flex justify-between q-pa-md sticky-header">
+  <div class="mobile-view-question">
+    <!-- Header with back button -->
+    <div class="mobile-header q-pa-md">
       <q-btn
         flat
         round
         dense
         icon="arrow_back"
         color="grey-8"
-        @click="router.back()"
+        @click="$emit('close')"
       />
     </div>
+
     <template v-if="isLoading">
       <div class="q-pa-md">
         <div class="flex no-wrap post">
@@ -59,11 +61,9 @@
               <span class="text-weight-medium">{{
                 postDetails?.user?.name
               }}</span>
-              <!-- Dynamic username -->
               <span v-show="postDetails?.user?.name" class="text-grey-7">
                 • {{ calculateTimeAgo(postDetails.createdAt) }}</span
               >
-              <!-- Dynamic time -->
             </p>
             <p
               class="text-grey-9 q-mb-sm"
@@ -135,17 +135,8 @@
 
         <q-separator />
 
-        <q-tab-panels v-model="tab" :class="[{ 'q-pb-lg': !isPopup }]">
+        <q-tab-panels v-model="tab" class="mobile-tab-panels">
           <q-tab-panel class="q-pa-lg" name="Votes">
-            <!-- <div v-if="isOwner" class="owner-view-panel q-pa-md q-mb-md">
-              <div
-                class="text-center text-grey-7 flex items-center justify-center"
-              >
-                <q-icon name="lock" color="primary" class="q-mr-sm" />
-                <span>You cannot answer your own question.</span>
-                <q-badge color="primary" class="q-ml-sm">Owner</q-badge>
-              </div>
-            </div> -->
             <div v-if="!selectedVote && !isOwner" class="q-gutter-md">
               <q-card
                 v-for="option in postDetails.options"
@@ -182,7 +173,7 @@
                 />
               </q-card>
 
-              <!-- Add Submit Button -->
+              <!-- Submit Button -->
               <div class="submit-vote-btn q-mt-md">
                 <q-btn
                   color="primary"
@@ -196,16 +187,7 @@
                 />
               </div>
             </div>
-            <div
-              v-else
-              :class="[
-                'q-gutter-md',
-                {
-                  'option-container-grid':
-                    isPopup && postDetails?.options?.length > 2,
-                },
-              ]"
-            >
+            <div v-else class="q-gutter-md">
               <q-card
                 v-for="(option, index) in postDetails.options"
                 :key="option.id"
@@ -262,7 +244,7 @@
             <template v-else>
               <div
                 v-if="comments?.length === 0"
-                :class="['text-center', { 'q-mt-md': !isPopup }]"
+                class="text-center q-mt-md"
               >
                 <p class="text-grey-7">Break the silence, leave a comment!</p>
               </div>
@@ -301,7 +283,6 @@
                         • {{ calculateTimeAgo(comment?.createdAt) }}</span
                       >
                     </p>
-                    <!-- <p class="text-weight-medium text-weight-bold">{{ comment.text }}</p> -->
                     <p class="text-grey-9 q-mt-xs">
                       <span>{{ comment?.text }}</span>
                     </p>
@@ -464,17 +445,7 @@
                   </div>
                 </div>
               </div>
-              <div
-                :class="[
-                  'q-pa-md',
-                  'w-full',
-                  'bg-white',
-                  {
-                    'input-container': !isPopup,
-                    'input-container-popup': isPopup,
-                  },
-                ]"
-              >
+              <div class="mobile-input-container q-pa-md w-full bg-white">
                 <q-input
                   ref="replyInput"
                   v-model="text"
@@ -520,29 +491,24 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
 import { ref, onUnmounted, onMounted, nextTick, computed } from "vue";
 import { useQuasar } from "quasar";
 import { usePostStore } from "src/stores/postStore";
 import { useProfileStore } from "src/stores/profileStore";
 
-// Image
-// import likeImage from 'src/assets/images/like.png';
+// Images
 import happyIcon from "src/assets/icons/happy.svg";
-// import dislikeImage from 'src/assets/images/dislike.png';
 import sadIcon from "src/assets/icons/sad.svg";
 import fallbackImage from "src/assets/icons/profile-user.png";
 
 const postStore = usePostStore();
 const profileStore = useProfileStore();
-const router = useRouter();
-const route = useRoute();
 const $q = useQuasar();
 const tab = ref("Votes");
 const text = ref("");
-const dialog = ref(false); // Control dialog visibility
-const imageSrc = ref(""); // Store image source
-const selectedVote = ref(null); // Track the selected vote option
+const dialog = ref(false);
+const imageSrc = ref("");
+const selectedVote = ref(null);
 const totalVotes = ref(0);
 const totalComments = ref(0);
 const comments = ref([]);
@@ -559,20 +525,16 @@ const localTotalComments = ref(0);
 const props = defineProps({
   postId: {
     type: String,
-    default: "",
-  },
-  isPopup: {
-    type: Boolean,
-    default: false,
+    required: true,
   },
   tabValue: {
     type: String,
-    default: "",
+    default: "Votes",
   },
 });
 
 const emit = defineEmits([
-  "fetch-new-post",
+  "close",
   "question-answered",
   "update-post",
 ]);
@@ -605,35 +567,35 @@ let interval;
 onMounted(async () => {
   interval = setInterval(() => {
     now.value = Date.now();
-  }, 1000); // Update every second
-  const postId = route?.query?.postId || props?.postId;
-  if (postId) {
-    await fetchPostDetails(postId);
-    await fetchComments(postId);
-    isLoading.value = false; // Set loading to false after data is loaded
+  }, 1000);
+  
+  if (props.postId) {
+    await fetchPostDetails(props.postId);
+    await fetchComments(props.postId);
+    isLoading.value = false;
   } else {
-    isLoading.value = false; // Set loading to false even if no postId
+    isLoading.value = false;
   }
-  const tabValue = route?.query?.tab || props?.tabValue || "Votes";
-  if (tabValue) tab.value = tabValue;
+  
+  if (props.tabValue) {
+    tab.value = props.tabValue;
+  }
 });
 
 onUnmounted(() => {
-  clearInterval(interval); // Cleanup on component unmount
+  clearInterval(interval);
 });
 
 const now = ref(Date.now());
 const calculateTimeAgo = (dateTime) => {
   const secondsAgo = Math.floor((now.value - dateTime) / 1000);
 
-  // If older than 24 hours, show the actual date and time
   if (secondsAgo >= 86400) {
     const date = new Date(dateTime);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    // Format time as HH:MM AM/PM
     const timeOptions = {
       hour: "numeric",
       minute: "2-digit",
@@ -641,13 +603,11 @@ const calculateTimeAgo = (dateTime) => {
     };
     const timeString = date.toLocaleTimeString("en-US", timeOptions);
 
-    // Check if it's today or yesterday
     if (date.toDateString() === today.toDateString()) {
       return `Today at ${timeString}`;
     } else if (date.toDateString() === yesterday.toDateString()) {
       return `Yesterday at ${timeString}`;
     } else {
-      // For older dates, show full date
       const dateOptions = {
         month: "short",
         day: "numeric",
@@ -659,7 +619,6 @@ const calculateTimeAgo = (dateTime) => {
     }
   }
 
-  // For posts less than 24 hours old, use relative time
   if (secondsAgo < 60) {
     return `${secondsAgo} seconds ago`;
   } else if (secondsAgo < 3600) {
@@ -685,8 +644,7 @@ const calculateOptionsWithColors = (options, totalCount) => {
 };
 
 const focusReplyInput = async (commentId) => {
-  commentParentId.value = commentId; // Set the comment being replied to
-  // Wait for the DOM to update and then focus the input box
+  commentParentId.value = commentId;
   await nextTick(() => {
     const inputElement = replyInput.value?.$el.querySelector("input");
     if (inputElement) {
@@ -700,9 +658,9 @@ const countTotalComments = (comments) => {
 
   const traverse = (commentList) => {
     for (const comment of commentList) {
-      count++; // Count the current comment
+      count++;
       if (comment.replies && comment.replies.length > 0) {
-        traverse(comment.replies); // Recursively count replies
+        traverse(comment.replies);
       }
     }
   };
@@ -713,23 +671,18 @@ const countTotalComments = (comments) => {
 
 const toggleLike = async (commentId) => {
   try {
-    // Find the comment in the local state
     const updateCommentLikes = (commentsList) => {
       return commentsList.map((comment) => {
         if (comment.id === commentId) {
-          // Create updated comment
           const updatedComment = { ...comment };
 
           if (comment.hasLiked) {
-            // Remove like
             updatedComment.hasLiked = false;
             updatedComment.likesCount = Math.max(0, comment.likesCount - 1);
           } else {
-            // Add like
             updatedComment.hasLiked = true;
             updatedComment.likesCount = comment.likesCount + 1;
 
-            // Remove dislike if present
             if (comment.hasDisliked) {
               updatedComment.hasDisliked = false;
               updatedComment.dislikesCount = Math.max(
@@ -742,7 +695,6 @@ const toggleLike = async (commentId) => {
           return updatedComment;
         }
 
-        // Check nested replies
         if (comment.replies && comment.replies.length > 0) {
           return {
             ...comment,
@@ -754,17 +706,10 @@ const toggleLike = async (commentId) => {
       });
     };
 
-    // Update local state immediately
     comments.value = updateCommentLikes(comments.value);
-
-    // Make API call in background
     await postStore.addLike(commentId);
-
-    // Refresh comments to ensure consistency (optional - you might skip this for better UX)
-    // await fetchComments(postDetails.value.id);
   } catch (error) {
     console.error("Error toggling like:", error);
-    // Revert changes on error by refetching
     await fetchComments(postDetails.value.id);
 
     $q.notify({
@@ -779,26 +724,21 @@ const toggleLike = async (commentId) => {
 
 const toggleDislike = async (commentId) => {
   try {
-    // Find the comment in the local state
     const updateCommentDislikes = (commentsList) => {
       return commentsList.map((comment) => {
         if (comment.id === commentId) {
-          // Create updated comment
           const updatedComment = { ...comment };
 
           if (comment.hasDisliked) {
-            // Remove dislike
             updatedComment.hasDisliked = false;
             updatedComment.dislikesCount = Math.max(
               0,
               comment.dislikesCount - 1
             );
           } else {
-            // Add dislike
             updatedComment.hasDisliked = true;
             updatedComment.dislikesCount = comment.dislikesCount + 1;
 
-            // Remove like if present
             if (comment.hasLiked) {
               updatedComment.hasLiked = false;
               updatedComment.likesCount = Math.max(0, comment.likesCount - 1);
@@ -808,7 +748,6 @@ const toggleDislike = async (commentId) => {
           return updatedComment;
         }
 
-        // Check nested replies
         if (comment.replies && comment.replies.length > 0) {
           return {
             ...comment,
@@ -820,17 +759,10 @@ const toggleDislike = async (commentId) => {
       });
     };
 
-    // Update local state immediately
     comments.value = updateCommentDislikes(comments.value);
-
-    // Make API call in background
     await postStore.addDislike(commentId);
-
-    // Refresh comments to ensure consistency (optional - you might skip this for better UX)
-    // await fetchComments(postDetails.value.id);
   } catch (error) {
     console.error("Error toggling dislike:", error);
-    // Revert changes on error by refetching
     await fetchComments(postDetails.value.id);
 
     $q.notify({
@@ -870,7 +802,6 @@ const fetchComments = async (postId) => {
 const fetchPostDetails = async (postId) => {
   try {
     const data = await postStore.getPostDetails(postId);
-    // Populate the fields with fetched data
     postDetails.value = {
       id: data?.id || "",
       description: data?.description || "",
@@ -912,18 +843,18 @@ const fetchPostDetails = async (postId) => {
 };
 
 const openImage = (src) => {
-  imageSrc.value = src; // Set the image source
-  dialog.value = true; // Open the dialog
+  imageSrc.value = src;
+  dialog.value = true;
 };
 
 const closeDialog = () => {
-  dialog.value = false; // Close the dialog
+  dialog.value = false;
 };
 
 const isSubmittingComment = ref(false);
 
 const addComment = async () => {
-  if (isSubmittingComment.value) return; // Prevent double submission
+  if (isSubmittingComment.value) return;
 
   const commentText = text.value.trim();
   if (!commentText) return;
@@ -937,19 +868,13 @@ const addComment = async () => {
       ...(commentParentId.value ? { parentId: commentParentId.value } : {}),
     };
 
-    // Clear input immediately for better UX
     text.value = "";
     commentParentId.value = null;
 
-    // Make API call
     await postStore.createComment(data);
-
-    // Refresh comments after successful submission
     await fetchComments(postDetails.value.id);
 
-    // Emit the updated comment count to parent components
-    const postId = route?.query?.postId || props?.postId;
-    emit("update-post", postId, {
+    emit("update-post", props.postId, {
       commentsCount: localTotalComments.value,
     });
   } catch (error) {
@@ -966,14 +891,12 @@ const addComment = async () => {
   }
 };
 
-// Modify showVotesResult to handle temporary selection
 const showVotesResult = (option) => {
-  tempSelectedVote.value = option; // Just store the selection temporarily
+  tempSelectedVote.value = option;
 };
 
 const isAnimatingResults = ref(false);
 
-// Modified submitVote function with water ripple animation
 const submitVote = async () => {
   try {
     if (!tempSelectedVote.value) {
@@ -986,7 +909,6 @@ const submitVote = async () => {
       return;
     }
 
-    // Button morphing animation
     const submitButton = document.querySelector(".submit-vote-btn .q-btn");
     if (submitButton) {
       submitButton.classList.add("morphing");
@@ -999,30 +921,27 @@ const submitVote = async () => {
     };
 
     await postStore.createVote(data);
-    const postId = route?.query?.postId || props?.postId;
-    if (postId) {
-      await fetchPostDetails(postId);
+    
+    if (props.postId) {
+      await fetchPostDetails(props.postId);
     }
 
-    // Trigger water ripple animation after results load
     setTimeout(() => {
       animateResults();
     }, 300);
 
-    emit("update-post", postId, {
+    emit("update-post", props.postId, {
       hasVoted: true,
       votesCount: localTotalVotes.value,
     });
     emit("question-answered");
 
-    // Clean up button animation
     setTimeout(() => {
       if (submitButton) {
         submitButton.classList.remove("morphing");
       }
     }, 1500);
   } catch (e) {
-    // Clean up button animation on error
     const submitButton = document.querySelector(".submit-vote-btn .q-btn");
     if (submitButton) {
       submitButton.classList.remove("morphing");
@@ -1038,21 +957,17 @@ const submitVote = async () => {
   }
 };
 
-// Water ripple animation function
 const animateResults = () => {
   isAnimatingResults.value = true;
 
-  // Get all progress bars and animate them with staggered timing
   const progressBars = document.querySelectorAll(
     ".votes-result .q-linear-progress"
   );
 
   progressBars.forEach((bar, index) => {
     setTimeout(() => {
-      // Add water ripple effect
       bar.classList.add("water-ripple-effect");
 
-      // Reset and animate the Quasar progress bar
       const progressTrack = bar.querySelector(".q-linear-progress__track");
       if (progressTrack) {
         progressTrack.style.transform = "scaleX(0)";
@@ -1064,10 +979,9 @@ const animateResults = () => {
           progressTrack.style.transform = "scaleX(1)";
         }, 50);
       }
-    }, index * 150); // Stagger each bar by 150ms
+    }, index * 150);
   });
 
-  // Clean up animation state
   setTimeout(() => {
     isAnimatingResults.value = false;
     progressBars.forEach((bar) => {
@@ -1078,13 +992,50 @@ const animateResults = () => {
 </script>
 
 <style scoped lang="scss">
-.q-page {
-  height: 100%;
-  overflow-y: auto; // Ensures vertical scrolling is enabled
-  -webkit-overflow-scrolling: touch;
+.mobile-view-question {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
+
+.mobile-header {
+  flex-shrink: 0;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.mobile-tab-panels {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  .q-tab-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.mobile-input-container {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  border-top: 1px solid #e0e0e0;
+}
+
 .post {
   gap: 16px;
+  
   .post-img {
     flex-shrink: 0;
     height: 44px;
@@ -1094,9 +1045,11 @@ const animateResults = () => {
     border: 1px solid #aeaeb2;
   }
 }
+
 :deep(.q-tab__label) {
   text-transform: none;
 }
+
 .vote-options {
   height: 60px;
   border: 1px solid #dfe2e8;
@@ -1183,7 +1136,6 @@ const animateResults = () => {
     margin-top: 8px;
     overflow: hidden;
 
-    // Water ripple effect
     &.water-ripple-effect {
       &::before {
         content: "";
@@ -1222,7 +1174,6 @@ const animateResults = () => {
       }
     }
 
-    // Ensure Quasar's track is visible
     :deep(.q-linear-progress__track) {
       transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
       transform-origin: left;
@@ -1232,38 +1183,18 @@ const animateResults = () => {
 
 .vote-options.disabled-option {
   opacity: 0.5;
-  pointer-events: none; /* Prevent any interaction */
+  pointer-events: none;
   cursor: not-allowed;
 }
 
 .comments-list {
   display: grid;
   grid-gap: 12px;
+  flex: 1;
+  
   .show-more {
     background: transparent;
     font-weight: 600;
-  }
-}
-
-.custom-page {
-  display: grid;
-  grid-template-rows: auto !important;
-  min-height: fit-content !important;
-  position: relative;
-}
-.option-container-grid {
-  display: grid;
-  grid-template-columns: auto;
-  grid-gap: 16px;
-}
-.input-container {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  &-popup {
-    position: sticky;
-    bottom: 0;
-    left: 0;
   }
 }
 
@@ -1282,18 +1213,18 @@ const animateResults = () => {
 .like-container {
   .like-icon-wrapper {
     display: inline-block;
-    border-radius: 50%; // Circular border
+    border-radius: 50%;
     display: grid;
   }
 
   .like-icon {
-    height: 20px; // Icon size
-    transition: filter 0.3s ease; // Smooth transition for hover effects
+    height: 20px;
+    transition: filter 0.3s ease;
   }
 
   .liked-text {
-    color: #f15b29; // Highlight text color
-    font-weight: 800; // Make text bold
+    color: #f15b29;
+    font-weight: 800;
   }
 }
 
@@ -1333,9 +1264,16 @@ const animateResults = () => {
   }
 
   :deep(.q-img) {
-    min-width: 500px;
+    min-width: 300px;
     max-width: 90vw;
   }
+}
+
+.skeleton-vote-option {
+  height: 60px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 
 @keyframes water-shimmer {
@@ -1366,7 +1304,6 @@ const animateResults = () => {
   }
 }
 
-// Button morphing animation
 @keyframes button-morph {
   0% {
     border-radius: 12px;
@@ -1390,7 +1327,6 @@ const animateResults = () => {
   }
 }
 
-// Selection bounce animation
 @keyframes selection-bounce {
   0% {
     transform: scale(1);
@@ -1403,55 +1339,11 @@ const animateResults = () => {
   }
 }
 
-// Keep all your existing styles unchanged
-.vote-options.disabled-option {
-  opacity: 0.5;
-  pointer-events: none;
-  cursor: not-allowed;
-}
-
-// Add smooth transitions to existing elements
-.q-linear-progress {
-  transition: all 0.3s ease;
-}
-
-// Ensure animations work well with Quasar's deep selectors
 :deep(.q-linear-progress__track) {
   will-change: transform;
 }
 
 :deep(.q-btn__content) {
   transition: all 0.3s ease;
-}
-
-.popup-container {
-  width: 100%;
-  max-width: 100vw;
-  min-width: unset;
-  padding: 8px;
-  background: #fff;
-  position: relative;
-  border-radius: 10px;
-}
-@media (min-width: 600px) {
-  .popup-container {
-    max-width: 500px;
-    margin: 0 auto;
-    border-radius: 12px;
-    padding: 24px;
-  }
-}
-.owner-view-panel {
-  background: #f8fafc;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  .vote-options.owner-disabled {
-    opacity: 0.7;
-    filter: grayscale(1);
-    cursor: not-allowed;
-    .text-grey-6 {
-      font-weight: 500;
-    }
-  }
 }
 </style>

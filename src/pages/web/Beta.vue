@@ -158,7 +158,7 @@
       </div>
       <div class="footer-links">
         <a href="/#/privacy-policy">Privacy Policy</a>
-        <a href="/#/terms-of-service">Terms of Service</a>
+        <a href="/#/terms-of-service">Terms of Use</a>
         <a href="/#/about-us">About Us</a>
       </div>
     </section>

@@ -7,7 +7,7 @@
             Submit questions to find assistance, ranging from being trivial to
             life altering.
           </h1>
-          <p>Forums for everyday life. Discuss with the world.</p>
+          <p>Ask the world.</p>
           <div class="mobile-links">
             <p>Download the mobile app and join the community.</p>
             <div>
