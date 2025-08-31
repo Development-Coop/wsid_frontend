@@ -55,7 +55,7 @@
       />
       <p class="text-center text-body1">
         Have an account already?
-        <RouterLink to="/app/auth/login" class="text-primary text-weight-bold">
+        <RouterLink :to="{ name: 'app-login' }" class="text-primary text-weight-bold">
           Login
         </RouterLink>
       </p>

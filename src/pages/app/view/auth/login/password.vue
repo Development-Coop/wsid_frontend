@@ -7,7 +7,7 @@
       unelevated
       class="justify-self-start align-self-start"
       style="border-radius: 0px"
-      :to="{ name: 'login' }"
+      :to="{ name: 'app-login' }"
     >
       <q-icon v-motion-pop-visible :delay="300" size="24px">
         <img src="~src/assets/icons/arrow-left.svg" alt="logo" />

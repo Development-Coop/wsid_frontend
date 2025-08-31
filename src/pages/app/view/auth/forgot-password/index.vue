@@ -8,7 +8,7 @@
       unelevated
       class="justify-self-start align-self-start"
       style="border-radius: 0px"
-      @click="router.push({ name: 'login' })"
+      @click="router.push({ name: 'app-login' })"
     >
       <q-icon v-motion-pop-visible :delay="300" size="24px">
         <img src="~src/assets/icons/arrow-left.svg" alt="logo" />

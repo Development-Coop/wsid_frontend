@@ -200,7 +200,7 @@ const routes = [
           },
           {
             path: "login",
-            name: "login",
+            name: "app-login",
             component: () => import("src/pages/app/view/auth/login/index.vue"),
           },
           {
