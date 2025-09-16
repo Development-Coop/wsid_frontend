@@ -319,7 +319,7 @@ const isMobile = computed(() => $q.platform.is.mobile || $q.platform.is.tablet);
 const handleGetStarted = () => {
   if (isMobile.value) {
     // Direct mobile users to mobile app auth
-    router.push({ path: '/app/auth' });
+    router.push({ path: '/app/getting-started' });
   } else {
     // Direct desktop users to web login
     router.push({ path: '/auth/web-login?tab=login' });
