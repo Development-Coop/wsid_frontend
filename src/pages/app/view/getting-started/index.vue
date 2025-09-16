@@ -22,7 +22,7 @@
         color="primary"
         label="Continue"
         class="w-full q-mb-md"
-        :to="{ name: 'introduction' }"
+        :to="{ name: 'auth-mobile' }"
       />
       <q-btn
         v-motion-pop
@@ -34,6 +34,7 @@
         class="w-full"
         text-color="black"
         label="Learn More"
+        :to="{ name: 'introduction' }"
       />
     </div>
   </q-page>

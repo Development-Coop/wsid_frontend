@@ -264,14 +264,15 @@ export const usePostStore = defineStore("post", () => {
   };
 
   // Enhanced function to merge posts with stored voting status
+  //NOTE - We are now doing this from the backend so these methods that store as cookies are antiquated
   const mergePostsWithStoredVotingStatus = (posts) => {
     if (!posts.length) return posts;
 
-    const storedVotingStatus = getUserVotingStatusFromStorage();
+    // const storedVotingStatus = getUserVotingStatusFromStorage();
 
     return posts.map((post) => ({
       ...post,
-      hasVoted: storedVotingStatus[post.id] || false,
+      // hasVoted: storedVotingStatus[post.id] || false,
     }));
   };
 

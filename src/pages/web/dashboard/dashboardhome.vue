@@ -176,10 +176,9 @@ const fetchPosts = async () => {
     // Check if there are new posts
     if (newPosts.length > 0) {
       // Merge posts with stored voting status from local storage
-      const postsWithVotingStatus =
-        postStore.mergePostsWithStoredVotingStatus(newPosts);
+      console.log(newPosts)
 
-      const merged = [...postStore.homePosts, ...postsWithVotingStatus];
+      const merged = [...postStore.homePosts, ...newPosts];
       const unique = merged.filter(
         (post, index, self) => index === self.findIndex((p) => p.id === post.id)
       );

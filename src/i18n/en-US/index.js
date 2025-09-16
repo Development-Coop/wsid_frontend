@@ -14,19 +14,19 @@ export default {
         "Anyone can submit a question to find assistance - where to go, what food to try, etc. The questions can range from being trivial to life altering.",
     },
     createOptions: {
-      title: "Create Options",
+      title: "Create Choices",
       description:
-        "Anyone can submit a question to find assistance - where to go, what food to try, etc. The questions can range from being trivial to life altering.",
+        " Add 2 to 4 choices that make sense. You control the conversation.",
     },
     receiveResults: {
       title: "Receive Results",
       description:
-        "Anyone can submit a question to find assistance - where to go, what food to try, etc. The questions can range from being trivial to life altering.",
+        "Watch the votes roll in and see what people really think. Results update in real time.",
     },
     getFeedback: {
       title: "Get Feedback",
       description:
-        "Anyone can submit a question to find assistance - where to go, what food to try, etc. The questions can range from being trivial to life altering.",
+        "Go beyond the vote with thoughtful comments and insights. Clarity comes from conversation.",
     },
     growTogether: {
       title: "Grow Together",

@@ -53,7 +53,7 @@ const $q = useQuasar();
 const router = useRouter();
 const drawerLeft = ref(false);
 
-const navItems = [
+var navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about-us" },
   { name: "Login", path: "/auth/web-login?tab=login" },
@@ -61,6 +61,15 @@ const navItems = [
 ];
 
 const isMobile = computed(() => $q.screen.width < 700);
+
+if (isMobile.value) {
+  navItems = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about-us" },
+    { name: "Login", path: "/app/auth?tab=login" },
+    { name: "Register", path: "/auth/auth?tab=signup" },
+  ];
+}
 </script>
 
 <style scoped lang="scss">

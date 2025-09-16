@@ -158,6 +158,7 @@ const routes = [
         children: [
           {
             path: "",
+            name: "auth-mobile",
             component: () => import("src/pages/app/view/auth/index.vue"),
           },
           {
