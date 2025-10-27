@@ -16,7 +16,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 // Export Auth and Google Auth Provider
 const auth = getAuth(firebaseApp);
 
-const analytics = getAnalytics(app);
+const analytics = getAnalytics(firebaseApp);
 
 
 export { auth, analytics };
